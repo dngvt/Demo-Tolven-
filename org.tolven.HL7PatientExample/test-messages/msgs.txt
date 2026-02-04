@@ -1,0 +1,25 @@
+Submit message with NS = urn:hl7-org:v2
+Processor as written will blindly add observations, diagnoses and allergies to a patients record.
+You may prefer to check for existance of and prevent duplicates in certain cases, depending on your situation.
+
+LAB TEST Message - multiple observations
+
+MSH|^~\&|FORMENTRY|AMRS|HL7LISTENER|AMRS|20060809121931||ORU^R01|formentry-20060809121931|P|2.5|1||||||||2^AMRS-ELDORET^http://schema.openmrs.org/2006/FormEntry/formId^URI
+PID|8937459|3452345|1^^^AMRS-ELDORET&openmrs.org&DNS^||Patient^John^Quincy||19620723|M|||153 FERNWOOD DR.^||(310)670-7466||||||872839723
+OBR|2|||1019^COMPLETE BLOOD COUNT^99DCT
+OBX|1|NM|1015^HEMATOCRIT^99DCT||1000|||||||||20060807
+OBX|2|NM|21^HEMOGLOBIN^99DCT||1000|||||||||20060807
+OBX|3|NM|678^WHITE BLOOD CELLS^99DCT||100000|||||||||20060807
+OBX|4|NM|729^PLATELETS^99DCT||10|||||||||20060807
+
+
+ADT TEST MESSAGE.    We require the Diagnosis description in field 4.   We could also change code to grap the name from the coded 3rd field..
+
+MSH|^~\&|SendingApp^‹OID›^ISO|SendingFac^‹OID›^ISO|ReceivingApp^‹OID›^ISO|ReceivingFac^‹OID›^ISO|20060922||ADT^A01^ADT_A01|20060922|D|2.5
+PID|872364474|99999999|7005728^^^TML^MR||Larsen^Sven^Lornquist||19310313|F|||200 ANYWHERE ST^^TORONTO^ON^M6G 2T9||(416)888-8888||||||1014071185^KR
+AL1|1||^PENICILLIN|^dire|PRODUCES HIVES|20050102|
+AL1|2||^CAT DANDER|^not so bad|Sneezes|20060505
+AL1|3|DA|^Penicillin|^ ARGH!!!|Cardiac Arrest|20070314
+DG1|1||784.3^APHASIA^I9C|APHASIA|20060922|A
+DG1|2||784.0^HEADACHE^I9C|HEADACHE|20060922|A
+DG1|3||781.6^MENINGISMUS^I9C|MENINGISMUS|20060922|A

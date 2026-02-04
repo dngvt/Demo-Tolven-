@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Laboratory Result</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+		
+		<c:set var="hasResults" value="false"/>
+		<div class="widget">
+				<c:forEach var="labResult" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="widgetIndex">
+					<c:set var="hasResults" value="true"/>
+					<c:set var="class" value="odd"/>
+					<c:if test="#{(widgetIndex.index%2)==1}">
+						<c:set var="class" value="even"/>
+					</c:if>
+				<wiz:group title="Date of observation">
+					<trim:TS id="effectiveTime" value="#{labResult.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" />
+				</wiz:group>
+
+				<wiz:group title="Enter Lab Result">
+				  <c:if test="#{labResult.act.observation.value.PQ != null}">
+					<h:outputLabel value="Value"></h:outputLabel>
+					<h:inputText value="#{labResult.act.observation.value.PQ.value}" style="width: 90px;" />
+					<h:outputLabel value="Unit"></h:outputLabel>
+					<h:inputText value="#{labResult.act.observation.value.PQ.unit}" style="width: 90px;"/>
+					<h:outputLabel value="Specimen Type"></h:outputLabel>
+					<h:selectOneMenu id="specimenType#{widgetIndex.index}" style="width:110px;" value="#{labResult.act.participation['specimen'].role.player.code.CE}">
+					  <f:selectItems value="#{trim.valueSets['specimenType']}"/>
+					  <f:converter converterId="DataTypeConverter"/>
+					</h:selectOneMenu>
+					<h:outputLabel value="Specimen Container"></h:outputLabel>
+			      	  </c:if>
+				  <c:if test="#{labResult.act.observation.value.ED != null}">
+				    <trim:ED id="comments" value="#{labResult.act.observation.value}" readonly="false"/>
+				  </c:if>
+				</wiz:group>
+				<wiz:group title="Enter Comments">
+				  <h:inputTextarea id="comments" rows="5" cols="80" value="#{labResult.act.relationship['administrationComment'].act.observation.value.ST.value}" />
+				</wiz:group>
+<!-- 					<tr class="#{class}">
+						<td style="width:25%;">
+							#{labResult.act.title.ST.value}
+							<h:inputHidden id="saveLabResult#{widgetIndex.index}" value="#{labResult.enableRelationship}"/>
+						</td>
+						<td style="width:20%;">
+							<trim:TSNew id="dateOfResult#{widgetIndex.index}" value="#{labResult.act.effectiveTime.TS}" dateStyle="short" style="width:68%;" readonly="false"/>
+						</td>
+						<td style="width:15%;">
+							<h:inputText id="value#{widgetIndex.index}" value="#{labResult.act.observation.value.PQ.value}"/>
+						</td>
+						<td style="width:15%;" >
+							<h:outputText id="unit#{widgetIndex.index}" value="#{labResult.act.observation.value.PQ.unit}"/>
+						</td>
+						<td style="width:25%;">
+							<h:inputTextarea id="comment#{widgetIndex.index}" value="#{labResult.act.relationship['administrationComment'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>	-->					
+				</c:forEach>	
+		</div>
+	 	<c:if test="#{hasResults == 'false'}">
+			<script language="JavaScript" type="text/javascript">
+				// <![CDATA[
+	            openTemplate('#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}','#{menu.elementLabel}:#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}', 'saveLabResult', '#{menu.elementLabel}', 0);		
+				// ]]>			
+			</script>
+			<div id="addNewOrderAnchor" class="widgetAction">
+				<a onclick="openTemplate('#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}','#{menu.elementLabel}:#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}', 'saveLabResult', '#{menu.elementLabel}', 0)" href="#">Select Laboratory Result</a>					
+			</div>
+		</c:if>		
+		<c:if test="hasResults == 'true'}">
+			<h:inputHidden id="preProcessStepParams" value="2,confirmDeleteUnsavedProblems"/>
+		</c:if>
+	</ui:composition>
+</body>
+</html>

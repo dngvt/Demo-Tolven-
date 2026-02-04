@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<extends>patientDet</extends>
+	<name>obs/evn/patientPrescription</name>
+	<description>New Prescription</description>
+	<page>patientPrescription.xhtml</page>
+	<drilldown>patientPrescriptionDD.xhtml</drilldown>
+	<menu>global:officeMedicationOrdersMenu</menu>
+	<application name="echr">
+		<instance>echr:patient:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="active">
+			<label language="en">Active</label>
+		</transition>
+		<transition name="complete" from="active" to="completed">
+			<label language="en">Discontinue</label>
+		</transition>
+		<transition name="reviseActive" from="active" to="active">
+			<label language="en">Revise</label>
+		</transition>
+		<transition name="nullifiedActive" from="active" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>
+	</transitions>
+	<act classCode="REG" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:officeMedicationOrder</path>
+			</placeholder>
+		</bind>
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:officeMedicationOrder</path>
+			</placeholder>
+		</bind>
+		<id>
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{officeMedicationOrder.path}</extension>
+			</II>
+		</id>
+		<statusCode>active</statusCode>
+		<effectiveTime>
+			<label>Order Date</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<substanceAdministration>
+			<routeCode>
+				<valueSet>route</valueSet>
+			</routeCode>
+		</substanceAdministration>
+		<participation name="pharmacy" typeCode="PPRF">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:pharmacies:all</path>
+					</list>
+				</bind>
+				<id>
+					<II>
+						<root>#{computeIDRoot(account)}</root>
+						<extension>#{pharmacy.path}</extension>
+					</II>
+				</id>
+			</role>
+		</participation>
+		<participation typeCode="ATND" name="attender">
+			<role classCode="ASSIGNED">
+				<bind phase="request" application="echr">
+					<list cardinality="multiple">
+						<path>echr:admin:staff:all</path>
+					</list>
+				</bind>
+				<bind phase="request" application="ephr">
+					<list cardinality="multiple">
+						<path>ephr:admin:staff:all</path>
+					</list>
+				</bind>
+				<id>
+				</id>
+			</role>
+		</participation>
+		<participation name="consumableProduct" typeCode="CSM">
+			<role classCode="THER">
+				<effectiveTime>
+					<IVL_TS>
+						<low>
+							<label>Start Date</label>
+							<new datatype="TS" function="now" />
+							<TS>
+								<value>#{TS(officeMedicationOrder.start)}</value>
+							</TS>
+						</low>
+						<high>
+							<label>End Date</label>
+							<TS>
+								<value>#{TS(officeMedicationOrder.end)}</value>
+							</TS>
+						</high>
+					</IVL_TS>
+				</effectiveTime>
+				<player classCode="MMAT" determinerCode="KIND">
+					<code>
+						<CE>
+							<displayName>#{act.participation['consumableProduct'].role.player.code.CE.displayName}</displayName>
+							<code>#{act.participation['consumableProduct'].role.player.code.CE.code}</code>
+							<codeSystemName></codeSystemName>
+							<codeSystemVersion></codeSystemVersion>
+						</CE>
+					</code>
+					<quantity>
+						<label>Strength</label>
+						<PQ>
+							<originalText>#{act.participation['consumableProduct'].role.player.quantity.PQ.originalText}</originalText>
+							<value></value>
+							<unit>1</unit>
+						</PQ>
+					</quantity>
+					<material>
+						<formCode>
+							<CE>
+								<displayName>#{act.participation['consumableProduct'].role.player.material.formCode.CE.displayName}</displayName>
+								<code>#{act.participation['consumableProduct'].role.player.material.formCode.CE.code}</code>
+								<codeSystemName>MDDF</codeSystemName>
+								<codeSystemVersion>version</codeSystemVersion>
+							</CE>
+						</formCode>
+					</material>					
+				</player>
+				<participation name="maxDose" typeCode="PRD">
+					<act classCode="OBS" moodCode="EVN">
+						<title>
+							<ST>Maximum Dose</ST>
+						</title>
+						<observation>
+							<value>
+								<ST></ST>
+							</value>
+						</observation>
+					</act>
+				</participation>
+			</role>
+		</participation>
+		<relationship typeCode="NAME" direction="IN" name="fdbResponse">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="interactions">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="drugDrugInteraction">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="drugFoodResponse">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="duplicateTherapyResponse">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="drugAllergyResponse">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="AHFSClassification">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="CTETCClassification">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="CTFDBClassification">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="CTActionGroupClassification">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="prescriberInstructions">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="patientInstructions">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="isControlled">
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="physicianNotificationPreference">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<ST />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="isInDrugFromulary">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>Drug Formulary</label>
+						<ST>#{medication.isInDrugFromulary}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship name="sigCodes" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Sig Codes</label>
+						<ED />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="refill">
+			<act moodCode="EVN" classCode="ENTRY">
+				<text>
+					<label>refill quantity</label>
+					<ST></ST>
+				</text>
+				<observation>
+					<value>
+						<label>Refill</label>
+						<CE />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="daysSupply">
+			<act moodCode="EVN" classCode="ENTRY">
+
+				<observation>
+					<value>
+						<label>Day Supply*</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="subAllowed">
+			<act moodCode="EVN" classCode="ENTRY">
+
+				<observation>
+					<value>
+						<label>Substitution Allowed</label>
+						<CE />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="dispenseFromOffice">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>Dispense from Office</label>
+						<CE />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship name="comment" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Comment</label>
+						<ED />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship name="status" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<text>
+					<ST>Pending</ST>
+				</text>
+			</act>
+		</relationship>
+		<relationship name="messageId" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<text>
+					<ST></ST>
+				</text>
+			</act>
+		</relationship>
+		<relationship name="overrideWarning" direction="OUT" typeCode="PERT" enabled="false">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Warning Override Comments</label>
+						<ED />
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		 <relationship typeCode="NAME" direction="IN" name="ndcDetails">
+    		<act moodCode="EVN" classCode="ENTRY">
+    			<observation>
+      			 	<value>
+						<label>NDC Details</label>
+						 <CE>
+						 	<label></label>
+						 	<originalText></originalText>
+						 	<displayName></displayName>
+						 	<code></code>
+						 	<codeSystem></codeSystem>	
+						 	<codeSystemName></codeSystemName>					 	
+						 </CE>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship name="diagnosis" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:patient:diagnosis</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>ephr:patient:diagnosis</path>
+					</placeholder>
+				</bind>
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:diagnosis:current</path>
+					</list>
+				</bind>
+				<id />
+				<title>
+					<ST>Diagnosis</ST>
+				</title>
+			</act>
+		</relationship>
+		<relationship name="prescriber" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:assigned</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:assigned</path>
+					</placeholder>
+				</bind>
+				
+				<id />				
+			</act>
+		</relationship>
+		<relationship name="encounter" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>ephr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:encounters:active</path>
+					</list>
+				</bind>
+				<id>
+					<II>
+						<root>#{computeIDRoot(account)}</root>
+						<extension>#{encounter.path}</extension>
+					</II>
+				</id>
+				<title>
+					<ST>Encounter</ST>
+				</title>
+			</act>
+		</relationship>
+		<compute>
+			<type>org.tolven.process.SelectFDBDrug</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="drugCode">
+				<value xsi:type="xs:string"></value>
+			</property>
+			<property name="drugName">
+				<value xsi:type="xs:string"></value>
+			</property>
+			<property name="drugFormularyPath">
+				<value xsi:type="xs:string">echr:admin:drugFormulary:all</value>
+			</property>
+			<property name="allergyPath">
+				<value xsi:type="xs:string">echr:patient:allergies:current~Name</value>
+			</property>
+			<property name="medicationPath">
+				<value xsi:type="xs:string">echr:patient:officeMedicationOrders:active~name,echr:patient:hospitalMedicationOrders:active~name</value>
+			</property>
+		</compute>
+		<compute>
+			<type>org.tolven.process.MessageID</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="action">
+				<value xsi:type="xs:string">prescription</value>
+			</property>
+		</compute>
+		<!-- <compute> <type>org.tolven.process.Prescription</type> <property name="enabled"> <value xsi:type="xs:boolean">true</value> </property> <property name="allergyPath"> <value xsi:type="xs:string">echr:patient:allergies:current</value> </property> <property name="medicationPath"> <value xsi:type="xs:string">echr:patient:medications:active</value> </property> </compute> -->
+	</act>
+	<valueSet name="status">
+		<CE>
+			<displayName>Active</displayName>
+			<code>C0024114</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Refill</displayName>
+			<code>C0024224</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Discontinued</displayName>
+			<code>C0024334</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="dispenseFromOffice">
+		<CE>
+			<displayName>Yes</displayName>
+			<code>C0024444</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>No</displayName>
+			<code>C0024554</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="substitutionAllowed">
+		<CE>
+			<displayName>Yes</displayName>
+			<code>C0024444</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>No</displayName>
+			<code>C0024554</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="refillQualifier">
+		<CE>
+			<displayName>R</displayName>
+			<code>C0034444</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>PRN</displayName>
+			<code>C0044554</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="route">
+		<CE>
+			<displayName>1=by mouth (PO)</displayName>
+			<code>C0547040</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>2=Sublingual (SL)</displayName>
+			<code>C0547041</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>3=Intramuscular (IM)</displayName>
+			<code>C0547042</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>4=Intravenous (IV)</displayName>
+			<code>C0547043</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>5=Subcutaneous (SQ)</displayName>
+			<code>C0547044</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>6=Rectal (R)</displayName>
+			<code>C0547045</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>7=Topical</displayName>
+			<code>C0547046</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>8=Inhalation</displayName>
+			<code>C0547047</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>9=Enteral Tube</displayName>
+			<code>C0547048</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>10=Other</displayName>
+			<code>C0547049</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+
+</trim>

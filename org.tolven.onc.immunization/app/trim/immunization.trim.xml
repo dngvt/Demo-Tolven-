@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:trim:4.0 http://tolven.org/xsd/trim4">
+	<!-- <extends>patientAct</extends> -->
+	<abstract>true</abstract>
+	<name>sbadm/rqo/immunization</name>
+	<page>immunization.xhtml</page>
+	<drilldown>immunizationDD.xhtml</drilldown>
+	<menu>global:cvxImmunizationMenu</menu>
+	<application name="ephr">
+		<instance>ephr:patient:immunization</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:immunization</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="completed">
+			<label language="en">Active</label>
+		</transition>
+		<transition name="nullifiedActive" from="completed" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>
+		<transition name="reviseActive" from="completed" to="completed">
+			<label language="en">Revise</label>
+		</transition>
+	</transitions>
+	<act classCode="SBADM" moodCode="RQO">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:immunization</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:immunization</path>
+			</placeholder>
+		</bind>
+		<id>					
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{immunization.path}</extension>
+				<displayable>false</displayable>
+			</II>
+		</id>
+		<statusCode>completed</statusCode>
+		<text>
+			<label>Instructions</label>
+			<ED />
+		</text>		
+		<effectiveTime>
+			<label>Start time</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<repeatNumber>
+			<INT>
+				<value></value>
+			</INT>
+		</repeatNumber>
+		<observation>
+            <value>
+                <CE>#{immunization.codeCE}</CE>
+            </value>
+        </observation>
+		<substanceAdministration>
+			<doseQuantity>
+				<label>Dose</label>
+				<PQ>
+					<value>#{immunization.dosageQuantity}</value>
+					<unit>ml</unit>
+				</PQ>
+			</doseQuantity>
+		</substanceAdministration>
+		<participation name="author" typeCode="AUT">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:admin:staff:all</path>
+					</list>
+				</bind>
+				<id />
+			</role>
+		</participation>
+		
+		<relationship name="LOTnumber" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<title>
+					<ST>LOT Number</ST>
+				</title>
+				<observation>
+					<value>
+						<ST>#{immunization.lotNumber}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship name="manufacturer" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<title>
+					<ST>Substance Manufacturer</ST>
+				</title>
+				<observation>
+					<value>
+						<label>Manufacturer</label>
+						<ST>#{immunization.manufacturer}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<participation name="receiver" typeCode="SBJ">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:admin:receivers:all</path>
+					</list>
+				</bind>
+				<id />
+			</role>
+		</participation>
+		<relationship name="encounter" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>ephr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:encounters:active</path>
+					</list>
+				</bind>
+				<id>
+					<II>
+						<root>#{computeIDRoot(account)}</root>
+						<extension>#{encounter.path}</extension>
+					</II>
+				</id>
+				<title>
+					<ST>Encounter</ST>
+				</title>
+			</act>
+		</relationship>
+	</act>
+</trim>

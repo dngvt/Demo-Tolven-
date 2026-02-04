@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:trim:4.0 http://tolven.org/xsd/trim4">
+	<name>docclin/evn/surescriptResponse</name>
+	<description>Response from Surescript</description>
+	<page>surescriptResponse.xhtml</page>
+	<drilldown>surescriptResponseDD.xhtml</drilldown>
+	<menu>global:surescriptResponseMenu</menu>	
+	<application name="echr">
+		<instance>echr:responses</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act moodCode="EVN" classCode="OBS">
+		<relationship typeCode="APND" direction="IN" name="sample">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>
+					<value>
+						<label>sample</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<compute>
+			<type>org.tolven.process.InsertResponse</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">true</value>
+			</property>
+		</compute>
+	</act>
+</trim>

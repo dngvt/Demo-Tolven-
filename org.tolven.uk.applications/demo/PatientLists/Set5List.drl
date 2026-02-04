@@ -1,0 +1,45 @@
+package GlyburideDiabetes1
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//Demographics:                      all patients, all genders
+//Problem:                           Diabetes Mellitus, Type 2
+//Medication:                        glyburide
+
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "GlyburideDiabetes1 list determination"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $msMedicationList: MenuStructure( path == "echr:patient:medications:active" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    eval( app.onList($mdPatient, $msProblemList, "lower(string01) like '%diabetes mellitus type 2%'") )
+    eval( app.onList($mdPatient, $msMedicationList, "lower(string01) like '%glyburide%'") )
+  then
+    insert (new PatientFact( $mdPatient, "GlyburideDiabetes1Fact"));
+    app.info( "*** FIRING GlyburideDiabetes1 PROCESS ***" );
+end
+
+rule "GlyburideDiabetes1 list generation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    PatientFact( name=="GlyburideDiabetes1Fact", patient==$mdPatient ) 
+    $msList: MenuStructure( role == "list", path == "echr:patients:GlyburideDiabetes1" )
+  then
+    app.createReferenceMD( $mdPatient, $msList);
+    app.info( "*** FIRING GlyburideDiabetes1 LIST ***" );
+end
+

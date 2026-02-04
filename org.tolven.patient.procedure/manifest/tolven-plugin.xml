@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd"
+	id="org.tolven.patient.procedure" version="2.1.2" vendor="Tolven">
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+		<import plugin-id="org.tolven.component.tolvenlocale" />
+		<import plugin-id="org.tolven.component.tolvenlocale_en" />
+	</requires>
+	
+	<!-- In most case, you plugin will be included in the development library which will allow others to compile and debug against your code. -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<extension-point id="applications" parent-plugin-id="org.tolven.component.application" parent-point-id="applications">
+		<parameter-def id="dir" default-value="app" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension-point id="trims" parent-plugin-id="org.tolven.component.application" parent-point-id="trims">
+		<parameter-def id="dir" default-value="app/trim" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="procedure-drilldownDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.procedure" />
+		<parameter id="extension-point" value="procedure-drilldownDirectory" />
+		<parameter id="targetWebDirectory" value="drilldown" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="procedure-drilldownDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/drilldown" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="procedure-wizardDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.procedure" />
+		<parameter id="extension-point" value="procedure-wizardDirectory" />
+		<parameter id="targetWebDirectory" value="wizard" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="procedure-wizardDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/wizard" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="procedure-fiveDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.procedure" />
+		<parameter id="extension-point" value="procedure-fiveDirectory" />
+		<parameter id="targetWebDirectory" value="five" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="procedure-fiveDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/five" multiplicity="none-or-one" />
+	</extension-point>
+	<extension id="application-locale" plugin-id="org.tolven.component.tolvenlocale" point-id="application-locale">
+		<parameter id="application-name" value="echr"></parameter>
+		<parameter value="locale/patient-procedure-locale.properties" id="properties-file" />
+	</extension>
+
+</plugin>

@@ -1,0 +1,175 @@
+
+	var VTEX = [false, false, false, false, false, false];
+	var VTEN = [false, false, false, false, false, false];
+	var VTED = [false, false, false, false, false, false];
+        var grpName ;
+	function qr1Init(qualityMeasureValue,operationType,VTEIndex){
+           var qualityMeasureStatus = qualityMeasureValue;
+	    var grp = document.getElementsByName(qualityMeasureValue.name);
+           var i = qualityMeasureValue.id.replace(qualityMeasureValue.name+":","");
+            grpName  = qualityMeasureValue.name.split(":")[0];
+
+//alert("..2.."+grpName);
+           var lastValue = (i == (grp.length -1)) ? true : false;
+          //if the selected value is Exclusion
+  
+        
+           if(operationType == "X") { 
+              if(lastValue) {
+               unCheckAllX(grp,i, VTEIndex);
+              } else {
+               markX(grp,i, VTEIndex);
+              }
+           } else if(operationType ==  "D") { 
+		if(lastValue) {
+               unCheckAllD(grp,i, VTEIndex);
+              } else {
+               markD(grp,i, VTEIndex);
+              }
+         
+           } else  if(operationType == "N") {
+             if(lastValue) {
+               unCheckAllN(grp,i, VTEIndex);
+              } else {
+               markN(grp,i, VTEIndex);
+              }
+           } 
+		 
+	}
+
+        function unCheckAllX(grp,i, VTEIndex) {
+		 unCheckAll(grp, VTEIndex, VTEX);
+		return true;
+	} 
+
+	function unCheckAllN(grp,i, VTEIndex) {
+		 
+		unCheckAll(grp, VTEIndex, VTEN)
+		return true;
+	} 
+	
+	function unCheckAllD(grp,i, VTEIndex) {
+		 
+		unCheckAll(grp, VTEIndex, VTED)
+		return true;
+	}
+	
+	function unCheckAll(grp, VTEIndex, stateArray) {
+		if(grp[grp.length - 1].checked){
+			for (var i = 0; i < grp.length - 1; i++) {
+				grp[i].checked = false;
+			}
+			stateArray[VTEIndex] = false;
+		}
+		repaintResult();
+		return true;
+	} 
+	
+
+        function markX(grp,i, VTEIndex) {	
+                markIt(i, VTEIndex, grp, VTEX)
+		return true;
+	}
+
+	function markD(grp,i, VTEIndex) {	
+        	markIt(i, VTEIndex, grp, VTED)
+		return true;
+ 
+	} 
+	
+	function markN(grp,i, VTEIndex) {	
+	      markIt(i, VTEIndex, grp, VTEN)
+	      return true;
+	}
+
+
+	function markIt(i, VTEIndex, grp, stateArray) {	
+ 
+		if(!grp[i].checked){
+		    var lastOne = true;
+			for (var j = 0; j< grp.length - 1; j++) {
+				if(grp[j].checked) {
+					lastOne = false;
+	    			break;
+				}
+			}
+			
+			if(lastOne) {
+				stateArray[VTEIndex] = false;
+			 	repaintResult();
+				return true;
+			}
+		}
+	
+	       stateArray[VTEIndex] = true;
+	       grp[grp.length - 1].checked = false;
+	       repaintResult();
+	       return true;
+	}
+
+	 function repaintResult(){
+ 
+	   var r = "";
+ 
+		r += getResult(document.getElementsByName(grpName +":VTE1N"), 0, "D");
+		//alert("....1"+grpName);
+		document.getElementById(grpName +":VTE_Prophylaxis").value = getResult(document.getElementsByName(grpName +":VTE1N"), 0, "D");
+ 
+		r += getResult(document.getElementsByName(grpName +":VTE2N"), 1, "D");
+
+		document.getElementById(grpName +":ICU_VTE_Prophylaxis").value = getResult(document.getElementsByName(grpName +":VTE2N"), 1, "D");
+ 
+
+		r += getResult(document.getElementsByName(grpName +":VTE3N"), 2, "I");
+		
+		document.getElementById(grpName +":Anticoagulation_Overlap_Therapy").value = getResult(document.getElementsByName(grpName +":VTE3N"), 2, "I");
+ 
+		r += getResult(document.getElementsByName(grpName +"VTE4N"), 3, "I");
+ 
+		document.getElementById(grpName +":VTE_UFH").value = getResult(document.getElementsByName(grpName +":VTE4N"), 3, "I");
+
+		r += getResult(document.getElementsByName(grpName +":VTE5N"), 4, "I");
+
+		document.getElementById(grpName +":Discharge_Instructions").value = getResult(document.getElementsByName(grpName +":VTE5N"), 4, "I");
+ 
+		r += getResult(document.getElementsByName(grpName +":VTE6N"), 5, "I");
+
+		document.getElementById(grpName +":VTE_Potentially_Preventable").value =  getResult(document.getElementsByName(grpName +":VTE6N"), 5, "I");
+
+		document.getElementById(grpName+":result").value = r;
+ 
+	}
+
+      function getResult(grp, VTEIndex, defValue){
+	    var r = "";
+	  
+	    if (VTEX[VTEIndex]) {
+                r="X";
+	    	VTEN[VTEIndex] = false;
+	    	for (var i = 0; i < grp.length; i++) {
+			 //grp[i].disabled = true;
+			 grp[i].checked = false;
+		 }
+	    } else {
+	    	for (var i = 0; i < grp.length; i++) {
+			 grp[i].disabled = false;
+		}
+
+		 if (VTEN[VTEIndex]) {
+			r="N";
+                   
+		 } else if (VTED[VTEIndex]) {
+                   
+	    	        r="D";
+	    	} else { 
+                  
+	    		r= defValue;
+	    	}
+	    }
+	    return r;
+      }
+
+ 
+	
+	
+	

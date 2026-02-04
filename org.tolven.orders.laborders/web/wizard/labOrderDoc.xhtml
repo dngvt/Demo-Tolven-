@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+      
+	<head>
+	    <title>Laboratory Order Wizard</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	
+	<body>
+	    <ui:composition>
+			<h:inputHidden id="computeEnable"  value="#{trim.trim.act.computes[0].property['enabled']}" converter="javax.faces.Boolean"/>			
+		 	<h:inputHidden id="computeTemplate" value="#{trim.trim.act.computes[0].property['template']}" />
+		 	<h:inputHidden id="computePosition" value="#{trim.trim.act.computes[0].property['position']}" />					
+		 	<h:inputHidden id="computeAction" value="#{trim.trim.act.computes[0].property['action']}" />	
+		 	<h:inputHidden id="computeListPath" value="#{trim.trim.act.computes[0].property['listPath']}" />
+		 	
+			<c:set var="hasOrders" value="false"/>
+		 		
+			<div id="#{menu.elementLabel}:popupGrids">
+				<div id="#{menu.elementLabel}:#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}" class="popupgrid"/>          
+			</div>
+			<c:forEach var="rel" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="relIndex">
+			<c:set var="hasOrders" value="true"/>
+			<wiz:step title="#{trim.trim.act.computes[0].property['arType']}" >
+				<wiz:body>
+					<ui:include src="labOrder.xhtml">
+						<!--ui:param name="status" value="thisParamIsNotNeeded"/-->
+					</ui:include>
+					<c:forEach var="associationCompute" items="#{rel.act.computes}" varStatus="computeIndex">
+					<c:if test="#{associationCompute.property['template'] =='associatedDiagnosis'}" >
+						<ui:include src="associatedDiagnoses.xhtml">
+							<ui:param name="actRelation" value="#{rel}"/>
+		           			<ui:param name="compute" value="#{associationCompute}"/>
+		           			<ui:param name="computeIndex" value="#{computeIndex.index}"/>
+			     			<ui:param name="actIndex" value="#{relIndex.index+1}"/>
+			     		</ui:include>	
+					</c:if>
+					<c:if test="#{associationCompute.property['template'] =='associatedProblem'}">
+						<ui:include src="associatedProblems.xhtml">
+							<ui:param name="actRelation" value="#{rel}"/>
+		           			<ui:param name="compute" value="#{associationCompute}"/>
+		           			<ui:param name="computeIndex" value="#{computeIndex.index}"/>
+			     			<ui:param name="actIndex" value="#{relIndex.index+1}"/>
+			     		</ui:include>	
+					</c:if>			
+				</c:forEach>			
+				</wiz:body>								
+			</wiz:step>
+			</c:forEach>
+			<c:if test="#{hasOrders == 'false'}">
+			<script language="JavaScript" type="text/javascript">
+				// <![CDATA[
+				openTemplate('#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}','#{menu.elementLabel}:#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}', 'saveLabOrder', '#{menu.elementLabel}', 0);		
+				// ]]>			
+			</script>
+			<div id="addNewOrderAnchor" class="widgetAction">
+				<a onclick="openTemplate('#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}','#{menu.elementLabel}:#{top.accountType}:#{trim.trim.act.computes[0].property['listPath']}', 'saveLabOrder', '#{menu.elementLabel}', 0)" href="#">Select Laboratory Order</a>					
+			</div>
+			</c:if>
+			<ui:include src="labOrderExt.xhtml"/>
+			<ui:include src="selectEncounter.xhtml"/>
+		</ui:composition>
+	</body>
+</html>

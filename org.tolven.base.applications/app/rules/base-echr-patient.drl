@@ -1,0 +1,67 @@
+package base_echr_patient
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+/**
+ * Identify the patient when the patient is created in this transaction
+ */
+rule "Insert patient as patient model"
+	when
+		$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+		$mdPatient: MenuData( reference==null, menuStructure == $msPatient )
+		not org.tolven.model.Patient( placeholder == $mdPatient )
+	then
+		insert( new org.tolven.model.Patient( $mdPatient, now ));
+end
+
+/**
+ * Identify the patient, if one occurs in this transaction. Only one, unique patient object gets created.
+ */
+rule "Identify Patient based on activity related to the patient"
+	when
+		/* Any activity occurred on some patient */
+		$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+		$md: MenuData( $mdPatient: parent01!=null, parent01.menuStructure == $msPatient)
+		not org.tolven.model.Patient( placeholder == $mdPatient )
+	then
+		insert( new org.tolven.model.Patient( $mdPatient, now ));
+end
+
+/**
+ * Add Patient to all patients list, except for VIP patients
+ */
+rule "Add patient to patient list"
+	when
+		$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+		$msPatientAll: MenuStructure( path == "echr:patients:all" )
+		$mdPatient: MenuData( reference==null, menuStructure == $msPatient, actStatus!="ABORTED", actStatus!="nullified" )
+		eval( !isVIP($mdPatient.getField( "vip")) )
+	then
+		MenuData mdPatList = app.createReferenceMD( $mdPatient, $msPatientAll );
+		mdPatList.addPhrase( $mdPatient.getStringField("lastName"), "family", "en_US" );
+		mdPatList.addPhrase( $mdPatient.getStringField("firstName"), "given", "en_US" );
+		mdPatList.addPhrase( $mdPatient.getStringField("middleName"), "given", "en_US" );
+		mdPatList.addPhrase( $mdPatient.getStringField("sex"), "gender", "en_US" );
+		insert( mdPatList );
+end
+

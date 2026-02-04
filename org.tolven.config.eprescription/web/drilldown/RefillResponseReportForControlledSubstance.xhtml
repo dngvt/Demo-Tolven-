@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+	    <title>Refill Response -Report</title>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body >
+ 	 	<ui:composition>
+ 			<div id="header">
+				<h2 style="text-align:center;">Prescription Report</h2>
+			</div>
+			<c:set var="md" value="#{sureAct.md}" />
+			<c:set var="pat" value="#{sureAct.patient}"/>
+			<c:set var="prescriber" value="#{trim.trim.act.relationship['prescriber']}"/>
+			<c:set var="medPrescribed" value="#{trim.trim.act.relationship['MedicationPrescribed']}"/>
+		<table cellspacing="1" cellpadding="1" width="100%">
+		 <tr>
+		 	<td width="50%">
+		 		<table width="100%">
+		 			<c:forEach items="#{trim.trim.act.relationship['prescriber'].act.observation.values}" var="prescriber" varStatus="status">
+		 			<c:if test="#{prescriber.label.value == 'ClinicName'}">
+		 			<tr>
+		 				<td><h:outputText style="font-size:10px;" value="#{prescriber.ST.value}"></h:outputText></td>
+		 			</tr>
+		 			</c:if>
+		 			<c:if test="#{prescriber.label.value == 'Prescriber FirstName'}">
+		 			<tr>
+		 				<td>
+		 					<c:forEach items="#{trim.trim.act.participation['subject'].role.player.name.EN['L'].parts}" var="pres" varStatus="status">
+								<h:outputText style="font-size:10px;" value="#{pres.ST.value} "></h:outputText>
+							</c:forEach>
+						</td>
+		 			</tr>
+		 			</c:if>
+		 			<c:if test="#{prescriber.label.value == 'TE'}">
+		 			<tr>
+		 				<td><h:outputText style="font-size:10px;" value="Tel : #{prescriber.ST.value}"></h:outputText></td>
+		 			</tr>
+		 			</c:if>
+		 			<c:if test="#{prescriber.label.value == 'FX'}">
+		 			<tr>
+		 				<td><h:outputText style="font-size:10px;" value="Fax : #{prescriber.ST.value}"></h:outputText></td>
+		 			</tr>
+		 			</c:if>
+		 			<c:if test="#{prescriber.label.value == 'Email'}">
+		 			<tr>
+		 				<td><h:outputText style="font-size:10px;" value="#{prescriber.ST.value}"></h:outputText></td>
+		 			</tr>
+		 			</c:if>
+		 			</c:forEach>
+		 		</table>
+		 	</td>
+		 	<td width="50%">
+		 		<table width="100%">
+		 			<tr>
+		 				<td style="text-align: right;" width="20%"><h:outputText style="font-size:10px;" value="Name :"></h:outputText></td>
+		 				<td style="text-align: left;" width="80%"><h:outputText style="font-size:10px;" value="#{pat.string02} #{pat.string03} #{pat.string01}"/></td>
+		 			</tr>
+		 			<tr>
+		 				<td style="text-align: right;" width="20%"><h:outputText style="font-size:10px;" value="DOB:"></h:outputText></td>
+		 				<td style="text-align: left;" width="80%"><h:outputText style="font-size:10px;" value="#{pat.date01}"/></td>
+		 			</tr>
+		 			<tr>
+		 				<td style="text-align: right;" width="20%"><h:outputText style="font-size:10px;" value="Address :"></h:outputText></td>
+		 				<td style="text-align: left;" width="80%"><h:outputText style="font-size:10px;" value="#{sureAct.addressLine1} #{sureAct.addressLine2} #{sureAct.patientState} #{sureAct.patientZip} "/></td>
+		 			</tr>
+		 			<tr>
+		 				<td style="text-align: right;" width="20%"><h:outputText style="font-size:10px;" value="Date :"></h:outputText></td>
+		 				<td style="text-align: left;" width="80%"><h:outputText style="font-size:10px;" value="#{sureAct.date}"/></td>
+		 			</tr>
+		 		</table>
+		 	</td>
+		 </tr>
+		 <tr>
+		 	<td>
+		 		<br/>
+		 		<br/>
+		 	</td>
+		 </tr>
+		 <tr>
+		 	<td colspan="2">
+		 		<table width="100%">
+		 			<c:forEach items="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values}" var="medPrescribed">
+		 			<c:if test="#{medPrescribed.label.value == 'DrugDescription'}">
+		 			<tr>
+		 				<td width="30%"><h:outputText style="font-size:12px;font-weight:bold;" value="Drug : "></h:outputText></td>
+		 				<td width="70%"><h:outputText style="font-size:10px;" value="#{medPrescribed.ST.value}"/></td>
+		 			</tr>
+		 			</c:if>
+		 			</c:forEach>
+		 			<tr>
+		 				<td width="30%"><h:outputText style="font-size:12px;font-weight:bold;" value="Directions : "></h:outputText></td>
+		 				<td width="70%"><h:outputText style="font-size:10px;" value="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values[5].ST.value}"/></td>
+		 			</tr>
+		 			<c:forEach items="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values}" var="medPrescribed">
+		 			<c:if test="#{medPrescribed.label.value == 'Quantity(value)'}">
+		 			<tr>
+		 				<td width="30%"><h:outputText style="font-size:12px;font-weight:bold;" value="Quantity : "></h:outputText></td>
+		 				<td width="70%"><h:outputText style="font-size:10px;" value="#{medPrescribed.ST.value}"/></td>
+		 			</tr>
+		 			</c:if>
+		 			<c:if test="#{medPrescribed.label.value == 'Refills(value)'}">
+		 			<tr>
+		 				<td width="30%"><h:outputText style="font-size:12px;font-weight:bold;" value="Refills : "></h:outputText></td>
+		 				<td width="70%"><h:outputText style="font-size:10px;" value="#{medPrescribed.ST.value}"/></td>
+		 			</tr>
+		 			</c:if>
+		 			</c:forEach>
+		 			<c:forEach items="#{trim.trim.act.relationship['prescriber'].act.observation.values}" var="prescriber">
+		 			<c:if test="#{prescriber.label.value == 'DEA Number'}">
+		 			<tr>
+		 				<td width="30%"><h:outputText style="font-size:12px;font-weight:bold;" value="DEA # : "></h:outputText></td>
+		 				<td width="70%"><h:outputText style="font-size:10px;" value="#{prescriber.ST.value}"/></td>
+		 			</tr>
+		 			</c:if>
+		 			</c:forEach>
+	 			 	<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[3].ST.value != ''}">
+						<tr>
+							<td>
+								<h:outputText value="RxReference Number :" style="font-size:12px;font-weight:bold;"/>
+							</td>
+							<td>
+								<h:outputText id="rxReferenceNumber"  style="font-size:10px;" value="#{trim.trim.act.relationship['header'].act.observation.values[3].ST.value}"/>
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="#{trim.trim.act.relationship['response'].act.observation.values[1].ST.value != ''}">
+						<tr>
+							<td>
+								<h:outputText value="#{trim.trim.act.relationship['response'].act.observation.values[1].label.value} :" style="font-size:12px;font-weight:bold;"/>
+							</td>
+							<td>
+								<h:outputText id="response"  style="font-size:10px;" value="#{trim.trim.act.relationship['response'].act.observation.values[1].ST.value}"/>
+							</td>
+						</tr>
+					</c:if>
+		 		</table>
+		 		<br/>
+		 	</td>
+		 </tr>
+		 <tr>
+		 	<td colspan="2" >
+		 		<table  width="100%">
+		 			<tr >
+		 				<td width="70%" align="right" ><h:outputText style="font-size:15px;font-weight:bold;padding-right:10px;" value="Signature : "></h:outputText></td>
+		 				<td width="30%">........................................</td>
+		 			</tr>
+		 			<tr>
+		 				<td width="70%" align="right"><h:outputText style="font-size:15px;font-weight:bold;padding-right:10px;" value="Print Name : " ></h:outputText></td>
+		 				<td width="30%">........................................</td>
+		 			</tr>
+		 		</table>
+		 	</td>
+		 </tr>
+		 <tr>
+		 	<td colspan="2">
+		 		<h:outputText style="font-size:8px;" value="Please note that this eRx is in response to the Refill Request for a Controlled Substance"/>
+		 	</td>
+		 </tr>
+		
+		 <tr>
+		 	<td>
+		 	   <h:outputText style="font-size:8px;" value="INTERCHANGE is mandated unless the practitioner writes the words 'NO SUBSTITUTION' in this space"/>
+		 	</td>
+		 	<td style="text-align:right;">
+		 		<h:outputText style="font-size:8px;" value="(c) 2010, Health Records Framework , M.D"/>
+		 	</td>
+		 </tr>
+		</table>
+		</ui:composition>
+	</body>
+</html>		

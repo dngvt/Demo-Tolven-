@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<extends>patientAct</extends>
+	<name>obs/evn/overCounter</name> 
+	<description>Overcounter Medication</description>
+	<page>overCounter.xhtml</page>
+	<drilldown>overCounterDD.xhtml</drilldown>
+	<menu>global:patientMedicationMenu</menu> 	
+	<application name="ephr">
+		<instance>ephr:patient:wip</instance>
+		<wip>ephr:activity:all</wip>
+	</application>	
+	<act classCode="REG" moodCode="EVN">
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:currentMedication</path>
+			</placeholder>
+		</bind>
+		<code>
+			<CD>
+				<code>C0017494</code>
+				<codeSystemName>UMLS</codeSystemName>
+				<codeSystemVersion>2007AA</codeSystemVersion>
+			</CD>
+		</code>
+		<title>
+			<ST>Over Counter Medication</ST>
+		</title>
+		<relationship typeCode="NAME" direction="IN" name="overCounter">
+        	<act classCode="OBS" moodCode="EVN">
+        		<title>
+    				<ST>Over Counter Medication</ST>
+    			</title>
+    			<effectiveTime>
+					<IVL_TS>
+						<low>
+							<label>Start Date</label>
+							<TS>
+								<value>#{TS(now)}</value>
+							</TS>
+						</low>
+						<high>
+							<label>End Date</label>
+							<TS>
+								<value>#{TS(now)}</value>
+							</TS>
+						</high>
+					</IVL_TS>
+				</effectiveTime>
+	        	<observation>	        		                
+	                <value>
+	                	<label>Medication Name</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                    <label>Medication Date</label>
+	                   	<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+	                </value>	                
+	                <value>
+	                	<label>Strength</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                	<label>Frequency</label>
+	                	<INT><value>0</value></INT>
+	                </value>
+	                <value>
+	                	<label>Route</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                    <label>Start Date</label>
+	                   	<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+	                </value>
+	                <value>
+	                    <label>End Date</label>
+	                   	<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+	                </value>	                
+	                <value>
+	                	<label>Status</label>
+	                	<valueSet>status</valueSet>	                	
+	                </value>
+	                <value>
+    	 				<label>Message Id</label>
+    	 				<ST></ST>
+    	 			</value>
+    	 			<value>
+    	 				<label>Message From FDB</label>
+    	 				<ST></ST>
+    	 			</value>
+    	 			<value>
+    	 				<label>Medication Id</label>
+    	 				<INT><value>0</value></INT>
+    	 			</value>    	 			    	 			                	                
+	            </observation>
+	        </act>
+	    </relationship>	       
+	    <compute>
+        	<type>org.tolven.process.MessageID</type>
+        	<property name="enabled">
+            	<value xsi:type="xs:boolean">true</value>
+        	</property>
+   		</compute> 	
+	</act>
+	<valueSet name="status"> 
+ 		<CE>
+ 			<displayName>Active</displayName>
+ 			<code>C0024114</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE> 		
+ 		<CE>
+ 			<displayName>Discontinued</displayName>
+ 			<code>C0024334</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet>
+</trim>

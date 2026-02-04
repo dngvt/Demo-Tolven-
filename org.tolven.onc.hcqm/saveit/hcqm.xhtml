@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Test HCQM Trim data entry</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+
+		<wiz:step title="#{msg.Identity}">
+			<wiz:body>	
+	    		<h:panelGrid columns="2">
+					<h:outputText value="Patient Name:"/>
+					<h:outputText value="#{menu.menuDataItem.parent01.string01}, #{menu.menuDataItem.parent01.string02} #{menu.menuDataItem.parent01.string03}"/>
+					<h:outputText value="DOB: "/>					
+					<h:outputText value="#{menu.menuDataItem.parent01.date01}"/>										
+					<h:outputText value="Hospital:"/>
+					<h:outputText value="#{top.accountTitle} "/>
+					<h:outputText value="Admit Date: "/>					
+					<h:outputText value="#{encounter.effectiveTimeLow}"/>						
+					<h:outputText value="Discharge Date: "/>					
+					<h:outputText value="#{menu.menuDataItem.date01}"/>	
+				</h:panelGrid>
+			</wiz:body>
+		</wiz:step>		
+	
+		
+		
+		<wiz:step title="Enter #{menu.menuDataItem.string01}" >
+			<wiz:body>
+				<wiz:group title="#{trim.trim.act.title.ST}">
+						<table width="100%" cellpadding="5">
+							<tr>
+								<td width="20%">
+									<h:outputText value="#{trim.trim.act.relationship['cqm1'].act.code.CD.code}: "/>
+								</td>
+								<td width="20%">
+									<h:inputText id="measureresult" value="#{trim.trim.act.relationship['cqm1'].act.observation.value.ST.value}" />
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="#{trim.trim.act.relationship['cqm1'].act.relationship['edvalue'].act.observation.value.PQ.label.value}"/>
+								</td>
+								<td>
+									 <h:inputText id="measurevalue" value="#{trim.trim.act.relationship['cqm1'].act.relationship['edvalue'].act.observation.value.PQ.value}" />
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+				</wiz:group>
+
+			<wiz:group title="checkbox test">
+			<wiz:check id="unchkdbox" value="#{trim.trim.act.relationship['testbox1'].act.independentInd}" >
+			<h:outputText value="#{trim.trim.act.relationship['testbox1'].act.title.ST}" />
+			</wiz:check>
+			<wiz:check id="chkdbox" value="#{trim.trim.act.relationship['testbox2'].act.independentInd}" >
+			<h:outputText value="#{trim.trim.act.relationship['testbox2'].act.title.ST}" />
+			</wiz:check>
+			</wiz:group>
+
+				<wiz:group title="Date of observation">
+					<trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short"/>
+				</wiz:group>				
+				
+			</wiz:body>
+			<wiz:help>
+				<h1>Quality Review</h1>
+				<p>Help needed here.</p>
+			</wiz:help>
+		</wiz:step>
+
+	</ui:composition>
+</body>
+</html>

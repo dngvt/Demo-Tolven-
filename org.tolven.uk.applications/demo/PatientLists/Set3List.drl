@@ -1,0 +1,58 @@
+package AvanCH03
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//Demographics:                          patient age >18 years old
+//Problem:                               heart failure
+//Medication:                            Avandia
+//Laboratory Test Results:               Total cholesterol:        >200 mg/dl    OR
+//                                       HDL-cholesterol:          <40 mg/dl     OR
+//                                       LDL-cholesterol:          >100 mg/dl    OR
+//                                       Triglycerides:            >150 mg/dl    OR
+
+
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "AvanCH03 list determination"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $msLabResultList: MenuStructure( path == "echr:patient:labresults:completed" )
+    $msMedicationList: MenuStructure( path == "echr:patient:medications:active" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    org.tolven.model.Patient( placeholder == $mdPatient, ageInYears > 18 )
+    eval(((app.onList($mdPatient, $msLabResultList, "lower(string02) like '%total cholesterol%'") && app.onList($mdPatient, $msLabResultList, "pqvalue01 > 200")) ||
+         (app.onList($mdPatient, $msLabResultList, "lower(string02) like '%hdl cholesterol%'") && app.onList($mdPatient, $msLabResultList, "pqvalue01 < 40")) ||
+         (app.onList($mdPatient, $msLabResultList, "lower(string02) like '%ldl cholesterol%'") && app.onList($mdPatient, $msLabResultList, "pqvalue01 > 100")) ||
+         (app.onList($mdPatient, $msLabResultList, "lower(string02) like '%triglycerides%'") && app.onList($mdPatient, $msLabResultList, "pqvalue01 > 150"))) &&
+         app.onList($mdPatient, $msMedicationList, "lower(string01) like '%avandia%'") && 
+         app.onList($mdPatient, $msProblemList, "lower(string01) like '%heart failure%'")
+        )
+  then
+    insert (new PatientFact( $mdPatient, "AvanCH03Fact"));
+    app.info( "*** FIRING AvanCH03 PROCESS ***" );
+    
+end
+
+rule "AvanCH03 list generation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    PatientFact( name=="AvanCH03Fact", patient==$mdPatient ) 
+    $msList: MenuStructure( role == "list", path == "echr:patients:AvanCH03" )
+  then
+    app.createReferenceMD( $mdPatient, $msList);
+    app.info( "*** FIRING AvanCH03 LIST ***" );
+end
+

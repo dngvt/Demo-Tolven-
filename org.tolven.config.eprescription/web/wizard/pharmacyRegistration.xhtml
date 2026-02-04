@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>#{trim.description}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <ui:composition>
+	<wiz:step title="#{msg.GettingStarted}" >
+		<wiz:body>
+				<p>Manually add Pharmacy- This wizard will register pharmacies that receive prescriptions via FAX.</p>
+				<p>Click Next to Start.</p>
+		</wiz:body>		
+		<wiz:help>
+			<h1>Getting Started</h1>
+			<p>Help provides additional information about each page</p>
+			<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+			If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+			Once submitted, you will not be able to Cancel the form.</p>
+		</wiz:help>
+	</wiz:step>
+	<wiz:step title="#{trim.trim.act.title.ST.value}">
+		<wiz:body>
+			<wiz:group title="Details">
+				<h:panelGrid columns="2" cellpadding="6;">			
+					#{trim.trim.act.relationship['registration'].act.observation.values[0].label.value}
+					<h:inputText id="NCPDPID" value="#{trim.trim.act.relationship['registration'].act.observation.values[0].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[1].label.value}
+					<h:inputText id="StoreName" value="#{trim.trim.act.relationship['registration'].act.observation.values[1].ST.value}" size="20"/>
+				</h:panelGrid>
+			</wiz:group>
+			<wiz:group title="Address">
+				<h:panelGrid columns="2" cellpadding="5;">			
+					#{trim.trim.act.relationship['registration'].act.observation.values[2].label.value}
+					<h:inputText id="AddressLine1" value="#{trim.trim.act.relationship['registration'].act.observation.values[2].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[3].label.value}
+					<h:inputText id="AddressLine2" value="#{trim.trim.act.relationship['registration'].act.observation.values[3].ST.value}" size="20"/>					
+					#{trim.trim.act.relationship['registration'].act.observation.values[4].label.value}
+					<h:inputText id="City" value="#{trim.trim.act.relationship['registration'].act.observation.values[4].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[5].label.value}
+					<h:inputText id="State" value="#{trim.trim.act.relationship['registration'].act.observation.values[5].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[6].label.value}
+					<h:inputText id="Zip" value="#{trim.trim.act.relationship['registration'].act.observation.values[6].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[7].label.value}
+					<h:inputText id="Fax" value="#{trim.trim.act.relationship['registration'].act.observation.values[7].ST.value}" size="20"/>
+				</h:panelGrid>
+			</wiz:group>
+			<wiz:group title="Other Details">
+				<h:panelGrid columns="2" cellpadding="5;">			
+					#{trim.trim.act.relationship['registration'].act.effectiveTime.IVLTS.low.label.value}
+					<trim:TS id="ActiveStartTime" value="#{trim.trim.act.relationship['registration'].act.effectiveTime.IVLTS.low.TS}" dateStyle="short"/>
+					#{trim.trim.act.relationship['registration'].act.effectiveTime.IVLTS.high.label.value}
+					<trim:TS id="ActiveEndTime" value="#{trim.trim.act.relationship['registration'].act.effectiveTime.IVLTS.high.TS}" dateStyle="short"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[8].label.value}
+					<h:inputText id="PartnerAccount" value="#{trim.trim.act.relationship['registration'].act.observation.values[8].ST.value}" size="20"/>
+					#{trim.trim.act.relationship['registration'].act.observation.values[9].label.value}
+					<trim:TS id="LastModifiedDate" value="#{trim.trim.act.relationship['registration'].act.observation.values[9].TS}" dateStyle="short"/>
+				</h:panelGrid>
+			</wiz:group>
+		</wiz:body>
+	</wiz:step>
+			
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/drugFormulary</name>
+	<description>Drug Formulary</description>
+	<page>drugFormulary.xhtml</page>
+	<drilldown>drugFormularyDD.xhtml</drilldown>
+	<menu>global:drugFormularyMenu</menu>
+	<tolvenId application="#{knownType}" accountId="#{account.id}" />
+	<application name="echr">
+		<instance>echr:drugFormulary</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<application name="ephr">
+		<instance>ephr:drugFormulary</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="active">
+			<label language="en">Active</label>
+		</transition>
+		<transition name="nullifiedActive" from="active" to="nullified">
+			<label language="en">Nullified</label>
+		</transition>
+	</transitions>
+	<act classCode="REG" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:drugFormulary</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:drugFormulary</path>
+			</placeholder>
+		</bind>
+		<statusCode>active</statusCode>
+		<title>
+			<ST>Drug Formulary</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective time</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<relationship typeCode="NAME" direction="IN" name="drugDetails">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Drug Details</label>
+						<CE>
+							<displayName></displayName>
+							<code></code>
+							<codeSystem></codeSystem>
+							<codeSystemName></codeSystemName>
+							<codeSystemVersion></codeSystemVersion>
+							<translation>
+								<code></code>
+								<codeSystem></codeSystem>
+								<codeSystemName>GenericMedID</codeSystemName>
+								<codeSystemVersion></codeSystemVersion>
+							</translation>
+						</CE>
+					</value>
+					<!--<value>
+						<label>MedID</label>
+						<ST></ST>
+					</value>
+				--></observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="strength">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Strength</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<!--
+		<relationship typeCode="NAME" direction="IN" name="elementLabel">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>ElementLabel</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		-->
+		<compute>
+			<type>org.tolven.process.EditFormularyDrug</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="fdbDrugCode">
+				<value xsi:type="xs:string"></value>
+			</property>			
+		</compute>
+	</act>
+</trim>

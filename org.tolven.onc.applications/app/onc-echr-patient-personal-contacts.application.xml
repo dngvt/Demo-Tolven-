@@ -1,0 +1,51 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+
+	<extends path="echr:patient:personal">
+			<list name="contacts" title="Contacts" page="/five/list.xhtml" visible="true" drilldown=":contact" sequence="2">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{contact.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="20.0" reference="true">
+					<from>#{contact.name}</from>
+				</column>
+				<column name="Phone" width="10.0">
+					<from>#{contact.phone}</from>
+				</column>
+				<column name="Source" width="10.0">
+					<from>#{contact.author.lastName}</from>
+					<from>#{contact.enteredBy}</from>
+				</column>
+				<column name="BusPhone" visible="never">
+					<from>#{contact.busPhone}</from>
+				</column>
+				<column name="City" visible="never">
+					<from>#{contact.city}</from>
+				</column>
+				<column name="State" visible="never">
+					<from>#{contact.state}</from>
+				</column>
+				<column name="Zip" visible="never">
+					<from>#{contact.zip}</from>
+				</column>
+				<column name="AddLine1" visible="never">
+					<from>#{contact.addLine1}</from>
+				</column>
+				<column name="AddLine2" visible="never">
+					<from>#{contact.addLine2}</from>
+				</column>
+				<column name="Relation" visible="never">
+					<from>#{contact.relation}</from>
+				</column>
+				<column name="OtherRelation" visible="never">
+					<from>#{contact.otherRelation}</from>
+				</column>
+				<column name="Email" visible="never">
+					<from>#{contact.email}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:contactMenu">
+					<column name="Contacts" internal="string01" instantiate="true" width="30.0" />
+				</action>
+			</list>
+	</extends>
+</application>

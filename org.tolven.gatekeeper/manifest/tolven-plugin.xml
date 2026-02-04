@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.gatekeeper" version="2.1.20" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+
+	<requires>
+		<import plugin-id="org.tolven.component.ear" />
+		<import plugin-id="org.tolven.component.war" />
+		<import plugin-id="org.tolven.component.faces" />
+		<import plugin-id="org.tolven.library.apache-commons" />
+		<import plugin-id="org.tolven.library.bouncy-castle" />
+		<import plugin-id="org.tolven.library.tolvencommon" />
+		<import plugin-id="org.tolven.shiro" />
+		<import plugin-id="org.tolven.gatekeeper.authorization" />
+		<import plugin-id="org.tolven.opends.config" />
+		<import plugin-id="org.tolven.user" />
+	</requires>
+
+	<!-- EXTENSION POINTS -->
+
+	<!-- DEV EXTENSION POINTS -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<!-- DEV EXTENSION POINTS End -->
+
+
+
+
+
+	<!-- EAR EXTENSION POINTS -->
+
+	<extension-point id="EAR-DECLARATION" parent-plugin-id="org.tolven.component.ear" parent-point-id="ear-declaration" extension-multiplicity="none">
+		<parameter-def id="context-id" default-value="gatekeeper-ear" />
+	</extension-point>
+
+	<!-- EAR Services EXTENSION POINTS -->
+	<extension-point id="EAR-META-INF-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="META-INF-adaptor" />
+	<extension-point id="connectorModuleProduct-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="connectorModuleProduct-adaptor" />
+	<extension-point id="ejbModuleProduct-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="ejbModuleProduct-adaptor" />
+	<extension-point id="libProduct-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="libProduct-adaptor" />
+	<extension-point id="localeModule-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="localeModule-adaptor" />
+	<extension-point id="localeModuleProduct-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="localeModuleProduct-adaptor" />
+	<extension-point id="warModule-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="warModule-adaptor" />
+	<extension-point id="warModuleProduct-adaptor" parent-plugin-id="org.tolven.component.ear" parent-point-id="warModuleProduct-adaptor" />
+	<!-- EAR Services End EXTENSION POINTS -->
+
+	<!-- EAR End EXTENSION POINTS -->
+
+
+
+
+
+	<!-- WAR EXTENSION POINTS -->
+
+	<extension-point id="gatekeeper.rs-WARMODULE-DECLARATION" parent-plugin-id="org.tolven.component.war" parent-point-id="warModule-declaration" extension-multiplicity="none">
+		<parameter-def id="context-id" default-value="gatekeeperrs" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-WARMODULE-DECLARATION" parent-plugin-id="org.tolven.component.war" parent-point-id="warModule-declaration" extension-multiplicity="none">
+		<parameter-def id="context-id" default-value="gatekeeperhtml" />
+	</extension-point>
+
+	<!-- WAR Services -->
+	<extension-point id="WEB-ROOT-FILES-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="WEB-ROOT-FILES-adaptor" />
+	<extension-point id="WEB-INF-FILE-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="WEB-INF-FILE-adaptor" />
+	<extension-point id="WEB-INF-CLASSES-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="WEB-INF-CLASSES-adaptor" />
+	<extension-point id="WEB-INF-LIB-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="WEB-INF-LIB-adaptor" />
+	<extension-point id="webDirectory-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="webDirectory-adaptor" />
+	<extension-point id="filter-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="filter-adaptor" />
+	<extension-point id="filter-mapping-contribution-adaptor" parent-plugin-id="org.tolven.component.war" parent-point-id="filter-mapping-contribution-adaptor" />
+	<!-- WAR Services End -->
+
+	<!-- WAR EXTENSION POINTS End -->
+
+
+
+
+
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="gatekeeper-common-lib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-common-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-common-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-common-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-lib-legacypostgresql" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="legacypostgresql/gatekeeper-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-lib-oracle" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="oracle/gatekeeper-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-client-lib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-client-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-client-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-client-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-web-security" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-web-security.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-rs" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-rs.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-web-web.xml" extension-multiplicity="none">
+		<parameter-def id="file" default-value="web/WEB-INF/web.xml" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-rs-web.xml" extension-multiplicity="none">
+		<parameter-def id="file" default-value="rs/WEB-INF/web.xml" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="gatekeeper-web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-WEB-ROOT-FILES" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/root" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-homeDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/home" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-loginDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/login" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-loginsecurityquestionsDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/loginsecurityquestions" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-imagesDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/images" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-passwordmgrDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/passwordmgr" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-publicDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/public" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-recoverloginpasswordDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/recoverloginpassword" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-registerDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/register" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-resetloginpasswordDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/resetloginpassword" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="gatekeeper.html-stylesDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/styles" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+
+
+
+
+	<!-- EXTENSIONS -->
+
+	<!-- EAR EXTENSIONS -->
+
+	<!-- THIRD-PARTY LIB Extensions -->
+	<extension id="org.tolven.library.apache-commons-commons-beanutils" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.library.apache-commons" />
+		<parameter id="extension-point" value="commons-beanutils" />
+	</extension>
+	<extension id="org.tolven.library.bouncy-castle-bcprov" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.library.bouncy-castle" />
+		<parameter id="extension-point" value="lib" />
+	</extension>
+	<extension id="org.tolven.shiro-shiro-core" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiro-core" />
+	</extension>
+	<extension id="org.tolven.shiro-shiro-web" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiro-web" />
+	</extension>
+	<!-- THIRD-PARTY LIB Extensions End -->
+
+
+
+
+
+	<!-- TOLVEN LIB Extensions -->
+	<extension id="org.tolven.library.tolvencommon-tolvenCommon" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.library.tolvencommon" />
+		<parameter id="extension-point" value="tolvenCommon" />
+	</extension>
+	<extension id="org.tolven.jndi-tolvenJndi" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.jndi" />
+		<parameter id="extension-point" value="tolvenJndi" />
+	</extension>
+	<extension id="gatekeeper-web-security" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-web-security" />
+	</extension>
+	<extension id="gatekeeper-common-lib-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-common-lib" />
+	</extension>
+	<extension id="gatekeeper-lib-legacypostgresql-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-lib-legacypostgresql" />
+		<parameter id="database-code" value="legacypostgresql" />
+		<parameter id="contains-entities" />
+	</extension>
+	<extension id="gatekeeper-lib-oracle-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-lib-oracle" />
+		<parameter id="database-code" value="oracle" />
+		<parameter id="contains-entities" />
+	</extension>
+	<extension id="shiro-lib-legacypostgresql-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiro-lib-legacypostgresql" />
+		<parameter id="database-code" value="legacypostgresql" />
+		<parameter id="contains-entities" />
+	</extension>
+	<extension id="shiro-lib-oracle-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiro-lib-oracle" />
+		<parameter id="database-code" value="oracle" />
+		<parameter id="contains-entities" />
+	</extension>
+	<!-- TOLVEN LIB Extensions End -->
+
+	<!-- EAR EXTENSIONS -->
+
+
+
+
+
+
+	<!-- EJB Extensions -->
+	<extension id="gatekeeper-common-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-common-ejb" />
+	</extension>
+	<extension id="gatekeeper-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-ejb" />
+	</extension>
+	<extension id="shiro-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiro-ejb" />
+	</extension>
+	<!-- EJB EXTENSIONS End -->
+
+
+
+
+
+	<!-- RS WAR EXTENSIONS -->
+
+	<extension id="gatekeeper.rs-warModule-adaptor" plugin-id="org.tolven.gatekeeper" point-id="warModule-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="web-uri" value="gatekeeper-rs.war" />
+		<parameter id="context-root" value="/gatekeeper/rs" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="gatekeeper-rs-WEB-INF-FILE-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-FILE-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-rs-web.xml" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="gatekeeper-rs-WEB-INF-LIB-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-rs" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="WEB-INF-LIB-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiroWEB" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+
+
+
+
+
+
+	<!-- RS WAR FILTER EXTENSIONS -->
+	<extension id="gatekeeper.rs-TransactionFilter" plugin-id="org.tolven.gatekeeper" point-id="filter-adaptor">
+		<parameter id="filter-name" value="TransactionFilter" />
+		<parameter id="filter-class" value="org.tolven.shiro.filter.TransactionFilter" />
+		<parameter id="filter-sequence" value="10" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="gatekeeper.rs-TransactionFilter-contribution" plugin-id="org.tolven.gatekeeper" point-id="filter-mapping-contribution-adaptor">
+		<parameter id="filter-name" value="TransactionFilter" />
+		<parameter id="url-pattern" value="/*" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="gatekeeper.rs-ShiroFilter" plugin-id="org.tolven.gatekeeper" point-id="filter-adaptor">
+		<parameter id="filter-name" value="ShiroFilter" />
+		<parameter id="filter-class" value="org.tolven.shiro.filter.TolvenShiroFilter" />
+		<parameter id="filter-sequence" value="50" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<extension id="gatekeeper.rs-ShiroFilter-contribution" plugin-id="org.tolven.gatekeeper" point-id="filter-mapping-contribution-adaptor">
+		<parameter id="filter-name" value="ShiroFilter" />
+		<parameter id="url-pattern" value="/*" />
+		<parameter id="parent-context-id" value="gatekeeperrs" />
+	</extension>
+	<!-- RS WAR FILTER EXTENSIONS End -->
+
+	<!-- RS WAR EXTENSIONS End -->
+
+
+
+
+
+	<!-- HTML WAR EXTENSIONS -->
+
+	<extension id="gatekeeper.html-warModule-adaptor" plugin-id="org.tolven.gatekeeper" point-id="warModule-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="web-uri" value="gatekeeper-web.war" />
+		<parameter id="context-root" value="/gatekeeper/html" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper-web-WEB-INF-FILE-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-FILE-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-web-web.xml" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-WEB-INF-LIB-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.shiro" />
+		<parameter id="extension-point" value="shiroWEB" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper-web" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-WEB-ROOT-FILES-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-ROOT-FILES-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-WEB-ROOT-FILES" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+
+
+
+
+
+	<!-- HTML WAR WEBDIRECTORY EXTENSIONS -->
+	<extension id="gatekeeper.html-homeDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-homeDirectory" />
+		<parameter id="targetWebDirectory" value="home" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-loginDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-loginDirectory" />
+		<parameter id="targetWebDirectory" value="login" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-loginsecurityquestionsDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-loginsecurityquestionsDirectory" />
+		<parameter id="targetWebDirectory" value="loginsecurityquestions" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-imagesDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-imagesDirectory" />
+		<parameter id="targetWebDirectory" value="images" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-passwordmgrDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-passwordmgrDirectory" />
+		<parameter id="targetWebDirectory" value="passwordmgr" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-publicDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-publicDirectory" />
+		<parameter id="targetWebDirectory" value="public" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-recoverloginpasswordDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-recoverloginpasswordDirectory" />
+		<parameter id="targetWebDirectory" value="recoverloginpassword" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-registerDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-registerDirectory" />
+		<parameter id="targetWebDirectory" value="register" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-resetloginpasswordDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-resetloginpasswordDirectory" />
+		<parameter id="targetWebDirectory" value="resetloginpassword" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-stylesDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.gatekeeper" />
+		<parameter id="extension-point" value="gatekeeper.html-stylesDirectory" />
+		<parameter id="targetWebDirectory" value="styles" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<!-- HTML WAR WEBDIRECTORY EXTENSIONS End -->
+
+
+
+
+
+	<!-- HTML WAR FILTER EXTENSIONS -->
+	<extension id="gatekeeper.html-TransactionFilter" plugin-id="org.tolven.gatekeeper" point-id="filter-adaptor">
+		<parameter id="filter-name" value="TransactionFilter" />
+		<parameter id="filter-class" value="org.tolven.shiro.filter.TransactionFilter" />
+		<parameter id="filter-sequence" value="10" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-TransactionFilter-contribution" plugin-id="org.tolven.gatekeeper" point-id="filter-mapping-contribution-adaptor">
+		<parameter id="filter-name" value="TransactionFilter" />
+		<parameter id="url-pattern" value="/*" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-ShiroFilter" plugin-id="org.tolven.gatekeeper" point-id="filter-adaptor">
+		<parameter id="filter-name" value="ShiroFilter" />
+		<parameter id="filter-class" value="org.tolven.shiro.filter.TolvenShiroFilter" />
+		<parameter id="filter-sequence" value="50" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<extension id="gatekeeper.html-ShiroFilter-contribution" plugin-id="org.tolven.gatekeeper" point-id="filter-mapping-contribution-adaptor">
+		<parameter id="filter-name" value="ShiroFilter" />
+		<parameter id="url-pattern" value="/*" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<!-- HTML WAR FILTER EXTENSIONS End -->
+
+
+
+
+
+	<!-- HTML WAR FACES EXTENSIONS -->
+	<extension id="gatekeeper.html-login-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for login activities" />
+		<parameter id="managed-bean-name" value="login" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.LoginAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+	<extension id="gatekeeper.html-property-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for login activities" />
+		<parameter id="managed-bean-name" value="prop" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.PropertyAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-home-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for home activities" />
+		<parameter id="managed-bean-name" value="home" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.HomeAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/home/home.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="" />
+		<parameter id="from-view-id" value="/home/home.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="logout" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="manageLoginPassword" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="createUser" />
+			<parameter id="to-view-id" value="/register/createUser.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="manageLoginSecurityQuestions" />
+			<parameter id="to-view-id" value="/loginsecurityquestions/loginSecurityQuestions.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="resetLoginPassword" />
+			<parameter id="to-view-id" value="/resetloginpassword/resetLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/manageLoginPassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user to manage their password" />
+		<parameter id="from-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="home" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="logout" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="changeLoginPassword" />
+			<parameter id="to-view-id" value="/passwordmgr/changeLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="backupLoginPassword" />
+			<parameter id="to-view-id" value="/passwordmgr/backupLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-reg-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for registration and activation activities" />
+		<parameter id="managed-bean-name" value="createUser" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.CreateUserAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/register/createUser.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Create a user" />
+		<parameter id="from-view-id" value="/register/createUser.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="home" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="logout" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="cancel" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/register/createUser.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{createUser.activate}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/register/createUser.xhtml" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-changepasswd-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Change Login Password" />
+		<parameter id="managed-bean-name" value="changepasswd" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.ChangeLoginPasswordAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/changeLoginPassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user to change their password" />
+		<parameter id="from-view-id" value="/passwordmgr/changeLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.changeLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/passwordmgr/changeLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="cancel" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/mustChangeLoginPassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="User must change their password" />
+		<parameter id="from-view-id" value="/passwordmgr/mustChangeLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.mustChangeLoginPassword}" />
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/passwordmgr/mustChangeLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.mustChangeLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/passwordExpiring.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="User password is expiring" />
+		<parameter id="from-view-id" value="/passwordmgr/passwordExpiring.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.mustChangeLoginPassword}" />
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/passwordmgr/passwordExpiring.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.mustChangeLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{changepasswd.later}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/passwordmgr/passwordExpiring.xhtml" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-backuploginpassword-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Backup Login Password" />
+		<parameter id="managed-bean-name" value="backup" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.BackupLoginPasswordAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/backupLoginPassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user to backup their password" />
+		<parameter id="from-view-id" value="/passwordmgr/backupLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{backup.backupLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/passwordmgr/backupLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="cancel" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-recover-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Recover Login Password" />
+		<parameter id="managed-bean-name" value="recover" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.RecoverLoginPasswordAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/recoverloginpassword/recoverLoginPassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user to recover their login password from a backup" />
+		<parameter id="from-view-id" value="/recoverloginpassword/recoverLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="home" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="manageLoginPassword" />
+			<parameter id="to-view-id" value="/passwordmgr/manageLoginPassword.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{recover.findSecurityQuestion}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/recoverloginpassword/recoverLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{recover.recoverLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/login/login.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/recoverloginpassword/recoverLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="cancel" />
+			<parameter id="to-view-id" value="/login/login.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-securityq-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Manage Security Questions" />
+		<parameter id="managed-bean-name" value="loginsecurityq" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.LoginSecurityQuestionAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/loginsecurityquestions/loginSecurityQuestions.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user manage login security questions" />
+		<parameter id="from-view-id" value="/loginsecurityquestions/loginSecurityQuestions.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="home" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="logout" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{loginsecurityq.addLoginSecurityQuestions}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/loginsecurityquestions/loginSecurityQuestions.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{loginsecurityq.removeLoginSecurityQuestions}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/loginsecurityquestions/loginSecurityQuestions.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/loginsecurityquestions/loginSecurityQuestions.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-outcome" value="cancel" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-resetpasswd-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Reset Login Password" />
+		<parameter id="managed-bean-name" value="resetpasswd" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.ResetLoginPasswordAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+
+	<extension id="gatekeeper.html-/passwordmgr/resetloginpassword.xhtml-navigation-rule" plugin-id="org.tolven.component.faces" point-id="navigation-rule">
+		<parameter id="description" value="Allow a user's password to be reset" />
+		<parameter id="from-view-id" value="/resetloginpassword/resetLoginPassword.xhtml" />
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="home" />
+			<parameter id="to-view-id" value="/home/home.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="logout" />
+			<parameter id="to-view-id" value="/public/logout.xhtml" />
+			<parameter id="redirect" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{resetpasswd.resetLoginPassword}" />
+			<parameter id="from-outcome" value="success" />
+			<parameter id="to-view-id" value="/resetloginpassword/resetLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="navigation-case">
+			<parameter id="from-action" value="#{resetpasswd.resetLoginPassword}" />
+			<parameter id="from-outcome" value="error" />
+			<parameter id="to-view-id" value="/resetloginpassword/resetLoginPassword.xhtml" />
+		</parameter>
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+	<!-- HTML WAR FACES EXTENSIONS End -->
+
+	<!-- HTML WAR EXTENSIONS -->
+
+	<!-- EXTENSIONS End 
+
+
+	<extension-point extension-multiplicity="none" id="tolvenProperties">
+		<parameter-def id="gatekeeper.web.defaultLogo" default-value="/images/Tolven_Logotype_410px.png" />
+	</extension-point>
+	-->
+</plugin>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.shiro">
+
+	<import file="../plugin/buildImport.xml" />
+
+	<property name="buildFolder" value="build" />
+	<property name="includeSourceInDevLib" value="true" />
+
+	<target name="createBuildFolders">
+        <mkdir dir="${buildFolder}/legacypostgresql" />
+        <mkdir dir="${buildFolder}/oracle" />
+    </target>
+
+	<target name="build-plugin" depends="init, createBuildFolders" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest" />
+		</zip>
+		<!-- Begin list of sections to build. Each section is added to the plugin zip file. -->
+		<!-- End of list of sections to build -->
+		<antcall target="buildSection">
+			<param name="section" value="shiro-lib" />
+			<param name="lib" value="lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="ejb-impl" />
+			<param name="lib" value="${buildFolder}/shiro-lib/classes:lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="web" />
+			<param name="lib" value="${buildFolder}/shiro-lib/classes:${buildFolder}/ejb-impl/classes:lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar" />
+			<param name="endorseddirs" value="${basedir}/lib" />
+			<param name="sectionZipExcludes" value="**/" />
+		</antcall>
+		<jar destfile="${buildFolder}/legacypostgresql/shiro-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/shiro-lib/classes" />
+			<zipfileset dir="shiro-lib/META-INF-legacypostgresql" prefix="META-INF" />
+		</jar>
+		<jar destfile="${buildFolder}/oracle/shiro-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/shiro-lib/classes" />
+			<zipfileset dir="shiro-lib/META-INF-oracle" prefix="META-INF" />
+		</jar>
+		<jar destfile="${buildFolder}/shiro-ejb.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/ejb-impl/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/shiroWEB.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/web/classes" includes="**/*.class" />
+		</jar>
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar" />
+				<include name="legacypostgresql/**" />
+				<include name="oracle/**" />
+				<include name="shiro-ejb.jar" />
+				<include name="shiroWEB.jar" />
+			</zipfileset>
+			<zipfileset dir="lib">
+				<include name="shiro-core-1.1.0.jar" />
+				<include name="shiro-web-1.1.0.jar" />
+			</zipfileset>
+		</zip>
+		<!-- Add DevLib.jar to plugin zip -->
+
+		<!--Copy client jars to devLib -->
+		<copy todir="${tolven.devLib}">
+			<fileset dir="lib" />
+			<mapper type="glob" from="*.jar" to="${plugin(id)}.*.jar" />
+		</copy>
+	</target>
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven Shiro"
+			packagenames="*"
+			classpathref="project.classpath" 
+			source="1.6" sourcepath="ejb-impl/source:shiro-lib/source:web/source" splitindex="true" use="true" version="true"
+			encoding="UTF-8" docencoding="UTF-8"/>
+	</target>
+</project>

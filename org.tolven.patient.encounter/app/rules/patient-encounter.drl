@@ -1,0 +1,102 @@
+package echr_patient_encounter
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+
+rule "Place Encounter on Encounter summary list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:encsum" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+	then
+		// Add act to patient's Encounter summary (list)
+		app.createReferenceMD( $mdEncounter, $msList );
+end
+
+rule "Place Encounters on encounter list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:encounters:active" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='active' )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $msList );
+end
+
+rule "Place Encounters on inactive encounter list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:encounters:inactive" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus!='active' )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $msList );
+end
+
+rule "Place Encounters on nullified encounter list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:encounters:nullified" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='nullified' )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $msList );
+end
+
+rule "Place Encounters on the account-wide encounter list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$msList: MenuStructure( path == "echr:admin:encounters:all" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $msList );
+end
+
+rule "Place Encounters on inpatient list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='active', string01=='Inpatient Encounter', $mdPat: parent01 )
+	then
+		MenuData mdInList = app.createReferenceMD( $mdEncounter, "echr:patients:in" );
+end
+
+rule "Ensure Encounter is updated when patient is updated"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='active', $mdPat: parent01 )
+	then
+		app.touchIf( $mdEncounter, $mdPat );
+end
+
+rule "Ensure Encounter is updated when location is updated"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='active', $mdFac: parent03!=null )
+	then
+		app.touchIf( $mdEncounter, $mdFac );
+end
+
+rule "Place Encounter on staff list"
+	when
+		$list: MenuStructure( path == "echr:assigned:encounters:in" )
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter, actStatus=='active', $attender: parent04 != null )
+	then
+		MenuData mdInList = app.createReferenceMD( $mdEncounter, $list, $attender );
+end
+
+

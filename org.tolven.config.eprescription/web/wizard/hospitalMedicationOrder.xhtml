@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+<title>#{trim.trim.act.title.ST}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="tolven6.js" />
+</head>
+<body>
+
+<ui:composition>
+	<h:inputHidden id="openMeFirst" value="#{top.accountUser.openMeFirst}" />
+	<div id="#{menu.elementLabel}:warningDialog" style="display: none;" class="prescriberWarningDialog"/>
+	<img id="#{menu.elementLabel}:ajaxLoader"  alt="ajax" src="../images/ajax-loader23.gif" style="display:none; z-index: 50;position: absolute;margin-top: 40px;margin-left: 450px;"/>
+			
+	<script type="text/javascript">
+		    // <![CDATA[ 
+		   
+			if($("#{menu.elementLabel}:openMeFirst").value == null || $("#{menu.elementLabel}:openMeFirst").value == ""){
+				showPrescriberWarningDialog("#{menu.elementLabel}","#{menu.element}");	
+			}		
+			
+			//disableSelections("#{menu.elementLabel}");
+			//loadRefillsIfNull("#{menu.elementLabel}");
+			// ]]> 
+			</script>
+	<h:inputHidden id="computeEnable" value="#{trim.trim.act.computes[0].property['enabled']}" converter="javax.faces.Boolean"/>
+	<h:inputHidden id="enableOverride" value="#{trim.trim.act.relationship['overrideWarning'].enableRelationship}" converter="javax.faces.Boolean"/>
+	<h:inputHidden id="drugCode" value="#{trim.trim.act.computes[0].property['drugCode']}" />
+	
+	<wiz:step title="Prescription">
+		<wiz:body>
+			<div id="popupGrids">
+ 				<div id="#{menu.elementLabel}:global:fdbMedications" class="popupgrid"/>          
+			</div>
+			<wiz:group title="" prefix="#{trim.trim.description}">
+			<table width="100%" cellpadding="5">
+					<tr>
+						<td width="30%" class="tableLabel">
+						Diagnosis
+						</td>
+						<td colspan="2" width="70%" >
+							 <h:selectOneMenu id="diagnosis" value="#{trim.trim.act.relationship['diagnosis'].act.id.for[top.accountUser.account].extension}">
+							 <f:selectItem itemValue="#{null}" itemLabel="Select Diagnosis" />
+							<f:selectItems value="#{trim.list['echr:patient:diagnoses:current~Diagnosis']}"/>							
+						</h:selectOneMenu>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							#{trim.trim.act.effectiveTime.label.value}
+						</td>
+						<td colspan="2" width="70%">
+							<trim:TS id="orderDate" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short"  />
+						</td>
+					</tr>
+					<c:if test="${fn:length(trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName) == 0}">
+						<tr>
+							<td width="30%" class="tableLabel">
+								Select Medication *
+							</td>
+							<td width="40%">
+									<h:commandButton id="medicationPopup" value="Medication Look Up" onclick="javascript:openListPopup('global:fdbMedications','#{menu.elementLabel}:global:fdbMedications', 'medicationDocument', '#{menu.elementLabel}', 0,'medicationDocument');"/>
+							</td>							
+						</tr>
+					</c:if>
+					<c:if test="${fn:length(trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName) > 0}">
+						<tr>
+							<td width="30%" class="tableLabel">
+								Medication *
+							</td>
+							<td>
+								<h:outputText  style="font-weight: bold;border: 0px;width: 500px;" 
+								value="#{trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName}"
+								maxlength="105" />
+								<h:inputHidden id="requestedMedicine" value="#{trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName}"/>								
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="${fn:length(trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName) > 0}">
+					<tr>
+						<td width="30%" class="tableLabel">
+							<h:outputText value="AHFS Classifications " />
+						</td>
+						<td colspan="2" width="70%">
+							<h:outputText id="classficationFromFdb" style="border: 0px;width: 800px;"
+							value="#{trim.trim.act.relationship['AHFSClassification'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							<h:outputText value="CT Action Group Classifications " />
+						</td>
+						<td colspan="2" width="70%">
+							<h:outputText id="ctactiongroupClassficationFromFdb"	
+							value="#{trim.trim.act.relationship['ctactiongroupClassficationFromFdb'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							<h:outputText value="CTETC Classifications " />
+						</td>
+						<td colspan="2" width="70%">
+						<h:outputText id="ctetcClassficationFromFdb" value="#{trim.trim.act.relationship['CTETCClassification'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							<h:outputText value="CTFDB Classifications " />
+						</td>
+						<td colspan="2" width="70%">
+						<h:outputText id="ctfdbClassficationFromFdb" value="#{trim.trim.act.relationship['CTFDBClassification'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							<h:outputText value="Drug in Formulary? " />
+						</td>
+						<td colspan="2" width="70%">
+							<h:outputText id="isdrugFormulary" style="border:0px; width: 800px; color:red;"	value="#{trim.trim.act.relationship['isInDrugFromulary'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+						Strength
+						</td>
+						<td width="30%">
+							<h:inputText id="strength" value="#{trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.originalText}" disabled="true" />
+						</td>
+						<td width="40%">
+							<h:outputText value="Unit: " style="float:left;width:85px;" /> 
+							<h:selectOneMenu id="strengthUnits" value="#{trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.unit}">
+								<f:selectItems value="#{sureAct.drugQualifiers}" />
+							</h:selectOneMenu>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							#{msg.Route}
+						</td>
+						<td width="30%">							
+							<trim:valueSetMenu  id="route" slot="#{trim.trim.act.substanceAdministration.routeCode}" required="true"/>
+						</td>
+						
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							#{msg.Frequency}
+						</td>
+						<td width="30%">		
+							<trim:valueSetMenu id="frequency"  slot="#{trim.trim.act.relationship['frequency'].act.observation.value}" required="true"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+							Sig Codes*
+						</td>
+						<td colspan="2" width="70%">
+							<trim:ED id="sigcodes" value="#{trim.trim.act.relationship['sigCodes'].act.observation.value}"
+							onkeyup="return ismaxlength(this , '#{menu.elementLabel}');" required="true"/>
+							<h:outputText id="sigLeft" style="font-size: 11px;" value="* maximum character limit allowed is 140." />
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" class="tableLabel">
+						Substitution Allowed
+						</td>
+						<td colspan="2" width="70%">
+						<wiz:radio id="substitutionAllowed" value="#{trim.trim.act.relationship['subAllowed'].act.observation.value.CE}" 	required="true" layout="lineDirection">
+							<f:selectItems value="#{trim.valueSets['substitutionAllowed']}" />
+							<f:converter converterId="DataTypeConverter" />
+						</wiz:radio></td>
+					</tr>
+					
+					 <tr>
+						<td width="30%" class="tableLabel">
+						Comments
+						</td>
+						<td colspan="2" width="70%">
+							<trim:ED id="comment" value="#{trim.trim.act.relationship['comment'].act.observation.value}" onkeyup="return ismaxlength(this , '#{menu.elementLabel}');" required="true"/>
+							<h:outputText id="commentsLeft" style="font-size: 11px;" value="* maximum character limit allowed is 210." />
+						</td>
+					</tr>
+					<c:if test="${trim.trim.act.relationship['overrideWarning'].enabled}">
+						<tr>
+							<td width="30%" class="tableLabel">
+							Override Comments*
+							</td>
+							<td colspan="2" width="70%">
+								<trim:ED id="overrideWarning" value="#{trim.trim.act.relationship['overrideWarning'].act.observation.value}" onkeyup="return ismaxlength(this , '#{menu.elementLabel}');" required="true"/>
+								<h:outputText id="overrideWarningLeft" style="font-size: 11px;" value="* maximum character limit allowed is 210." />
+							</td>
+						</tr>
+					</c:if>
+					</c:if>
+					
+				</table>
+			</wiz:group>
+		</wiz:body>
+	</wiz:step>
+	<ui:include src="selectEncounter.xhtml" />
+</ui:composition>
+</body>
+</html> 

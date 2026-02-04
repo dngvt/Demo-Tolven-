@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+  <head>
+        <title>Medication Details</title>
+  </head>
+  <body>
+  	<ui:composition>
+  		<table class="attributes" width="95%">
+  			<tr><td class="name" width="15%">#{msg.prescriberOrderNumber}</td><td class="value" width="85%">#{menu.drilldownItem.prescriberOrderNumber}</td></tr>
+  			<c:if test="#{menu.drilldownItem.surescriptStatus == 'Shared'}">
+  			<tr><td class="name" width="15%">Provider</td><td class="value" width="85%">#{menu.drilldownItem.prescriber}</td></tr>
+  			</c:if>
+  			<c:if test="#{menu.drilldownItem.surescriptStatus != 'Shared'}">
+  			<tr><td class="name" width="15%">#{msg.prescriber}</td><td class="value" width="85%">#{menu.drilldownItem.prescriber}</td></tr>
+  			</c:if>  			
+  			<tr><td class="name" width="15%">#{msg.prescriptionDate}</td><td class="value" width="85%">#{menu.drilldownItem.prescriptionDate}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.medicationName}</td><td class="value" width="85%">#{menu.drilldownItem.medicationName}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.medicationStrength}</td><td class="value" width="85%">#{menu.drilldownItem.medicationStrength}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.medicationStartDate}</td><td class="value" width="85%">#{menu.drilldownItem.medicationStartDate}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.medicationEndDate}</td><td class="value" width="85%">#{menu.drilldownItem.medicationEndDate}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.medicationRoute}</td><td class="value" width="85%">#{menu.drilldownItem.medicationRoute}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.dispenseAmount}</td><td class="value" width="85%">#{menu.drilldownItem.dispenseAmount}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.numberOfRefills}</td><td class="value" width="85%">#{menu.drilldownItem.numberOfRefills}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.status}</td><td class="value" width="85%">#{menu.drilldownItem.status}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.messageFDB}</td><td class="value" width="85%">#{menu.drilldownItem.fdbReponse}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.ddmessage}</td><td class="value" width="85%">#{menu.drilldownItem.ddResponse}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.dfmessage}</td><td class="value" width="85%">#{menu.drilldownItem.drugFoodResp}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.damessage}</td><td class="value" width="85%">#{menu.drilldownItem.drugAllergy}</td></tr>
+  			<tr><td class="name" width="15%">#{msg.duplicatetherapy}</td><td class="value" width="85%">#{menu.drilldownItem.duplicateTherapy}</td></tr>
+  			<c:forEach var="id" items="${menu.drilldownItem.placeholderIDArray}"> 
+	  			<tr>
+				<td class="name" width="15%">#{id.root} [#{id.assigningAuthority}]</td><td class="value" width="85%">#{id.extension}</td>  			
+	  			</tr>
+			</c:forEach>
+  		</table>
+  		<c:set var="isEmergencyAccount" value="false"/>
+		<c:if test="#{top.accountUser.property['tolven.cchit.emergencyAccount'] == 'true'}">
+			<c:set var="isEmergencyAccount" value="true" />
+		</c:if>
+  		<c:if test="#{menu.drilldownItem.surescriptStatus !='Error' and menu.drilldownItem.surescriptStatus != 'Pending' and menu.drilldownItem.surescriptStatus != 'Shared' and menu.drilldownItem.prescriptionDate!=null and isEmergencyAccount=='false'}">
+  			<a href="#" onclick="reviseActiveMedication('#{fn:replace(menu.element,':identity','')}')">Revise</a><br/>
+  		</c:if>
+  		
+  		<c:if test="#{menu.drilldownItem.surescriptStatus =='Error'}">
+  			<p class="attributes"><a href="#" onclick="instantiate('obs/evn/patientPrescription','#{menu.element}','#{menu.drilldownItem.path}')">#{msg.Update}</a></p>
+  		</c:if>
+  		<c:if test="#{menu.drilldownItem.surescriptStatus == 'Pending'}">
+  			<p class="attributes">Network Time-out Occurred.<a href="#" onclick="instantiate('obs/evn/patientPrescription','#{menu.element}','#{menu.drilldownItem.path}')">resubmit</a></p>
+  		</c:if>
+  		<c:if test="#{menu.drilldownItem.surescriptStatus == 'Shared'}">
+  			<p class="attributes"><a>This is a shared medication and it may not contain all mandatory details.</a></p>
+  		</c:if>
+	</ui:composition>
+  </body>
+</html>

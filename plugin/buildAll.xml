@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="cleanBuildDeployPlugins" name="buildAllPlugins">
+	<!--
+	   To Build from scratch, clear out your repositoryLocal dir and run the following commands:
+	******************
+	1. clean (includes devLib [from managePlugins] )
+	2. build
+	3. deploy (includes updateLocalMetaData [from managePlugins] )
+	4. clean-build-deploy (includes updateLocalMetaData [from managePlugins] )
+	5. build-deploy  (includes updateLocalMetaData [from managePlugins] )
+	6. build-deploy-configPhase1
+	7. clean-build-deploy-configPhase1
+	
+	***************************
+	build.files list is defined in pluginsToBuild.xml - this list contains ALL plugins (including ONC)
+
+	***************************
+	To configure a custom list of plugins to build, create a file such as buildCustom.xml (which looks like pluginsToBuild.xml)
+	 and add the property like the following to your build.properties file:
+	
+	pluginsToBuildloc=../plugin/buildCustom.xml
+	
+	-->
+	<import file="../plugin/buildCommon.xml"/>
+
+	<property file="../plugin/build.properties"/>
+
+	<property name="pluginsToBuildloc" value="../plugin/pluginsToBuild.xml" />
+
+	<import file="${pluginsToBuildloc}" />
+
+	<target name="cleanBuild">
+		<!-- Remove all build components -->
+		<subant target="clean" failonerror="false" buildpathref="build.files" />
+	</target>
+
+	<target name="cleanPlugins">
+		<!-- Clears out all files from the devLib -->
+		<ant antfile="managePlugins.xml" target="cleanDevLib" />
+		<!-- Removes the build directory of all plugins related to build.files -->
+		<subant target="clean" failonerror="false" buildpathref="build.files" />
+		<delete file="plugin.log" />
+	</target>
+
+	<target name="buildPlugins">
+		<!-- Builds each of the plugins related to build.files and copies their devLibs to your tolven-config/devLib -->
+		<subant target="gen-build-plugin" buildpathref="build.files"  />
+	</target>
+
+	<target name="deployPlugins">
+		<!--Copy built plugins to local repository -->
+		<subant target="copy-plugin-to-local-repository" buildpathref="build.files" />
+		<!-- Update the local metadata -->
+		<ant antfile="managePlugins.xml" target="updateLocalMetaData" />
+	</target>
+
+	<target name="configPhase1">
+		<!--Runs repositoryInit (getPlugins), configPhase1, etc)-->
+		<ant antfile="managePlugins.xml" target="configPhase1" />
+	</target>
+
+	<target name="cleanBuildPlugins" depends="cleanPlugins,buildPlugins"/>
+
+	<target name="cleanBuildDeployPlugins" depends="cleanPlugins,buildPlugins,deployPlugins"/>
+
+	<target name="buildDeployPlugins" depends="buildPlugins,deployPlugins"/>
+
+	<target name="buildDeployConfigPhase1Plugins" depends="buildPlugins,deployPlugins,configPhase1"/>
+
+	<target name="cleanBuildDeployConfigPhase1Plugins" depends="cleanPlugins,buildPlugins,deployPlugins,configPhase1"/>
+
+	<target name="createDevLib">
+		<mkdir dir="${tolvenConfig.location}" />
+	</target>
+
+	<!-- This target will create three files in the plugin manager directory: plugins-local.log, plugins-published.log, plugins-unpublished.log -->
+	<!-- The catalog.url must be set in the build.properties file -->
+	<!-- The latest snapshot.pluginsxml.url must be set in the build.properties file -->
+	<target name="check-plugin-versions">
+		<fail unless="catalog.url" message="catalog.url must be defined in your build.properties file" />
+		<fail unless="snapshot.pluginsxml.url" message="snapshot.pluginsxml.url must be defined in your build.properties file" />
+		<property name="plugins-published.log" value="${basedir}/plugins-published.log" />
+		<property name="plugins-local.log" value="${java.io.tmpdir}/plugins-local.log" />
+		<property name="plugins-unpublished.log" value="${java.io.tmpdir}/plugins-unpublished.log" />
+		<property name="snapshot.pluginsxml" value="${java.io.tmpdir}/snapshot.pluginsxml" />
+		<delete file="${plugins-local.log}" />
+		<delete file="${plugins-published.log}" />
+		<delete file="${plugins-unpublished.log}" />
+		<get src="${snapshot.pluginsxml.url}" dest="${snapshot.pluginsxml}" />
+		<copy file="${snapshot.pluginsxml}" tofile="${plugins-published.log}">
+			<filterchain>
+				<linecontains>
+					<contains value="&lt;uri>" />
+				</linecontains>
+				<tokenfilter>
+					<replaceregex pattern="&lt;uri>${catalog.url}/plugins/" replace="" flags="g" />
+					<replaceregex pattern=".zip&lt;/uri>" replace="" flags="g" />
+					<replaceregex pattern="\ " replace="" flags="g" />
+				</tokenfilter>
+			</filterchain>
+		</copy>
+		<delete file="${snapshot.pluginsxml}" />
+		<delete file="${plugins-local.log}" />
+		<delete file="${plugins-unpublished.log}" />
+		<subant target="log-plugin-local-version" buildpathref="build.files" inheritall="true" inheritrefs="true" />
+		<copy file="${plugins-local.log}" tofile="plugins-local.log">
+			<filterchain>
+				<sortfilter />
+			</filterchain>
+		</copy>
+		<copy file="${plugins-unpublished.log}" tofile="plugins-unpublished.log">
+			<filterchain>
+				<sortfilter />
+			</filterchain>
+		</copy>
+		<delete file="${plugins-local.log}" />
+		<delete file="${plugins-unpublished.log}" />
+	</target>
+
+	<target name="create-catalog" depends="cleanBuildDeployPlugins">
+		<fail message="snapshotVersion must be set" unless="snapshotVersion" />
+		<property name="catalogZip" value="${snapshotVersion}.zip" />
+		<property name="catalogDir" value="${basedir}/build/catalog" />
+		<delete dir="${catalogDir}" />
+		<delete file="build/${catalogZip}" />
+		<property name="tolvenDir" value="${catalogDir}" />
+		<property name="snapshotsDir" value="${tolvenDir}/snapshots" />
+		<property name="snapshotDir" value="${tolvenDir}/snapshots/${snapshotVersion}_snapshot" />
+		<property name="pluginsDir" value="${snapshotDir}/plugins" />
+		<mkdir dir="${pluginsDir}" />
+		<mkdir dir="${snapshotDir}" />
+		<copy toDir="${snapshotDir}" preservelastmodified="true">
+			<fileset dir="${respositoryLocal.location}" />
+		</copy>
+		<java dir="${pluginManagerKitDir}/bin" fork="true" failonerror="true" classname="org.tolven.plugin.boot.TPFBoot" classpathref="project.classpath">
+			<env key="TOLVEN_REALM" value="${admin.realm}" />
+			<env key="TOLVEN_USER" value="${admin.user}" />
+			<env key="TOLVEN_PASSWORD" value="${admin.password}" />
+			<env key="TOLVEN_CONFIG_DIR" value="${tolvenConfig.location}" />
+			<arg line="-genMetadata -plugins ${pluginsDir} -relativePath plugins" />
+		</java>
+		<unzip dest="${snapshotDir}">
+			<zipfileset dir="../org.tolven.installer/build">
+				<include name="org.tolven.installer-*.zip" />
+			</zipfileset>
+		</unzip>
+		<mkdir dir="build/org.tolven.pluginsxml.template" />
+		<unzip dest="build/org.tolven.pluginsxml.template">
+			<zipfileset dir="../org.tolven.pluginsxml.template/build">
+				<include name="org.tolven.pluginsxml.template-*.zip" />
+			</zipfileset>
+		</unzip>
+		<copy todir="${snapshotDir}">
+			<fileset dir="build/org.tolven.pluginsxml.template">
+				<include name="template-*-plugins.xml" />
+			</fileset>
+			<filterchain>
+				<tokenfilter>
+					<replaceregex pattern="SNAPSHOT_DIR" replace="${snapshotVersion}_snapshot" flags="g" />
+				</tokenfilter>
+			</filterchain>
+		</copy>
+		<delete dir="build/org.tolven.pluginsxml.template" />
+		<unzip src="../org.tolven.assembler.pluginframework/build/installer/tolven-V2.1.zip" dest="${snapshotDir}" />
+		<copy file="${snapshotDir}/plugins.xml" tofile="${snapshotDir}/plugins-index.html">
+			<filterchain>
+				<linecontainsregexp>
+					<regexp pattern="&lt;uri>|&lt;plugins"/>
+				</linecontainsregexp>
+				<tokenfilter>
+					<replaceregex pattern="&lt;plugins xmlns=&quot;urn:tolven-org:plugins:1.0&quot;>" replace="&lt;table>" flags="g" />
+					<replaceregex pattern="&lt;uri>plugins/" replace="&lt;tr>&lt;td>" flags="g" />
+					<replaceregex pattern=".zip&lt;/uri>" replace="&lt;/tr>&lt;/td>" flags="g" />
+					<replaceregex pattern="\ " replace="" flags="g" />
+				</tokenfilter>
+				<sortfilter />
+			</filterchain>
+		</copy>
+		<echo file="${snapshotDir}/plugins-index.html" append="true">&lt;/table></echo>
+		<mkdir dir="${tolvenDir}/tolven-config" />
+		<mkdir dir="${tolvenDir}/initial-tolven-components" />
+		<zip destfile="build/${catalogZip}">
+			<zipfileset dir="${catalogDir}" excludes="**/*.sh" />
+			<zipfileset dir="${catalogDir}" filemode="700" includes="**/*.sh" />
+		</zip>
+	</target>
+
+</project>
+

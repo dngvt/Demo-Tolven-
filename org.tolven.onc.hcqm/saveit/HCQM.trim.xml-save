@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<extends>patientAct</extends>
+	<name>obs/evn/hcqm</name>
+	<page>hcqm.xhtml</page>
+	<drilldown>hcqmDD.xhtml</drilldown>
+	<menu>global:observationMenu</menu>
+	<reference>http://www.wikihit.org/wiki/index.php/xxx</reference>
+	<act classCode="OBS" moodCode="EVN">
+		<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>C0015230</code>
+				<codeSystemName>UMLS</codeSystemName>
+				<codeSystemVersion>2007AA</codeSystemVersion>
+			</CD>
+		</code>
+		<title>
+			<ST>Hospital Clinical Quality Measures</ST>
+		</title>
+		<effectiveTime>
+			<label>Time of observation</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<observation>
+     			<value>
+				<ST>HCQM info</ST>
+				</value>   
+		</observation>
+		
+<!-- ED Measures -->		
+       	<relationship typeCode="COMP" direction="OUT" name="ed1.1d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED1.1D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 1.1 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>					
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed1.1x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED1.1X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 1.1 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed1.2d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED1.2D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 1.2 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed1.3d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED1.3D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 1.3 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>		
+       	<relationship typeCode="COMP" direction="OUT" name="ed2.1d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED2.1D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 2.1 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed2.1x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED2.1X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 2.1 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed2.2d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED2.2D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 2.2 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="ed2.3d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>ED2.3D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>Emerg Dept 2.3 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>			
+<!-- VTE Prevention Measures -->		
+       	<relationship typeCode="COMP" direction="OUT" name="vte1d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE1D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE1 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte1n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE1N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE1 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>       	
+		<relationship typeCode="COMP" direction="OUT" name="vte1x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE1X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE1 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte2d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE2D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE2 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte2n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE2N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE2 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte2x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE2X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE2 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+<!-- VTE Treatment Measures -->
+       	<relationship typeCode="COMP" direction="OUT" name="vte3d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE3D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE3 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte3n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE3N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE3 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte3x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE3X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE3 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>		
+       	<relationship typeCode="COMP" direction="OUT" name="vte4d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE4D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE4 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte4n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE4N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE4 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte4x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE4X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE4 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>		
+       	<relationship typeCode="COMP" direction="OUT" name="vte5d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE5D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE5 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte5n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE5N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE5 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte5x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE5X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE5 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte6d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE6D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE6 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte6n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE6N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE6 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="vte6x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>VTE6X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>VTE6 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>			
+<!-- STK Measures -->
+       	<relationship typeCode="COMP" direction="OUT" name="stk2d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK2D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK2 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk2n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK2N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK2 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk2x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK2X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK2 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk3d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK3D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK3 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk3n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK3N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK3 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk3x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK3X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK3 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>		
+       	<relationship typeCode="COMP" direction="OUT" name="stk4d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK4D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK4 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk4n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK4N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK4 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk4x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK4X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK4 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>		
+       	<relationship typeCode="COMP" direction="OUT" name="stk5d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK5D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK5 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk5n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK5N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK5 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk5x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK5X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK5 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk6d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK6D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK6 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk6n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK6N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK6 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk6x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK6X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK6 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>				
+       			</observation>
+       		</act>
+       	</relationship>			
+       	<relationship typeCode="COMP" direction="OUT" name="stk8d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK8D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK8 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk8n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK8N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK8 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>			
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk8x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK8X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK8 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk10d" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK10D</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK10 Denominator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk10n" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK10N</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK10 Numerator</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value>  				
+       			</observation>
+       		</act>
+       	</relationship>
+       	<relationship typeCode="COMP" direction="OUT" name="stk10x" enabled="true">
+       		<act moodCode="EVN" classCode="OBS">
+			<bind application="echr" phase="create">
+				<placeholder bindAction="create">
+				<path>echr:patient:encounter:hcqmeasure</path>
+				</placeholder>
+			</bind>		
+		<code>
+			<CD>
+				<code>STK10X</code>
+				<codeSystemName>ONC</codeSystemName>
+			</CD>
+		</code>			
+       			<title>
+       				<ST>STK10 Exclusion</ST>
+       			</title>
+       			<observation>    				
+					<value>
+					<PQ>
+						<label>Duration</label>
+						<value>0</value>
+						<unit>minutes</unit>
+					</PQ>
+					</value> 				
+       			</observation>
+       		</act>
+       	</relationship>			
+<!-- end of Measures -->
+	</act>		
+</trim>

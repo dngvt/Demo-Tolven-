@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="ePrescriptionScripts.js">	
+		</script>
+</head>
+<body>
+<ui:composition>
+	<c:set var="path" value="echr:pharmacies"/>
+	<div class="popupgridheader"><img
+		onclick="closePopup('#{path}','#{menu.elementLabel}' );return false;"
+		src="../images/x_black.gif" class="closetab" />
+	</div>
+
+	<div id="#{path}-grid" class="grid" totalRows="#{sureAct.totalPharmacies}"
+		visibleRows="15" gridOffset="0" gridSortCol="pharmacy"
+		gridSortDir="ASC">
+		<table class="filter">
+			<tr>
+				<td class="menuActions">
+					Filter 
+					<input
+					id="#{path}-filter" name="#{path}-filter"
+					type="text" />
+				</td>
+			</tr>
+		</table>
+	
+		<table id="#{path}-LG_header">
+			<thead>
+				<tr>
+					<th style="text-align: left; width: 11.5em">Status</th>
+					<th style="text-align: left; width: 20.5em">Pharmacy Name</th>
+					<th style="text-align: left; width: 20.5em">Address</th>
+					<th style="text-align: left; width: 13.5em">City</th>
+					<th style="text-align: left; width: 4.5em">State</th>
+					<th style="text-align: left; width: 5.5em">Zip</th>
+				</tr>
+			</thead>
+		</table>
+		<table id="#{path}-LG">
+			<tbody>
+				<c:forEach var="i" begin="1" end="16" step="1" varStatus ="status">
+					<c:set var="class" value="odd"/>
+					<c:if test="#{(status.index%2)==1}">
+						<c:set var="class" value="even"/>
+					</c:if>
+					<tr class="#{class}">
+						<td style="text-align: left; width: 11.5em">--</td>
+						<td style="text-align: left; width: 20.5em">--</td>
+						<td style="text-align: left; width: 20.5em">--</td>
+						<td style="text-align: left; width: 13.5em">--</td>
+						<td style="text-align: left; width: 3.5em">--</td>
+						<td style="text-align: left; width: 5.5em">--</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div class="foot">
+			<span style="float: left;padding-right: 3px;">#{sureAct.totalPharmacies} items</span>
+			<span id="#{path}-foot" style="float: left;"></span><br clear="all"/>
+		</div>
+	</div>
+	<div style="float: right;width: 100%;">
+		<table width="100%" align="center" border="0" style="border-color: #ccc;margin-top: 6px;">
+			<tr>
+				<td style="width: 18px;"><label style="background:#4E9689;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>NewRx</td>
+				<td style="width: 18px;"><label style="background:#87D69B;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>RefReq/RefRes</td>
+				<td style="width: 18px;"><label style="background:#FDCDB9;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>RxChg/ChgRes</td>
+				<td style="width: 18px;"><label style="background:#EDB24C;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td style="width: 15%;">RxFill</td>
+				<td style="width: 18px;"><label style="background:#ED8A4C;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>CanRx/CanRxRes</td>
+			</tr>
+			<tr>
+				<td><label style="background:#FF9CA8;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>Medication History</td>
+				<td><label style="background:#FA7089;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>Eligibility</td>
+				<td><label style="background:#C12F70;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td>Inactive</td>
+				<td><label style="background:#731E45;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+				<td colspan="3">Disabled</td>
+			</tr>
+		</table>
+	</div><br clear="all"/>
+	
+	<script language="JavaScript" type="text/javascript">
+		// <![CDATA[
+			createPharmacyGrid( '#{path}','#{path}','addTemplate','#{menu.elementLabel}|0', null, '#{menu.element}');
+		// ]]>
+	</script>
+</ui:composition>
+</body>
+</html>

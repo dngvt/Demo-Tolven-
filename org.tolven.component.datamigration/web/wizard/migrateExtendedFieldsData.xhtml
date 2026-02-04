@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+  <head>
+        <title>Data migration</title>
+  </head>
+  <body>
+  	<ui:composition>
+     	<fieldset>
+     		<legend>Migrate Extended Fields</legend>
+     		<table>
+     			<tr>
+     				<td>Menu Structure:</td>
+     				<td><h:inputText id="migrateExtendedFieldsMS" onblur="javascript:checkMenuStructure()"/></td>
+     				<td><span id="checkMenuStructureStatus"/></td>     				
+     			</tr>
+     			<tr>
+     				<td>Old Field Name:</td>
+     				<td><h:inputText id="oldExtendedFieldHeading"/></td>
+     				<td></td>     				
+     			</tr>
+     			<tr>
+     				<td>New Field Name:</td>
+     				<td><h:inputText id="newExtendedFieldHeading"  onblur="javascript:checkMenuColumn()"/></td>
+     				<td><span id="checkFieldName"/></td>     				
+     			</tr>
+     			<tr>
+     				<td colspan="2"><button id="startDataMigrationButton" onclick="javascript:startDataMigration()">Start Migration</button> </td>
+     				<td><span id="extendedFieldMigrationStatus"/></td>
+     			</tr>
+     			
+     		</table>
+     	</fieldset>
+    </ui:composition>
+  </body>
+</html>

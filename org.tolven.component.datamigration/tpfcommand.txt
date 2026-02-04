@@ -1,0 +1,1 @@
+tpf.bat -plugin org.tolven.component.datamigration -tablePrefix core. -dbUrl jdbc:postgresql://localhost:5432/postgres?ssl=true -driverClass org.postgresql.Driver -driverClasspath <driver_library_location>/postgresql-9.1-902.jdbc4.jar -user postgres -password postgres

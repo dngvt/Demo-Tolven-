@@ -1,0 +1,79 @@
+package base_echr_patient_medicationorder
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app; 
+global Date now;
+
+
+rule "Assert Patient For Medications"
+  when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$md: MenuData( menuStructure == $ms, $mdPatient:parent01,string08 == "RQO") 
+  then
+  		app.assertPlaceholder($mdPatient);
+  		app.info( "Asserting Patient for Medications");
+ end
+
+
+rule "Place Medication on medication list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$msMedList: MenuStructure( role == "list", path == "echr:patient:medicationorders:all" )
+		$mdMedication: MenuData( menuStructure == $msMedication,string08 == "RQO")
+	then
+		app.createReferenceMD( $mdMedication, $msMedList );
+end
+
+rule "Place Active MedicationOrder on Active list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$msMedList: MenuStructure( role == "list", path == "echr:patient:medicationorders:active" )
+		$mdMedication: MenuData( menuStructure == $msMedication, actStatus =='active',string08 == "RQO"  )
+	then
+		app.info( "Place Active MedicationOrder on Active list"); 
+		app.createReferenceMD( $mdMedication, $msMedList );
+end
+
+rule "Place all nullified MedicationOrder on Nullified list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$msMedList: MenuStructure( role == "list", path == "echr:patient:medicationorders:nullified" )
+		$mdMedication: MenuData( menuStructure == $msMedication, actStatus == 'nullified',string08 == "RQO" )
+	then
+		app.info( "Place  nullified Medicationorder on Nullified list"); 
+		app.createReferenceMD( $mdMedication, $msMedList );
+end
+rule "Place Medication on Medication summary list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$msMedList: MenuStructure( role == "list", path == "echr:patient:summary:medordersum" )
+		$mdMedication: MenuData( menuStructure == $msMedication, actStatus == 'active',string08 == "RQO" )
+	then
+		app.createReferenceMD( $mdMedication, $msMedList );
+end
+
+rule "Place Active MedicationOrder on Active Orders list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:medication" )
+		$msOrderList: MenuStructure( role == "list", path == "echr:patient:orders:active" )
+		$mdMedication: MenuData( menuStructure == $msMedication, actStatus =='active',string08 == "RQO"  )
+	then
+		app.info( "Place Active MedicationOrder on active Order list"); 
+		app.createReferenceMD( $mdMedication, $msOrderList );
+end

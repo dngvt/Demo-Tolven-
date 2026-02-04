@@ -1,0 +1,40 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure ">
+
+	<trimMenu name="global:cvxImmunizationMenu">
+		<field name="trimName" internal="string02">
+			<from>#{trim.name}</from>
+		</field>
+		<field name="immunization" internal="string01">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="immCode" internal="string03">
+			<from>#{trim.act.code.CE.code}</from>
+		</field>
+		<field name="immDisplayName" internal="string04">
+			<from>#{trim.act.code.CE.displayName}</from>
+		</field>
+	</trimMenu>
+
+	<trimMenu name="global:immunizationMenu">
+		<field name="trimName" internal="string02">
+			<from>#{trim.name}</from>
+		</field>
+		<field name="immunization" internal="string01">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="immCode" internal="string03">
+			<from>#{trim.act.code.CE.code}</from>
+		</field>
+		<field name="immDisplayName" internal="string04">
+			<from>#{trim.act.code.CE.displayName}</from>
+		</field>
+	</trimMenu>
+	<trimMenu name="global:immunizationDocMenu">
+		<field name="trimName" internal="string02">
+			<from>#{trim.name}</from>
+		</field>
+		<field name="immunization" internal="string01">
+			<from>#{trim.description}</from>
+		</field>		
+	</trimMenu>
+</application>

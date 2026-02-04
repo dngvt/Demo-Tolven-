@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="build-jboss6">
+
+	<target name="props">
+		<dirname property="jboss6.parent.dir" file="${appserver.home}" />
+		<property name="jboss6.bin" value="${appserver.home}/bin" />
+		<property name="jboss6.lib.dir" value="${appserver.home}/server/tolven/lib" />
+		<property name="jboss6.config.dir" value="${appserver.home}/server/tolven/conf" />
+		<property name="jboss6.deploy.dir" value="${appserver.home}/server/tolven/deploy" />
+		<property name="jboss6.deployers.dir" value="${appserver.home}/server/tolven/deployers" />
+		<property name="jboss6.logfile" value="${appserver.home}/server/tolven/logs/server.log" />
+		<property name="jboss6.serverxml" value="${appserver.home}/server/tolven/deploy/jbossweb.sar/server.xml" />
+		<property name="jboss6.debugMode" value="false" />
+		<property name="jboss6.debugPort" value="8787" />
+		<property name="initialComponents.jboss6Zip.internal.dir" value="jboss-6.0.0.Final" />
+		<condition property="jboss6.on.win">
+			<os family="windows" />
+		</condition>
+		<condition property="jboss6.run.command" value="run.bat" else="./run.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="startTolvenJBoss" value="${jboss6.bin}/startTolvenJBoss.bat" else="${jboss6.bin}/startTolvenJBoss.sh">
+			<os family="windows" />
+		</condition>
+		<property name="startTolvenJBossNohup" value="${jboss6.bin}/startTolvenJBossNohup.sh" />
+		<condition property="startTolvenJBoss" value="${jboss6.bin}/startTolvenJBoss.bat" else="${jboss6.bin}/startTolvenJBoss.sh">
+			<os family="windows" />
+		</condition>
+		<basename property="startTolvenJBoss.basename" file="${startTolvenJBoss}" />
+		<condition property="stopTolvenJBoss" value="${jboss6.bin}/stopTolvenJBoss.bat" else="${jboss6.bin}/stopTolvenJBoss.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="start-jboss6" value="${jboss6.bin}/run.bat" else="${jboss6.bin}/run.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="JAVA_OPTS_VAR" value="%JAVA_OPTS%" else="$JAVA_OPTS">
+			<os family="windows" />
+		</condition>
+		<property name="JAVA_OPTS_VALUE" value="${JAVA_OPTS_VAR} -Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true -DsuppressOnMessageException=true" />
+		<condition property="jboss6-java-opts" value="-Xdebug -Xrunjdwp:transport=dt_socket,address=0.0.0.0:${jboss6.debugPort},server=y,suspend=n" else="">
+			<equals arg1="${jboss6.debugMode}" arg2="true" />
+		</condition>
+	</target>
+
+	<target name="requirements-guide">
+		<basename property="initialComponents.jboss6Zip.full-basename" file="${initialComponents.jboss6Zip}" />
+		<guide-echo args="Download jboss6: ${initialComponents.jboss6Zip.full-basename}" />
+		<guide-echo args="Place ${initialComponents.jboss6Zip.full-basename} in: ${initialComponentsDir}" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="install-requirements" if="${include.installAppserver}">
+		<fail message="${initialComponents.jboss6Zip} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.jboss6Zip}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${appserver.home} exists">
+			<condition>
+				<available file="${appserver.home}" />
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} install-requirements VERIFIED" />
+	</target>
+
+	<target name="config-requirements" if="${include.configAppserver}">
+		<fail message="${appserver.home} does not exist">
+			<condition>
+				<not>
+					<available file="${appserver.home}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.jdbcDriver} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.jdbcDriver}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonKeystoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonKeystoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonTruststoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonTruststoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} config-requirements VERIFIED" />
+	</target>
+
+	<target name="install" depends="props" description="install" if="${include.installAppserver}">
+		<guide-echo args="Install jboss6" />
+		<guide-echo args="" />
+
+		<guide-echo args="Unzip: ${initialComponents.jboss6Zip} to ${jboss6.parent.dir}" />
+		<delete dir="${java.io.tmpdir}/${initialComponents.jboss6Zip.internal.dir}" />
+		<unzip src="${initialComponents.jboss6Zip}" dest="${java.io.tmpdir}" />
+		<move todir="${appserver.home}">
+			<fileset dir="${java.io.tmpdir}/${initialComponents.jboss6Zip.internal.dir}" />
+		</move>
+
+		<guide-echo args="Rename ${appserver.home}/server/default to ${appserver.home}/server/tolven" />
+		<move todir="${appserver.home}/server/tolven">
+			<fileset dir="${appserver.home}/server/default" />
+		</move>
+		<guide-echo args="" />
+
+		<guide-echo args="Remove directory ${jboss6.deployers.dir}/resteasy.deployer" />
+		<delete dir="${jboss6.deployers.dir}/resteasy.deployer" />
+		<guide-echo args="" />
+
+		<guide-echo args="For linux ensure that the following are executable" />
+		<guide-echo args="All *.sh files in ${appserver.home} and its subdirectories" />
+		<chmod dir="${appserver.home}" perm="u+x" includes="**/*.sh" />
+		<guide-echo args="${jboss6.bin}/*.sh" />
+		<chmod dir="${jboss6.bin}" perm="u+x" includes="*" />
+		<guide-echo args="" />
+
+	</target>
+
+	<target name="config-tolven" depends="props" description="config-tolven" if="${include.configAppserver}">
+		<guide-echo args="Install Database Driver" />
+		<guide-echo args="Copy ${initialComponents.jdbcDriver} to ${jboss6.lib.dir}" />
+		<copy file="${initialComponents.jdbcDriver}" todir="${jboss6.lib.dir}" overwrite="false" verbose="true" />
+		<guide-echo args="" />
+
+		<guide-echo args="Update jboss6 KeyStore and TrustStore" />
+		<guide-echo args="Copy ${jboss6.keystore} to ${jboss6.config.dir}" />
+		<guide-echo args="Copy ${jboss6.truststore} to ${jboss6.config.dir}" />
+		<copy toDir="${jboss6.config.dir}" preservelastmodified="true" overwrite="true" verbose="true">
+			<fileset file="${jboss6.keystore}" />
+			<fileset file="${jboss6.truststore}" />
+		</copy>
+		<guide-echo args="" />
+
+		<antcall target="config-tolven-jboss6" />
+		<antcall target="include-gatekeeper-ear-deploy" />
+		<antcall target="include-tolven-ear-deploy" />
+		<antcall target="start-jboss6" />
+		<antcall target="config-gatekeeper-ear" />
+		<antcall target="config-tolven-ear" />
+	</target>
+
+	<target name="config-tolven-jboss6" depends="props">
+		<guide-echo args="Configure jboss6 For Tolven" />
+		<guide-echo args="" />
+
+		<guide-echo args="Install JBoss start and stop scripts" />
+		<antcall target="config-tolven-jboss6-scripts-linux" />
+		<antcall target="config-tolven-jboss6-scripts-win" />
+
+		<guide-echo args="Install Database Service" />
+		<property name="tolven-ds.xml" value="${jboss6.deploy.dir}/tolven-ds.xml" />
+		<guide-echo args="Setup the default properties in ${tolven-ds.xml}:" />
+		<antcall target="config-tolven-jboss6-legacypostgresql" />
+		<antcall target="config-tolven-jboss6-oracle" />
+		<guide-echo args="" />
+
+		<tpf args="-plugin org.tolven.assembler.jboss6 -jndi" />
+
+		<guide-echo args="Change the &quot;isolated&quot; property from true to false in ${jboss6.deployers.dir}/ear-deployer-jboss-beans.xml:" />
+		<property name="isolated.token" value="&lt;property name=&quot;isolated&quot;>true&lt;/property>" />
+		<property name="isolated.value" value="&lt;property name=&quot;isolated&quot;>false&lt;/property>" />
+		<guide-echo args="Replace ${isolated.token} with ${isolated.value}" />
+		<replace token="${isolated.token}" value="${isolated.value}" file="${jboss6.deployers.dir}/ear-deployer-jboss-beans.xml" />
+		<guide-echo args="" />
+
+		<guide-echo args="Deploy Tolven Libraries" />
+		<tpf args="-plugin org.tolven.deploy.jboss6 -config" />
+
+		<guide-echo args="Enable HTTPS Access" />
+		<guide-echo args="Edit ${jboss6.serverxml}" />
+		<guide-echo args="Replace the 8080 Connector with the following:" />
+		<guide-echo args="Connector protocol=&quot;HTTP/1.1&quot; port=&quot;${tolvenHttpPort}&quot; address=&quot;${jboss.bind.address}&quot;" />
+		<guide-echo args="     SSLEnabled=&quot;true&quot;" />
+		<guide-echo args="     maxThreads=&quot;150&quot; scheme=&quot;https&quot; secure=&quot;true&quot;" />
+		<guide-echo args="     clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot;" />
+		<guide-echo args="     keystoreFile=&quot;${jboss6.keystore}&quot;" />
+		<guide-echo args="     keystorePass=&quot;tolven&quot;" />
+		<guide-echo args="     keyAlias=&quot;tolven&quot;/>" />
+		<antcall target="fixcrlf-server.xml" />
+		<replace file="${jboss6.serverxml}" token="&lt;Connector protocol=&quot;HTTP/1.1&quot; port=&quot;${jboss.web.http.port}&quot; address=&quot;${jboss.bind.address}&quot; ${line.separator}         redirectPort=&quot;${jboss.web.https.port}&quot; />" value="&lt;Connector protocol=&quot;HTTP/1.1&quot; port=&quot;${tolvenHttpPort}&quot; address=&quot;${gatekeeper.domain}&quot; redirectPort=&quot;${gatekeeper.port}&quot; URIEncoding=&quot;UTF-8&quot; /> ${line.separator}      &lt;Connector address=&quot;${gatekeeper.domain}&quot; port=&quot;${gatekeeper.port}&quot; protocol=&quot;HTTP/1.1&quot; SSLEnabled=&quot;true&quot; maxThreads=&quot;150&quot; scheme=&quot;https&quot; secure=&quot;true&quot; clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; URIEncoding=&quot;UTF-8&quot; keystoreFile=&quot;${jboss6.keystore}&quot; keystorePass=&quot;${password.jboss6Keystore}&quot; />" />
+		<replace file="${jboss6.serverxml}" token="&lt;Connector protocol=&quot;AJP/1.3&quot; port=&quot;${jboss.web.ajp.port}&quot; address=&quot;${jboss.bind.address}&quot;${line.separator}         redirectPort=&quot;${jboss.web.https.port}&quot; />" value="&lt;Connector protocol=&quot;AJP/1.3&quot; port=&quot;${jboss.web.ajp.port}&quot; address=&quot;${gatekeeper.domain}&quot; redirectPort=&quot;${gatekeeper.port}&quot; URIEncoding=&quot;UTF-8&quot; />" />
+		<replaceregexp flags="g">
+			<regexp pattern="address=&quot;[^&quot;]*" />
+			<substitution expression="address=&quot;${gatekeeper.domain}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="port=&quot;[^&quot;]*" />
+			<substitution expression="port=&quot;${gatekeeper.port}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+		<replaceregexp flags="o">
+			<regexp pattern="port=&quot;[^&quot;]*" />
+			<substitution expression="port=&quot;${tolvenHttpPort}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="redirectPort=&quot;[^&quot;]*" />
+			<substitution expression="redirectPort=&quot;${gatekeeper.port}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+		<replaceregexp flags="g">
+			<regexp pattern="keystoreFile=&quot;[^&quot;]*" />
+			<substitution expression="keystoreFile=&quot;${jboss6.keystore}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+		<replaceregexp flags="g">
+			<regexp pattern="keystorePass=&quot;[^&quot;]*" />
+			<substitution expression="keystorePass=&quot;${password.jboss6Keystore}" />
+			<fileset file="${jboss6.serverxml}" />
+		</replaceregexp>
+	</target>
+
+	<target name="fixcrlf-server.xml" if="jboss6.on.win">
+		<fixcrlf srcdir="${jboss6.serverxml}/.." includes="server.xml" eol="crlf" />
+	</target>
+
+	<target name="config-tolven-jboss6-scripts-linux" unless="jboss6.on.win">
+		<concat destfile="${startTolvenJBoss}" append="false">#!/bin/bash</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">export JAVA_OPTS=&quot;${JAVA_OPTS_VALUE}&quot;</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${jboss6.run.command} -c tolven -b 0.0.0.0 -Djavax.net.ssl.keystore=${jboss6.keystore} -Djavax.net.ssl.keystorePassword=${password.jboss6Keystore} -Djavax.net.ssl.trustStore=${jboss6.truststore} -Djavax.net.ssl.trustStorePassword=${password.jboss6Truststore}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<chmod file="${startTolvenJBoss}" perm="u+x" />
+
+		<concat destfile="${startTolvenJBossNohup}" append="false">#!/bin/bash</concat>
+		<concat destfile="${startTolvenJBossNohup}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBossNohup}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBossNohup}" append="true">nohup .${file.separator}${startTolvenJBoss.basename} &amp;> /dev/null &amp;</concat>
+		<concat destfile="${startTolvenJBossNohup}" append="true">${line.separator}</concat>
+		<chmod file="${startTolvenJBossNohup}" perm="u+x" />
+
+		<concat destfile="${stopTolvenJBoss}" append="false">#!/bin/bash</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">.${file.separator}shutdown.sh -S</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<chmod file="${stopTolvenJBoss}" perm="u+x" />
+	</target>
+
+	<target name="config-tolven-jboss6-scripts-win" if="jboss6.on.win">
+		<concat destfile="${startTolvenJBoss}" append="false">set JAVA_OPTS=${JAVA_OPTS_VALUE}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${jboss6.run.command} -c tolven -b 0.0.0.0 -Djavax.net.ssl.keystore=${jboss6.keystore} -Djavax.net.ssl.keystorePassword=${password.jboss6Keystore} -Djavax.net.ssl.trustStore=${jboss6.truststore} -Djavax.net.ssl.trustStorePassword=${password.jboss6Truststore}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">if %ERRORLEVEL% NEQ 0 pause</concat>
+		<concat destfile="${startTolvenJBoss}" append="true">${line.separator}</concat>
+		<chmod file="${startTolvenJBoss}" perm="u+x" />
+		<concat destfile="${stopTolvenJBoss}" append="false">shutdown -S</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">if %ERRORLEVEL% NEQ 0 pause</concat>
+		<concat destfile="${stopTolvenJBoss}" append="true">${line.separator}</concat>
+		<chmod file="${stopTolvenJBoss}" perm="u+x" />
+	</target>
+
+	<target name="config-tolven-jboss6-legacypostgresql" if="${include.legacypostgresql}">
+		<guide-echo args="Copy ${appserver.home}/docs/examples/jca/postgres-xa-ds.xml to ${jboss6.deploy.dir}/tolven-ds.xml" />
+		<copy file="${appserver.home}/docs/examples/jca/postgres-xa-ds.xml" tofile="${tolven-ds.xml}" verbose="true" />
+
+		<replace token="&lt;jndi-name>PostgresDS&lt;/jndi-name>" value="&lt;jndi-name>PostgresDS&lt;/jndi-name>&lt;use-java-context>false&lt;/use-java-context>" file="${tolven-ds.xml}" />
+		<replace token="&lt;xa-datasource-property name=&quot;Password&quot;>password&lt;/xa-datasource-property>" value="&lt;xa-datasource-property name=&quot;Password&quot;>password&lt;/xa-datasource-property>&lt;xa-datasource-property name=&quot;Ssl&quot;>true&lt;/xa-datasource-property>&lt;min-pool-size>${db.minAppserverConnections}&lt;/min-pool-size>&lt;max-pool-size>${db.maxAppserverConnections}&lt;/max-pool-size>" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace PostgresDS with TolvenDS" />
+		<replace token="PostgresDS" value="TolvenDS" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace server_name with ${db.host}" />
+		<replace token="server_name" value="${db.host}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace 5432 with ${db.port}" />
+		<replace token="5432" value="${db.port}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace database_name with ${db.name}" />
+		<replace token="database_name" value="${db.name}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace user with ${db.user}" />
+		<replace token="user" value="${db.user}" file="${tolven-ds.xml}" />
+
+		<replace token="&lt;xa-datasource-property name=&quot;Password&quot;>password&lt;/xa-datasource-property>" value="&lt;xa-datasource-property name=&quot;Password&quot;>password&lt;/xa-datasource-property>" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace password with ${password.dbUser}" />
+		<replace token="password" value="${password.dbUser}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Remove the Compatible=7.1 flag" />
+		<replace token="&lt;xa-datasource-property name=&quot;Compatible&quot;>7.1&lt;/xa-datasource-property>" value="" file="${tolven-ds.xml}" />
+
+		<replaceregexp byline="true">
+			<regexp pattern="&lt;min-pool-size>.*&lt;/min-pool-size>" />
+			<substitution expression="&lt;min-pool-size>${db.minAppserverConnections}&lt;/min-pool-size>" />
+			<fileset file="${tolven-ds.xml}" />
+		</replaceregexp>
+		<replaceregexp byline="true">
+			<regexp pattern="&lt;max-pool-size>.*&lt;/max-pool-size>" />
+			<substitution expression="&lt;max-pool-size>${db.maxAppserverConnections}&lt;/max-pool-size>" />
+			<fileset file="${tolven-ds.xml}" />
+		</replaceregexp>
+
+		<replaceregexp byline="true" flags="o">
+			<regexp pattern="maxSize=.*, timeout" />
+			<substitution expression="maxSize=${jboss6.maxStatelessBeans}, timeout" />
+			<fileset file="${jboss6.deploy.dir}/ejb3-interceptors-aop.xml" />
+		</replaceregexp>
+		
+	</target>
+
+	<target name="config-tolven-jboss6-oracle" if="${include.oracle}">
+		<guide-echo args="Copy ${appserver.home}/docs/examples/jca/oracle-xa-ds.xml to ${jboss6.deploy.dir}/tolven-ds.xml" />
+		<copy file="${appserver.home}/docs/examples/jca/oracle-xa-ds.xml" tofile="${tolven-ds.xml}" verbose="true" />
+
+		<replace token="&lt;jndi-name>XAOracleDS&lt;/jndi-name>" value="&lt;jndi-name>XAOracleDS&lt;/jndi-name>&lt;use-java-context>false&lt;/use-java-context>" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace XAOracleDS with TolvenDS}" />
+		<replace token="XAOracleDS" value="TolvenDS" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace jdbc:oracle:oci8:@tc with ${db.url}" />
+		<replace token="jdbc:oracle:oci8:@tc" value="${db.url}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace scott with ${db.user}" />
+		<replace token="scott" value="${db.user}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Replace tiger with ${password.dbUser}" />
+		<replace token="tiger" value="${password.dbUser}" file="${tolven-ds.xml}" />
+
+		<guide-echo args="Remove the Compatible=7.1 flag" />
+		<replace token="&lt;xa-datasource-property name=&quot;Compatible&quot;>7.1&lt;/xa-datasource-property>" value="" file="${tolven-ds.xml}" />
+
+	</target>
+
+	<target name="start-jboss6" depends="props" if="${include.startAppserver}">
+		<guide-echo args="Start jboss6" />
+		<guide-echo args="For the purposes of this installation start, the JAVA_OPTS=${jboss6-java-opts}" />
+		<guide-echo args="Any other JAVA_OPTS can be found in ${startTolvenJBoss}" />
+		<exec executable="${startTolvenJBoss}" dir="${jboss6.bin}" spawn="true">
+			<env key="JAVA_OPTS" value="${jboss6-java-opts}" />
+			<env key="LAUNCH_JBOSS_IN_BACKGROUND" value="true" />
+		</exec>
+		<echo message="Waiting for jboss6 to start..." />
+		<waitfor maxwait="300" maxwaitunit="second" timeoutproperty="timed.out">
+			<socket server="${tolvenDomain}" port="${tolvenHttpsPort}" />
+		</waitfor>
+		<fail message="jboss6 appears to not have started. Nothing listening on port: ${tolvenHttpsPort}" if="timed.out" />
+		<echo message="Done" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="include-gatekeeper-ear-deploy" if="${include.gatekeeperearDeploy}">
+		<echo message="Deploy gatekeeper EAR File" />
+		<tpf args="-plugin org.tolven.deploy.jboss6 -earPlugins org.tolven.gatekeeper" />
+		<echo message="Done" />
+	</target>
+
+	<target name="config-gatekeeper-ear" if="${include.gatekeeperearDeploy}">
+		<echo message="Waiting for gatekeeper.ear to deploy..." />
+		<echo message="Waiting for directory: ${appserver.home}/server/tolven/work/jboss.web/localhost/gatekeeper_html" />
+		<waitfor maxwait="300" maxwaitunit="second">
+			<available file="${appserver.home}/server/tolven/work/jboss.web/localhost/gatekeeper_html" type="dir" />
+		</waitfor>
+		<guide-echo args="" />
+		<fail message="${appserver.home}/server/tolven/work/jboss.web/localhost/gatekeeper_html not found, so gatekeeper.ear failed to deploy">
+			<condition>
+				<not>
+					<available file="${appserver.home}/server/tolven/work/jboss.web/localhost/gatekeeper_html" type="dir" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="Done" />
+		<guide-echo args="" />
+
+	</target>
+
+	<target name="include-tolven-ear-deploy" if="${include.tolvenearDeploy}">
+		<echo message="Deploy Tolven EAR File" />
+		<tpf args="-plugin org.tolven.deploy.jboss6 -earPlugins org.tolven.component.tolvenear" />
+		<echo message="Done" />
+	</target>
+
+	<target name="config-tolven-ear" if="${include.tolvenearDeploy}">
+		<echo message="Waiting for tolven.ear to deploy..." />
+		<echo message="Waiting for directory: ${appserver.home}/server/tolven/work/jboss.web/localhost/Tolven" />
+		<waitfor maxwait="300" maxwaitunit="second">
+			<available file="${appserver.home}/server/tolven/work/jboss.web/localhost/Tolven" type="dir" />
+		</waitfor>
+		<guide-echo args="" />
+		<fail message="${appserver.home}/server/tolven/work/jboss.web/localhost/Tolven not found, so tolven.ear failed to deploy">
+			<condition>
+				<not>
+					<available file="${appserver.home}/server/tolven/work/jboss.web/localhost/Tolven" type="dir" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="Done" />
+		<guide-echo args="" />
+	</target>
+</project>

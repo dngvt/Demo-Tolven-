@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:trim:4.0 http://www.tolven.org/xsd/trim4">
+	<abstract>true</abstract>
+	<name>associatedProblem</name>
+	<author>Tolven</author>
+	<description>A template for adding associated problems</description>
+	<act moodCode="EVN" classCode="OBS">
+		<id>
+			<II>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{problem.path}</extension>
+			</II>
+		</id>
+		<code>
+			<CD>
+				<displayName>Problem</displayName>
+				<code>C0033213</code>
+				<codeSystemName>UMLS</codeSystemName>
+				<codeSystemVersion>2012AA</codeSystemVersion>
+			</CD>
+		</code>
+		<observation>
+			<value>
+				<CE>
+					<displayName>#{problem.title}</displayName>
+					<code>#{problem.code}</code>
+					<codeSystemName>#{problem.codeSystemName}</codeSystemName>
+				</CE>
+			</value>
+		</observation>
+	</act>
+</trim>

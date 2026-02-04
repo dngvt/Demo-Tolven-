@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:md="http://www.tolven.org/jsf/menuData">
+  <head>
+    <title>Surescripts URL Post Page</title>
+    <script type="text/javascript" src="/Tolven/scripts/prototype.js" />
+    <script type="text/javascript" src="/Tolven/scripts/scriptaculous.js" />
+    <script type="text/javascript">
+    function callSubmit(){
+		var xmlMsg = document.getElementById("xmlMessage").value;
+		xmlMsg = ReplaceAll(xmlMsg,'?','_');
+		xmlMsg = ReplaceAll(xmlMsg,'%','$');
+		xmlMsg = ReplaceAll(xmlMsg,'#','^');
+		var myAjax = new Ajax.Request(
+		   'process.sure',
+		   {
+		  	 method: 'post', 
+   			 parameters: 'xmlMsg='+xmlMsg, 
+        		 onFailure: function() {
+        		 location.href=document.URL;
+        		 },
+     		  onComplete: function(response) {
+     		  		document.getElementById("xmlMessage").value = "";
+     		  		alert(response.responseText);
+     		  }
+  				 });
+	}
+	
+	function ReplaceAll(Source,stringToFind,stringToReplace){
+	  	var temp = Source;
+	    var index = temp.indexOf(stringToFind);
+	        while(index != -1){
+	            temp = temp.replace(stringToFind,stringToReplace);
+	            index = temp.indexOf(stringToFind);
+	        }
+        return temp;
+	}
+    </script>
+  </head>
+  <h1>Surescripts URL Post Page</h1>
+  <form method="post" action="/eRxInbox">
+  	<table cellpadding="1" cellspacing="1" width="100%">
+  		<tr>
+  			<td>
+  				Please enter the XML to be posted to the URL
+  			</td>
+  			<td>
+  				<input id ="xmlMessage" type="text" style="height:400px;width:400px;" />
+  			</td>
+  		</tr>
+  		<tr>
+  			<td colspan="2" >
+  				<input type="button" value="Submit" style="margin-left:600px;" onclick="callSubmit()"/>
+  			</td>
+  		</tr>
+  	</table>
+  </form>
+</html>

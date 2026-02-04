@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- plugins -->
+	
+	<plugin id="org.tolven.component.tolvenlocale_en">
+		<root />
+	</plugin>
+	
+	<!-- end plugins -->
+	
+	<!-- properties -->
+	
+	<property name="initialComponents">
+		<property name="opendsZip" value="#{initialComponentsDir}/OpenDS-2.3.0-build003.zip" />
+		<property name="glassfish3Zip" value="#{initialComponentsDir}/glassfish-3.1.1-ml.zip" />
+		<property name="jboss6Zip" value="#{initialComponentsDir}/jboss-as-distribution-6.0.0.Final.zip" />
+		<property name="jdbcDriver" value="#{initialComponentsDir}/postgresql-9.2-1003.jdbc4.jar" />
+		<property name="commonKeystoreSrc" value="#{initialComponentsDir}/keystore.jks" />
+		<property name="commonTruststoreSrc" value="#{initialComponentsDir}/cacerts.jks" />
+		<property name="mdbuserKeystoreSrc" value="#{initialComponentsDir}/tolvendev-mdbuser.p12" />
+	</property>
+
+	<property name="repositoryLibrary">
+		<property name="v21">
+			<property name="trunkMetadata" value="file:///#{rootDir}/snapshots/SNAPSHOT_DIR/plugins.xml" />
+		</property>
+		<property name="repositoryLocal">
+			<property name="trunkMetadata" value="file:///#{tolvenConfigDir}/repositoryLocal/plugins.xml" />
+		</property>
+	</property>
+
+	<!-- end properties -->
+
+	<includes>
+		<include pluginsRef="default-template-fragments/defaults-plugins.xml" includeType="default" />
+		<include pluginsRef="default-template-fragments/jboss6-legacypostgresql-plugins.xml" includeType="default" />
+	</includes>
+
+</plugins>

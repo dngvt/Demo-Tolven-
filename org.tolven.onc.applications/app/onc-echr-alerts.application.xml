@@ -1,0 +1,143 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient">
+		<placeholder name="alert" title="Alert" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/alertLink.xhtml">
+			<field name="title" internal="string01">
+				<from>#{trim.field['title']}</from>
+			</field>
+			<field name="effectiveTime" internal="date01">
+			</field>
+			<field name="text" internal="string02">
+			</field>
+			<field name="patient" internal="parent01">
+			</field>
+			<field name="enteredBy" internal="string03">
+			</field>
+			<field name="reviewed" internal="string04">
+				<from>#{trim.field['reviewed']}</from>
+			</field>
+			<field name="sent" internal="string05">
+				<from>#{trim.field['sent']}</from>
+			</field>
+			<field name="deliveryType" internal="string06">
+				<from>#{trim.field['deliveryType']}</from>
+			</field>
+			<field name="recommendedAction" internal="_extended">
+				<from>#{trim.field['recommendedAction']}</from>
+			</field>
+			<field name="recommendedActionTaken" internal="_extended">
+				<from>#{trim.field['recommendedActionTaken']}</from>
+			</field>
+			<field name="actionTaken" internal="_extended">
+				<from>#{trim.field['actionTaken']}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:patients">
+		<list name="alerts" title="Alerts" page="/five/list.xhtml" visible="true" drilldown="echr:patients" sequence="8500">
+			<column name="Name" reference="true" internal="string01" width="20.0">
+				<from>#{alert.patient.lastName}, #{alert.patient.firstName}</from>
+				<output><a href="javascript:showPane('#{patient.path}',false,'echr:patients:alerts')">#{Name}</a></output>
+			</column>
+			<column name="DOB" internal="ts01" format="d MMM yyyy" visible="false"
+				width="7.0">
+				<from>#{alert.patient.dob}</from>
+			</column>
+			<column name="Age" internal="ts01" format="age" width="4.5" />
+			<column name="Sex" internal="string02" width="6.0">
+				<from>#{alert.patient.sex}</from>
+				<from>#{alert.patient.gender}</from>
+				<output>
+					<span style="color:#{ Sex=='Female'?'HotPink':'Blue'}" title="#{ageInYears(date01) lt 21?'child':'adult'}">#{Sex}</span>
+				</output>
+			</column>
+			<column name="Phone" width="10.0" internal="string03" visible="true">
+				<from>#{alert.patient.homeTelecom}</from>
+				<output>
+					<a
+						href="javascript:alert('Primary: #{alert.patient.primary.firstName} #{alert.patient.primary.lastName} #{alert.patient.primary.workTelecom}');">#{Phone}</a>
+				</output>
+			</column>
+			<column name="Title" internal="string04" width="10.0">
+				<from>#{alert.title}</from>
+				<output><a href="#" onclick="instantiate('act/evn/patientAlert','#{alert}','#{alert.path}')">#{alert.title}</a></output>
+			</column>
+			<column name="Reviewed" internal="string05" width="10.0">
+				<from>#{alert.reviewed}</from>
+			</column>
+			<!-- 
+			<column name="DeliveryType" internal="string06" width="15.0">
+				<from>#{alert.deliveryType}</from>
+			</column>
+			-->
+			<column name="RecommendedAction" internal="string07" width="40.0">
+				<from>#{alert.recommendedActionTaken=='true'?alert.recommendedAction:'Recommended Clinical Action Not Taken'}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary">
+		<list name="alertsum" visible="never">
+				<column name="Date" internal="date01" format="MM/dd/yyyy" width="10.0">
+					<from>#{alert.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="15.0">
+					<from>#{alert.title}</from>
+				</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="alertsum" portalColumn="2" sequence="3" title="Reminders" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:alertsum" visible="true" drilldown=":alerts">
+		</portlet>
+	</extends>
+	<extends path="echr:patient:summary:calendar">
+		<entry name="alert" sequence="4" title="Alert" query="echr:patient:summary:alertsum" visible="true" drilldown=":alerts" />
+	</extends>
+	<extends path="echr:patient">
+		<menu name="alerts" sequence="13" title="Alerts" page="/five/bar2.xhtml" visible="true">
+			<list name="current" title="Current" page="/five/list.xhtml" visible="true" drilldown=":alert">
+				<column name="Name" reference="true" internal="string08" visible="false">
+					<from>#{reminder.patient.lastName}, #{reminder.patient.firstName}</from>
+				</column>
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{alert.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="20.0">
+					<from>#{alert.title}</from>
+					<output><a href="#" onclick="instantiate('act/evn/patientAlert','#{alert}','#{alert.path}')">#{alert.title}</a></output>
+				</column>
+				<column name="Reviewed" internal="string04" width="10.0">
+					<from>#{alert.reviewed}</from>
+				</column>
+				<column name="Completed" internal="string05" width="10.0">
+					<from>#{alert.sent}</from>
+				</column>
+				<column name="RecommendedAction" internal="string07" width="40.0">
+					<from>#{alert.recommendedActionTaken=='true'?alert.recommendedAction:'Recommended Clinical Action Not Taken'}</from>
+				</column>
+			</list>
+			<list name="completed" title="Completed" page="/five/list.xhtml" visible="true" drilldown=":alert">
+				<column name="Name" reference="true" internal="string08" visible="false">
+					<from>#{reminder.patient.lastName}, #{reminder.patient.firstName}</from>
+				</column>
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{alert.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="20.0">
+					<from>#{alert.title}</from>
+					<output><a href="#" onclick="instantiate('act/evn/patientAlert','#{alert}','#{alert.path}')">#{alert.title}</a></output>
+				</column>
+				<column name="Reviewed" internal="string04" width="10.0">
+					<from>#{alert.reviewed}</from>
+				</column>
+				<column name="Completed" internal="string05" width="10.0">
+					<from>#{alert.sent}</from>
+				</column>
+				<column name="RecommendedAction" internal="string07" width="40.0">
+					<from>#{alert.recommendedActionTaken=='true'?alert.recommendedAction:'Recommended Clinical Action Not Taken'}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>	
+</application>
+				

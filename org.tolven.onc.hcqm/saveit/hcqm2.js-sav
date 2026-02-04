@@ -1,0 +1,180 @@
+
+	var STKX = [false, false, false, false, false, false];
+	var STKN = [false, false, false, false, false, false];
+	var STKD = [false, false, false, false, false, false];
+        var grpName ;
+	function qr2Init(qualityMeasureValue,operationType,STKIndex){
+           var qualityMeasureStatus = qualityMeasureValue;
+	    var grp = document.getElementsByName(qualityMeasureValue.name);
+           var i = qualityMeasureValue.id.replace(qualityMeasureValue.name+":","");
+            grpName  = qualityMeasureValue.name.split(":")[0];
+
+//alert(grpName);
+           var lastValue = (i == (grp.length -1)) ? true : false;
+          //if the selected value is Exclusion
+  
+        
+           if(operationType == "X") { 
+              if(lastValue) {
+               unCheckStkAllX(grp,i, STKIndex);
+              } else {
+               markStkX(grp,i, STKIndex);
+              }
+           } else if(operationType ==  "D") { 
+		if(lastValue) {
+               unCheckStkAllD(grp,i, STKIndex);
+              } else {
+               markStkD(grp,i, STKIndex);
+              }
+         
+           } else  if(operationType == "N") {
+             if(lastValue) {
+               unCheckStkAllN(grp,i, STKIndex);
+              } else {
+               markStkN(grp,i, STKIndex);
+              }
+           } 
+		 
+	}
+
+        function unCheckStkAllX(grp,i, STKIndex) {
+		 unCheckStkAll(grp, STKIndex, STKX);
+		return true;
+	} 
+
+	function unCheckStkAllN(grp,i, STKIndex) {
+		 
+		unCheckStkAll(grp, STKIndex, STKN)
+		return true;
+	} 
+	
+	function unCheckStkAllD(grp,i, STKIndex) {
+		 
+		unCheckStkAll(grp, STKIndex, STKD)
+		return true;
+	}
+	
+	function unCheckStkAll(grp, STKIndex, stateArray) {
+		if(grp[grp.length - 1].checked){
+			for (var i = 0; i < grp.length - 1; i++) {
+				grp[i].checked = false;
+			}
+			stateArray[STKIndex] = false;
+		}
+		repaintResultStk();
+		return true;
+	} 
+	
+
+        function markStkX(grp,i, STKIndex) {	
+                markItStk(i, STKIndex, grp, STKX)
+		return true;
+	}
+
+	function markStkD(grp,i, STKIndex) {	
+        	markItStk(i, STKIndex, grp, STKD)
+		return true;
+ 
+	} 
+	
+	function markStkN(grp,i, STKIndex) {	
+	      markItStk(i, STKIndex, grp, STKN)
+	      return true;
+	}
+
+
+	function markItStk(i, STKIndex, grp, stateArray) {	
+ 
+		if(!grp[i].checked){
+		    var lastOne = true;
+			for (var j = 0; j< grp.length - 1; j++) {
+				if(grp[j].checked) {
+					lastOne = false;
+	    			break;
+				}
+			}
+			
+			if(lastOne) {
+				stateArray[STKIndex] = false;
+			 	repaintResultStk();
+				return true;
+			}
+		}
+	
+	       stateArray[STKIndex] = true;
+	       grp[grp.length - 1].checked = false;
+	       repaintResultStk();
+	       return true;
+	}
+
+	 function repaintResultStk(){
+ 
+	   var r = "";
+ 
+		r += getResultStk(document.getElementsByName(grpName +":STK1N"), 0, "D");
+		//alert("....1"+grpName);
+		document.getElementById(grpName +":stk2_value").value = getResultStk(document.getElementsByName(grpName +":STK1N"), 0, "D");
+ 
+		r += getResultStk(document.getElementsByName(grpName +":STK2N"), 1, "D");
+
+		document.getElementById(grpName +":stk3_value").value = getResultStk(document.getElementsByName(grpName +":STK2N"), 1, "D");
+ 
+
+		r += getResultStk(document.getElementsByName(grpName +":STK3N"), 2, "I");
+		
+		document.getElementById(grpName +":stk4_value").value = getResultStk(document.getElementsByName(grpName +":STK3N"), 2, "I");
+ 
+		r += getResultStk(document.getElementsByName(grpName +"STK4N"), 3, "I");
+ 
+		document.getElementById(grpName +":stk5_value").value = getResultStk(document.getElementsByName(grpName +":STK4N"), 3, "I");
+
+		r += getResultStk(document.getElementsByName(grpName +":STK5N"), 4, "I");
+
+		document.getElementById(grpName +":stk6_value").value = getResultStk(document.getElementsByName(grpName +":STK5N"), 4, "I");
+ 
+		r += getResultStk(document.getElementsByName(grpName +":STK6N"), 5, "I");
+
+		document.getElementById(grpName +":stk8_value").value =  getResultStk(document.getElementsByName(grpName +":STK6N"), 5, "I");
+
+		r += getResultStk(document.getElementsByName(grpName +":STK7N"), 6, "I");
+
+		document.getElementById(grpName +":stk10_value").value =  getResultStk(document.getElementsByName(grpName +":STK7N"), 6, "I");
+
+
+		document.getElementById(grpName+":result").value = r;
+ 
+	}
+
+      function getResultStk(grp, STKIndex, defValue){
+	    var r = "";
+	  
+	    if (STKX[STKIndex]) {
+                r="X";
+	    	STKN[STKIndex] = false;
+	    	for (var i = 0; i < grp.length; i++) {
+			 //grp[i].disabled = true;
+			 grp[i].checked = false;
+		 }
+	    } else {
+	    	for (var i = 0; i < grp.length; i++) {
+			 grp[i].disabled = false;
+		}
+
+		 if (STKN[STKIndex]) {
+			r="N";
+                   
+		 } else if (STKD[STKIndex]) {
+                   
+	    	        r="D";
+	    	} else { 
+                  
+	    		r= defValue;
+	    	}
+	    }
+	    return r;
+      }
+
+ 
+	
+	
+	

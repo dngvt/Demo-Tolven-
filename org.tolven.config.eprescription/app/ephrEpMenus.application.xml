@@ -1,0 +1,54 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure ">
+	<trimMenu name="global:pharmacyMenu">	
+		<field name="pharmacy" internal="string01">
+			<from>#{trim.description}, #{trim.act.observation.values[1].ST.value},#{trim.act.observation.values[2].ST.value}, #{trim.act.observation.values[3].ST.value}, #{trim.act.observation.values[4].ST.value}</from>
+		</field>
+		<field name="description" internal="string05">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="address" internal="string03" >
+			<from>#{trim.act.observation.values[1].ST.value}</from>
+		</field>
+		<field name="city" internal="pqStringVal01" >
+			<from>#{trim.act.observation.values[2].ST.value}</from>
+		</field>
+		<field name="state" internal="string06" >
+			<from>#{trim.act.observation.values[3].ST.value}</from>
+		</field>
+		<field name="zip" internal="string04" >
+			<from>#{trim.act.observation.values[4].ST.value}</from>
+		</field>
+		<field name="primaryPhone" internal="string07" >
+			<from>#{trim.act.observation.values[5].ST.value}</from>
+		</field>
+		<field name="fax" internal="string08" >
+			<from>#{trim.act.observation.values[6].ST.value}</from>
+		</field>
+	</trimMenu>
+	<trimMenu name="global:pharmacyDocMenu">
+		<field name="name" internal="string01" >
+			<from>#{trim.description}</from>
+		</field>
+		<field name="description" internal="string02" >
+			<from>#{trim.name}</from>
+		</field>
+	</trimMenu>
+	<trimMenu name="global:medAdminMenu">
+		<field name="title" internal="string01">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="name" internal="string02">
+			<from>#{trim.name}</from>
+		</field>		
+	</trimMenu>	
+	<trimMenu name="global:patientMedicationMenu">
+		<field name="medication" internal="string01" >
+			<from>#{trim.description}</from>
+		</field>
+		<field name="name" internal="string02" >
+			<from>#{trim.name}</from>
+		</field>
+	</trimMenu>	
+</application>

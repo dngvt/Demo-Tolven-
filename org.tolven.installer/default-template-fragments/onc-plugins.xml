@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml 
+		file or an overlay plugins.xml -->
+
+	<plugin id="org.tolven.ccr">
+		<root />
+	</plugin>
+
+	<plugin id="org.tolven.onc.applications">
+		<root />
+	</plugin>
+
+
+	<!-- Start onc-plugins.xml plugins (but note base-plugins section below) -->
+	<plugin id="org.tolven.base.applications">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.dischargeInstructions">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.performance">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.orders.imageorders">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.orders.laborders">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.growthchart">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.ccd">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.cda">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.dataextract">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.labresults">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.diagnosis">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.allergy">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.procedure">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.medication">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.hl7">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.onc.assessments">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.onc.hcqm">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.onc.pqri">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.onc.immunization">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.onc.accountshares">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.component.tolvenlocale_en">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.reportablediagnosisLoader">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.substancemanufacturer">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.allergies">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.diagnoses">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.cvximmunization">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.immunization">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.procedures">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.icd9procedures">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.rxnorm">
+		<root />
+	</plugin>
+
+	<!-- Start base-plugins.xml plugins -->
+	<plugin id="org.tolven.patient.encounter">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.personal-event">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.observation">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.problem">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.admin.location">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.admin.staff">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.problems">
+		<root />
+	</plugin>
+	<!-- End onc-plugins.xml plugins (but note base-plugins section below) -->
+
+
+	<!--<plugin id="org.tolven.deploy.ImageOrders.LoaderLabOrders">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.LabOrders.LoaderLabOrders">
+		<root />
+	</plugin>-->
+
+</plugins>

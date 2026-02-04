@@ -1,0 +1,463 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+   		<title>#{trim.trim.act.title.ST}</title>
+   		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   		<script type="text/javascript" src="ePrescriptionScripts.js" />
+	</head>
+	<body>
+		<ui:composition>
+			<script>
+			// <![CDATA[
+			          	checkDrugValidity("#{menu.elementLabel}","#{menu.element}");
+			          	gatherOriginalPrescriptionInfo("#{menu.elementLabel}","#{menu.element}");
+			// ]]>           	
+			</script>
+			<input type="text"  id="rxRefNum" value="#{trim.trim.act.relationship['header'].act.observation.values[3].ST.value}"  style="display:none"/>
+			<input type="text"  id="status" value="#{trim.trim.act.relationship['header'].act.observation.values[6].ST.value}"  style="display:none"/>
+			<input type="text"  id="pon" value="#{trim.trim.act.relationship['header'].act.observation.values[4].ST.value}"  style="display:none"/>
+			<input type="text"  id="formIdValue" value="#{menu.elementLabel}"  style="display:none"/>
+  			<input type="text"  id="elementValue" value="#{menu.element}" style="display:none" />
+  			<input type="text"  id="isControlled" value="#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[3].ST.value}"  style="display:none" />
+  			<input type="text" id="refillsRequested" value="#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[0].ST.value}" style="display:none" />
+  			<input type="text" id="refillsQualRequested" value="#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[2].CE.displayName}" style="display:none" />
+  			<input type="text" id="medicationNameFinalised" value="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values[0].ST.value}" style="display:none"/>
+  			<input type="text" id="originalPON" value="#{trim.trim.act.relationship['header'].act.observation.values[10].ST.value}" style="display:none"/>
+  			<input type="text" id="elementLabel" value="#{menu.elementLabel}" style="display:none"/>
+  			<h:inputHidden id="patientHidden" value="#{trim.trim.act.relationship['patient'].act.observation.values[5].ST.value}"/>
+  			<h:inputHidden id="computeEnable"  value="#{trim.trim.act.computes[0].property['enabled']}" converter="javax.faces.Boolean"/>
+  			<c:forEach items="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values}" var="medicationPrescribed">
+				<c:if test="#{medicationPrescribed.label.value == 'IsScheduleDrug'}">
+					<input type="text" id="isScheduleDrug" value="#{medicationPrescribed.ST.value}" style="display:none" />
+				</c:if>
+			</c:forEach>
+			<wiz:step title="#{msg.GettingStarted}" >
+					 <script>
+					// <![CDATA[
+					 		$("#{menu.elementLabel}cancelButton").disabled=true;
+			  				 if ($("#{menu.elementLabel}submitButton")!=null){
+			                           $("#{menu.elementLabel}submitButton").observe('click', function() {
+			                           		openNewPrescription();
+			                           		submitMedicationDetails("#{menu.elementLabel}","#{menu.element}");
+			                           		if($("isControlled").value == "3" || $("isControlled").value == "4" || $("isControlled").value == "5" ||
+			                           				($("isScheduleDrug") != null && $("isScheduleDrug").value == "Yes")) {
+			                           			printControlledRefillResponse('#{menu.element}', '#{menu.elementLabel}', $("#{menu.elementLabel}:patientHidden").value);
+		                           			}
+			                           });
+			                 } 
+			  			// ]]>               
+  					</script>
+				<wiz:body>
+					<!-- <p>You have received Refill Request from the pharmacy via Surescripts.
+					You can review the information and then decide if you want to accept the 
+					information or not.</p>
+					<ol>
+						<li>Approve the request.</li>
+						<li>Approve with changes.</li>
+						<li>Deny the new prescription.</li>
+						<li>Deny.</li>
+					</ol>		-->			
+					<p>Click Next to Start.</p>
+				</wiz:body>		
+				<wiz:help>
+					<h1>getting Started</h1>
+					<p>Help provides additional information about each page</p>
+					<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+						If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+						Once submitted, you will not be able to Cancel the form.
+					</p>
+				</wiz:help>
+			</wiz:step>
+		    <wiz:step title="Refill Request Details" >
+				<wiz:body>	
+				<wiz:group prefix="Refill Request Details" title="">
+						<table width="100%">
+							<tr>
+								<td width="50%">
+									<div id="refillRequestPharmacy" >
+										<wiz:group prefix="Pharmacy" title="" style="margin:10px;">
+											<div class="refReqRow1">
+												<table style="width:100%" cellpadding="3">
+													<c:forEach items="#{trim.trim.act.relationship['pharmacy'].act.observation.values}" var="pharmacy">
+													<tr style="width:100%">
+														<td class="refReqtableLabel">
+															<h:outputText value="#{pharmacy.label.value} :"></h:outputText>
+														</td>
+														<td class="refReqtableData">
+															<h:outputText value="#{pharmacy.ST.value}"></h:outputText>
+														</td>
+													</tr>
+													</c:forEach>					
+												</table>
+											</div>
+										</wiz:group>
+									</div>
+								</td>
+								<td width="50%">
+									<div id="refillRequestPrescriber" >
+										<wiz:group prefix="Prescriber" title="" style="margin:10px;">
+											<div class="refReqRow1">
+												<table style="width:100%" cellpadding="3">
+													<c:forEach items="#{trim.trim.act.relationship['prescriber'].act.observation.values}" var="prescriber">
+													<tr style="width:100%">
+														<td class="refReqtableLabel">
+															<h:outputText value="#{prescriber.label.value} :"></h:outputText>
+														</td>
+														<td class="refReqtableData">
+															<h:outputText value="#{prescriber.ST.value}"></h:outputText>
+														</td>
+													</tr>
+													</c:forEach>					
+												</table>
+											</div>
+										</wiz:group>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div id="refillRequestPatient" >
+										<wiz:group prefix="Patient" title="" style="margin:10px;">
+											<div class="refReqRow2">
+												<table style="width:100%" cellpadding="3">
+													<c:forEach items="#{trim.trim.act.relationship['patient'].act.observation.values}" var="patient">
+													<c:if test="#{patient.label.value!='Patient Mentioned' and patient.ST.value != ''}">
+													<tr style="width:100%">
+														<td class="refReqtableLabel">
+															<h:outputText value="#{patient.label.value} :"></h:outputText>
+														</td>
+														<c:if test="#{patient.ST!=null}">
+															<td class="refReqtableData">
+																<h:outputText value="#{patient.ST.value}"></h:outputText>
+															</td>	
+														</c:if>
+															<c:if  test="#{patient.TS!=null}">
+															<td class="refReqtableData">
+																<trim:TS value="#{patient.TS}" dateStyle="short"  readonly="true"/>
+															</td>	
+														</c:if>
+													</tr>
+													</c:if>
+													</c:forEach>					
+												</table>
+											</div>
+										</wiz:group>
+									</div>
+								</td>
+								<td>
+									<div id="refillRequestMedDet" >
+										<wiz:group prefix="Medication Details" title="" style="margin:10px;">
+											<div class="refReqRow2">
+												<table style="width:100%" cellpadding="3">
+													<c:forEach items="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values}" var="medicationPrescribed">
+													<c:if test="#{medicationPrescribed.label.value != 'IsScheduleDrug'}">
+													<tr style="width:100%">
+														<td class="refReqtableLabel">
+															<h:outputText value="#{medicationPrescribed.label.value} :"></h:outputText>
+														</td>
+														<c:if test="#{medicationPrescribed.ST!=null}">
+														<td class="refReqtableData">
+															<h:outputText value="#{medicationPrescribed.ST.value}"></h:outputText>
+														</td>
+														</c:if>
+														<c:if  test="#{medicationPrescribed.TS!=null}">
+														<td class="refReqtableData">
+															<trim:TS value="#{medicationPrescribed.TS}" dateStyle="short"  readonly="true"/>
+														</td>
+														</c:if>
+													</tr>
+													</c:if>
+													</c:forEach>					
+												</table>
+											</div>
+										</wiz:group>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</wiz:group>
+					
+					<fieldset class="plain">
+						<table width="100%" >
+							<tr>
+								<td width="50%">
+									<wiz:group prefix="Match Patient and Mediction" title="" style="margin:10px;">
+										<div class="refReqPatMatch">
+										<table width="100%" cellpadding="2">
+											<tr>
+												<td style="text-align: right; width:40%">Prescriber Order Number Matched :</td>
+												<td style="width:60%"><h:outputText id="ponMatched"></h:outputText></td>
+											</tr>
+											<tr>
+												<td style="text-align: right; width:40%">Patient Matched :</td>
+												<td style="width:60%"><h:outputText id="patientMatched"/></td>
+											</tr>
+											<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[10].ST.value == ''}">
+												<tr>
+													<td style="text-align: right; width:40%">Prescriber Order Number(PON) :</td>
+													<td style="width:60%"><h:outputText id="initialPONStatus" value="Nil"></h:outputText></td>
+												</tr>
+											</c:if>
+											<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[10].ST.value != ''}">
+											<tr>
+												<td style="text-align: right; width:40%"><h:outputText value="Prescriber Order Number(PON) :"></h:outputText></td>
+												<td style="width:60%"><h:outputText id="initialPONStatus" value="#{trim.trim.act.relationship['header'].act.observation.values[4].ST.value}"></h:outputText></td>
+											</tr>
+											</c:if>
+										</table>
+										<wiz:group prefix="Matched Patient" title="" style="margin:10px;" id="matchPatient">
+											<div style="height: auto; overflow-y: auto;">
+												<table width="100%" cellpadding="2">
+												<tr>
+													<td style="text-align: right; width:20%">
+														<h:outputText style="" value="Name *"/> 
+													</td>
+													<td style="text-align: left; width:80%">
+														<select id="patientMentioned" onchange="buildRxAssocationDropdown('#{menu.elementLabel}' , '#{menu.element}');" style="max-width: 35%;">
+														</select>
+														<h:outputText id="patientSelected" style="margin-left:20px; text-weight:bold;"/>
+														<div id="patientPopup" style="display:none; margin-top:10px;">
+												  			<div id="echr:patients:patPopupList"  class="popupgrid" />
+															<a href="javascript:openPatientPopup('echr:patients:patPopupList','echr:patients:patPopupList', 'patientPopupRefReq', '#{menu.elementLabel}', 0, '');" >Select Patients</a>
+											             </div>
+							               				 <div id="patientSelect" style="margin-top:15px;">
+											                <h:outputLink value="javascript:instantiate('reg/evn/patient','echr:patients:all','');">
+											                	<h:outputText value="create new patient"/>
+											                </h:outputLink>
+											              	<br/>  
+											                <h:outputLink value="javascript:refreshRefillWizard('#{menu.element}','#{menu.elementLabel}',1)">
+											                	<h:outputText value="refresh"/>
+											                </h:outputLink> 
+											             </div>   
+													</td>
+												</tr>
+											</table>							
+											</div>
+										</wiz:group>
+										<wiz:group prefix="Matched Medicine" title="">
+											<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[10].ST.value ==''}">
+												<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[4].ST.value!=''}">
+													<table width="100%">
+														<tr>
+															<td width="30%">
+																<h:outputText value="Medication/PON :"></h:outputText>
+															</td>
+															<td width="70%">
+																<h:outputText style="float:left;" value="#{trim.trim.act.relationship['header'].act.observation.values[4].ST.value}"></h:outputText>
+																<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[10].ST.value==''}">
+																	<input style="margin-left:20px;float:left;" type="button" id="change" value="Change" onclick="removeRxAssociation('#{menu.elementLabel}' ,'#{menu.element}');"/>
+															 	</c:if>
+															 </td>
+														</tr>
+													</table>
+												</c:if>
+											</c:if>
+											<c:if test="#{trim.trim.act.relationship['header'].act.observation.values[4].ST.value==''}">
+												<table width="100%">
+													<tr>
+													<td width="30%">
+														<h:outputText value="Medication :"></h:outputText>
+													</td>
+													<td width="70%">
+														<select id="prescriptionMentioned" style="max-width:70%">
+						                        		</select>
+						                        		<input type="button" id="save" value="Save" onclick="displaySelectedValue('#{menu.elementLabel}' ,'#{menu.element}')"/>
+													</td>
+													</tr>
+												</table>
+											</c:if>
+											
+											<div id="newrxdetails" style="display:none; margin-top: 20px;">
+											<div id="medHead" style="margin-top: 10px; border-bottom-style: inset">Details of Medication with PON #{trim.trim.act.relationship['header'].act.observation.values[4].ST.value}</div>
+												<table width="100%" cellpadding="5">
+													<tr >
+														<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[0].label.value}:
+														</td>
+														<td class="refReqtableData" id="patientDetails">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[0].ST.value}
+														</td>
+													</tr>
+													<tr>
+														<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[1].label.value}:
+														</td>
+														<td class="refReqtableData" id="medicationDetails">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[1].ST.value}
+														</td>
+													</tr>
+													<tr>
+														<td class="refReqtableLabel" >
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[2].label.value}:
+														</td>
+														<td class="refReqtableData" id="scheduleDetails">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[2].ST.value}
+														</td>
+													</tr>
+													<tr>
+														<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[3].label.value}:
+														</td>
+														<td class="refReqtableData" id="refillDetails">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[3].ST.value}
+														</td>
+													</tr>
+													<tr>
+														<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['originalPrescription'].act.observation.values[4].label.value}:
+														</td>
+														<td class="refReqtableData" id="dateRxDetails">
+														<trim:TS value="#{trim.trim.act.relationship['originalPrescription'].act.observation.values[4].TS}" dateStyle="short"  readonly="true"/>
+														</td>
+													</tr>
+												</table>
+											</div>
+											<span id="errorPON" style="color: red;display:none;">
+													#{trim.trim.act.relationship['originalPrescription'].act.observation.values[5].ST.value}
+											</span>
+										</wiz:group>
+									</div>
+									</wiz:group>
+								</td>
+								<td width="50%">
+									<wiz:group prefix="Response" title="" style="margin:10px;">
+										<div class="refReqPatMatch">
+											<c:if test="#{top.accountUser.openMeFirst == trim.trim.act.relationship['header'].act.observation.values[8].ST.value}">
+						  					<table width="100%" cellpadding="3">
+						  						<tr width="100%" evalFunc="enableCompute('#{menu.elementLabel}')" >
+						  							<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['response'].act.observation.values[0].label.value}:
+													</td>     
+						               				<td class="refReqtableData">
+									                	<h:selectOneRadio id="responseField" value="#{trim.trim.act.relationship['response'].act.observation.values[0].CE}"  layout="pageDirection"
+									                	required="true" onchange="javascript:enableNotes('#{menu.elementLabel}', this);">
+									                 		<c:forEach items="#{trim.valueSets['response']}" var="index" varStatus="count" >
+											                 			<c:if test="#{count.index lt 3}">
+												                 			 	<f:selectItem itemLabel="#{index.value}" itemValue="#{index.value}"/>
+												                 				 <f:converter converterId="DataTypeConverter"/>
+													                 	</c:if>	
+									                 		 </c:forEach>
+									                	</h:selectOneRadio>
+													</td>
+												</tr>
+												<tr width="100%" id="qualifierRow" tvisible="$('#{menu.elementLabel}:responseField:0').checked==true">
+													<td evalFunc="hideThisPart('#{menu.elementLabel}');" class="refReqtableLabel">
+														#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[2].label.value}: 
+													</td>          
+						               				<td class="refReqtableData">
+														<wiz:radio id="refillQualifier" value="#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[2].CE}" layout="lineDirection" required="true">
+									                 		 <f:selectItems value="#{trim.valueSets['refillQualifier']}"/>
+									                 		 <f:converter converterId="DataTypeConverter"/>
+									                	</wiz:radio>
+									                	<span id="errorPRN" style="color: red;display:none;">
+															<h:outputText value="PRN was originally requested." />
+														</span>
+													</td>	
+												</tr>
+												<tr tvisible="$('#{menu.elementLabel}:responseField:2').checked==true" width="100%">
+													<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['response'].act.observation.values[3].label.value}: 
+													</td>
+													<td class="refReqtableData">
+														<trim:valueSetMenuRefReq id="denialReasonCode" slot="#{trim.trim.act.relationship['response'].act.observation.values[2]}"/>
+													</td>
+												</tr>
+												<tr width="100%" id="reasonRow" tvisible="$('#{menu.elementLabel}:denialReasonCodemenu').selectedIndex == 15" >
+													<td class="refReqtableLabel">Reason*</td>
+													<td class="refReqtableData" tvisible="$('#{menu.elementLabel}:responseField:2').checked == true">
+														<h:inputTextarea id="denialReasonCodeDetail" value="#{trim.trim.act.relationship['response'].act.observation.values[3].ST.value}" rows="3" cols="40"
+														maxlength="70" style="min-width: 80%;" onkeyup="return ismaxlength(this , '#{menu.elementLabel}');" ></h:inputTextarea>
+														<br/><h:outputText id="commentsDenied" style="font-size: 11px;" value="maximum character limit allowed is 70." />
+													</td>
+												</tr>
+												<tr width="100%" tvisible="$('#{menu.elementLabel}:responseField:0').checked==true" id="dispenseRow" >
+													<td class="refReqtableLabel">
+														<h:outputText value="Total number of dispensings approved:"/>
+													</td>
+													<td class="refReqtableData">
+														<h:inputText id="newRefill" onkeypress="return onlyNumbers(event);" onkeyup="checkRefillAmount('#{menu.elementLabel}');" value="#{trim.trim.act.relationship['MedicationRequested'].act.observation.values[0].ST.value}" size="5" maxlength="3"/>
+													</td>
+												</tr>
+												<tr id="notesRowTextArea" width="100%" >
+													<td class="refReqtableLabel">										
+														#{trim.trim.act.relationship['response'].act.observation.values[1].label.value} *
+													</td>
+													<td class="refReqtableData">
+			<!--											<textarea id="#{menu.elementLabel}:noteInputTextCS" rows="3" cols="40" style="min-width: 80%"></textarea>-->
+														<h:inputTextarea id="noteInputText" value="#{trim.trim.act.relationship['response'].act.observation.values[1].ST.value}" rows="4" cols="40" 
+														style="min-width: 80%" maxlength="70" onkeyup="return ismaxlength(this , '#{menu.elementLabel}');"></h:inputTextarea>
+														<br/><h:outputText id="commentsLeft" style="font-size: 11px;" value="maximum character limit allowed is 70." />
+													</td>
+												</tr>
+						  					</table>
+						  					</c:if>
+						  					
+											<!-- Limited Access	-->
+						  					<c:if test="#{top.accountUser.openMeFirst != trim.trim.act.relationship['header'].act.observation.values[8].ST.value}">
+						  					<input type="text" id="otherPrescriber" value="other" style="display:none"/>
+						  					<h:inputHidden id="condition" value="Denied New Prescription"/>
+						  					<table width="100%" cellpadding="5">
+						  						<tr width="100%" evalFunc="enableCompute('#{menu.elementLabel}')">
+						  							<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['response'].act.observation.values[0].label.value}: 
+													</td>     
+						               				<td class="refReqtableData">
+									                	<h:outputText id="responseType" value="Denied With NewRx" > </h:outputText>
+													</td>
+												</tr>
+												<tr id="notesRowTextArea" style="padding:5px;width:100%" >
+													<td class="refReqtableLabel">
+														#{trim.trim.act.relationship['response'].act.observation.values[1].label.value} *
+													</td>
+													<td class="refReqtableData">
+			<!--											<textarea id="#{menu.elementLabel}:noteInputTextCS" rows="3" cols="40" style="min-width: 80%"></textarea>-->
+														<h:inputTextarea id="noteInputText" value="#{trim.trim.act.relationship['response'].act.observation.values[1].ST.value}" 
+														rows="4" cols="40" maxlength="70" style="min-width: 80%"></h:inputTextarea>
+														<h:outputText id="commentsLeft" style="font-size: 11px;" value="maximum character limit allowed is 70." />
+													</td>
+												</tr>
+											</table>
+						  					</c:if>
+										</div>
+									</wiz:group>
+								</td>
+							</tr>
+							<tr>
+								<td >
+									<c:if test="#{trim.trim.act.relationship['supervisor'].act.observation.values[0].ST!=null}">
+									<div id="refillRequestPrescriber">
+										<wiz:group prefix="Supervisor" title="" style="margin:10px;">
+											<div style="height:auto;">
+												<table style="width:100%" cellpadding="3">
+													<c:forEach items="#{trim.trim.act.relationship['supervisor'].act.observation.values}" var="supervisor"> 
+														<tr>
+															<td class="refReqtableLabel">
+																<h:outputText value="#{supervisor.label.value} :"></h:outputText>
+															</td>
+															<td class="refReqtableData">
+																<h:outputText value="#{supervisor.ST.value}"></h:outputText>
+															</td>
+														</tr>
+													</c:forEach>
+												</table>
+											</div>
+										</wiz:group>
+									</div>
+									</c:if>
+								</td>
+								<td></td>
+							</tr>
+						</table>
+					</fieldset>
+			 	</wiz:body>
+			</wiz:step>
+  		</ui:composition>
+  	</body>
+ </html>

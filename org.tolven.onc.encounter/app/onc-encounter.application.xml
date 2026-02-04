@@ -1,0 +1,37 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<!-- Patient Encounter Discharge -->
+	<extends path="echr:patient:encounter">
+		<placeholder name="discharge" title="Discharge" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">		
+			<field name="dischargedDate" internal="date01">
+				<from>#{act.effectiveTime.TS.date}</from>
+			</field>
+			<field name="ecopy" internal="string01">
+				<from>#{trim.act.relationship['ecopy'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="printed" internal="string03">
+				<from>#{trim.act.relationship['printed'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="educationInfo" internal="string05">
+				<from>#{trim.act.relationship['educationInfo'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="clinicalSummary" internal="string06">
+				<from>#{trim.act.relationship['clinicalSummary'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="eClinicalSummary" internal="string07">
+				<from>#{trim.act.relationship['eClinicalSummary'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="medicationReconciliation" internal="string08">
+				<from>#{trim.act.relationship['medicationReconciliation'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="ecopyPHR" internal="string02">
+				<from>#{trim.act.relationship['ecopyPHR'].enableRelationship?'Yes':'No'}</from>
+			</field>
+			<field name="educationInfoText" internal="string04">
+				<from>#{trim.act.relationship['educationInfoText'].act.observation.value.ST.value}</from>
+			</field>
+			<field name="patient" internal="parent02">
+				<from>#{encounter.patient}</from>
+			</field>
+		</placeholder>
+	</extends>
+</application>

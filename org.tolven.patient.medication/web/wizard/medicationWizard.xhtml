@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<body>
+  	<ui:composition>
+		<c:if test="#{menu.drilldownItem.statusName == 'NEW'}">
+			<ui:include src="wizard.xhtml"/>	
+		</c:if>
+ 		<c:if test="#{menu.drilldownItem.statusName == 'ACTIVE'}">
+			<c:choose>
+				<c:when test="#{menu.drilldownItem.mood =='EVN'}">
+					<ui:include src="../drilldown/medicationDD.xhtml"/>
+				</c:when>
+				<c:when test="#{menu.drilldownItem.mood =='RQO'}">
+					<ui:include src="../drilldown/medicationOrderDD.xhtml"/>
+				</c:when>
+				<c:when test="#{menu.drilldownItem.mood =='PRP'}">
+					recommended medication
+				</c:when>
+			</c:choose>	
+		</c:if>
+    </ui:composition>
+</body>
+</html>

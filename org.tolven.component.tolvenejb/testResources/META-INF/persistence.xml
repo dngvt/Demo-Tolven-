@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tolven inc Sample persistence unit -->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+
+	<!-- A persistence unit is a set of listed persistent entities as well the configuration of an EntityManagerFactory. We configure each example in a separate persistence-unit. -->
+	<persistence-unit name="jpa-pu" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!-- We must enumerate each entity in the persistence unit -->
+		<!-- <class>org.tolven.app.entity.MenuData</class> <class>org.tolven.app.entity.AccountMenuStructure</class> <class>org.tolven.core.entity.Account</class> <class>org.tolven.app.entity.MenuDataWord</class> <class>org.tolven.app.entity.PlaceholderID</class> <class>org.tolven.core.entity.TrimHeader</class> <class>org.tolven.app.entity.MSColumn</class> <class>org.tolven.core.entity.AccountProperty</class> <class>org.tolven.core.entity.AccountRole</class> <class>org.tolven.core.entity.Sponsorship</class> <class>org.tolven.core.entity.AccountUserProperty</class> <class>org.tolven.core.entity.AccountUser</class> <class>org.tolven.core.entity.AccountUserRole</class> -->
+		<!-- <class> org.tolven.fdb.entity.FdbDispensable</class> -->
+		<class>org.tolven.security.key.TolvenEncryptedPrivateKey</class>
+		<class>org.tolven.security.key.TolvenEncryptedSecretKey</class>
+		<class>org.tolven.security.key.TolvenPublicKey</class>
+
+		<class>org.tolven.security.key.AccountSecretKey</class>
+		<class>org.tolven.security.key.AccountPrivateKey</class>
+		<class>org.tolven.security.key.AccountPublicKey</class>
+		<class>org.tolven.security.key.DocumentSecretKey</class>
+
+		<class>org.tolven.security.key.AccountProcessingPublicKey</class>
+		<class>org.tolven.security.key.AccountProcessingPrivateKey</class>
+
+
+
+		<properties>
+			<!-- We can configure the OpenJPA properties here. -->
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres" />
+			<property name="javax.persistence.jdbc.user" value="postgres" />
+			<property name="javax.persistence.jdbc.password" value="postgres" />
+			<property name="log4j.category.OpenEJB.startup" value="debug" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+			<property name="hibernate.connection.autocommit" value="false"/>
+			
+		</properties>
+	</persistence-unit>
+
+</persistence>

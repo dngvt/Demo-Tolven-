@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Diagnosis</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<c:forEach var="rel" items="#{trim.trim.act.relationships}" varStatus="relIndex">
+			<c:if test="#{rel.name==trim.trim.act.computes[0].property['arName']}">
+    			<ui:include src="dxContent.xhtml">
+					<ui:param name="rel" value="#{rel}"/>
+           			<ui:param name="type" value="#{trim.trim.act.computes[0].property['arName']}"/>
+           			<ui:param name="index" value="#{relIndex.index}"/>
+	     		</ui:include>	     			
+			</c:if>
+		</c:forEach>	
+    	<ui:include src="selectEncounter.xhtml"/>
+	</ui:composition>	
+</body>
+</html>

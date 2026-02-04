@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+  <title>Patient Diagnosis - Drilldown</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <ui:composition>
+    <wiz:body>
+      <table style="width:100%;">
+        <thead>
+          <th>Medication</th>
+          <th>#{msg.Date}</th>
+          <th>#{msg.Route}</th>
+          <th>#{msg.Frequency}</th>
+           <th>#{msg.DoseInstr}</th>
+          <th/>
+        </thead>
+        <tbody>
+          <c:forEach items="#{act.relationshipsList[act.computes[0].property['arName']]}" var="rel" varStatus="entryIndex">
+            <tr>
+              <td >#{rel.act.observation.value.CE}</td>
+              <td><trim:TS id="effectiveTime" value="#{rel.act.effectiveTime.TS}"  dateStyle="short"	timeStyle="short" readonly="true"/></td>
+              <td>#{rel.act.substanceAdministration.routeCode} </td>
+			  <td>#{rel.act.relationship['frequency'].act.observation.value}</td>
+               <td><trim:ED id="dose#{rel.sequenceNumber}" value="#{rel.act.text}" readonly="true"/></td>
+              <td style="width: 10%;">
+				<a href="javascript:displayMedLinePage('#{rel.act.observation.value.CE.code}','#{rel.act.observation.value.CE.displayName}','#{rel.act.observation.value.CE.codeSystem}');">
+					<h:outputText value="More Info"/>
+				</a>
+			  </td>
+            </tr>
+          </c:forEach>
+        </tbody>
+      </table>
+    </wiz:body>
+  </ui:composition>
+</body>
+</html>

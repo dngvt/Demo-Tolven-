@@ -1,0 +1,47 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<!-- Link Patient-->
+	 <extends path="echr">
+        <list name="manufacturer" title="Substance Manufacturer" page="/five/list.xhtml" visible="never" query="global:manufacturerMenu">
+            <column name="name" title="ManufacturerName" instantiate="true" visible="true" internal="string04" width="40.0" />
+        </list>
+    </extends>	
+	<extends path="echr">
+		<placeholder name="receiver" title="Receiver" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">		
+			<field name="facilityName" internal="string01">				
+				<from>#{act.relationship['facility'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="facilityOID" internal="string02">				
+				<from>#{act.relationship['facility'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="facilityOIDType" internal="string03">				
+				<from>#{act.relationship['facility'].act.observation.values[2].CE.displayName}</from>
+			</field>
+			<field name="applicationName" internal="string04">				
+				<from>#{act.relationship['application'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="applicationOID" internal="string05">				
+				<from>#{act.relationship['application'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="applicationOIDType" internal="string06">				
+				<from>#{act.relationship['application'].act.observation.values[2].CE.displayName}</from>
+			</field>
+		</placeholder>
+	</extends>
+	
+	<extends path="echr:admin">
+		<menu name="receivers" title="Receiver" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown="echr:receiver">				
+				<column name="Name" internal="string01" reference="true" width="10.0">
+					<from>#{receiver.facilityName}</from>
+				</column>
+				<column name="Application" internal="string04" width="10.0">
+					<from>#{receiver.applicationName}</from>
+				</column>											
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:receiverMenu">
+					<column name="Name" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+			</list>
+		</menu>
+	</extends>	
+	
+</application>

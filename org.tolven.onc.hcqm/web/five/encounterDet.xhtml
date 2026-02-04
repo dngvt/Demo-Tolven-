@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+  <head>
+        <title>Encounter Details</title>
+  </head>
+  <body>
+  	<ui:composition>
+  		<div style="width: 30%;">
+  			<wiz:group title="#{msg.Encounter}" >
+  				<table class="attributes">
+  					<ui:include src="../wizard/encounterDetExtn.xhtml"/>
+  					<tr><td class="name">#{msg.AdmitDate}</td><td class="value">#{menu.drilldownItem.effectiveTimeLow}</td></tr>
+		  			<tr><td class="name">#{msg.DischargeDate}</td><td class="value">#{menu.drilldownItem.effectiveTimeHigh}</td></tr>
+		  			<tr><td class="name">#{msg.AdmittingPhysician}</td><td class="value">#{menu.drilldownItem.admitter.lastName}</td></tr>
+		  			<tr><td class="name">#{msg.AttendingPhysician}</td><td class="value">#{menu.drilldownItem.attender.lastName}</td></tr>
+		  			<tr><td class="name">#{msg.Location}</td><td class="value">#{menu.drilldownItem.location.name}</td></tr>
+		  			<tr><td class="name">#{msg.DataEnterer}</td><td class="value">#{menu.drilldownItem.enteredBy}</td></tr>
+<!--		  			<tr><td class="name">#{msg.dischargedFrom}</td><td class="value">#{menu.drilldownItem.dischargedFrom}</td></tr>
+		  			<tr><td class="name">#{msg.transferredFrom}</td><td class="value">#{menu.drilldownItem.transferredFrom}</td></tr> -->
+	  			</table>
+	  		</wiz:group>
+			<table>
+				<tr>
+					<c:forEach var="transition" items="#{trim.trim.eventTransitions}">
+						<td><wiz:transition label="#{transition.label.value}" status="#{transition.name}" /></td>
+					</c:forEach>
+  				</tr>
+			</table>
+		</div>
+	</ui:composition>
+  </body>
+</html>

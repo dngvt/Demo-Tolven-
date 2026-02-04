@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xsi:schemaLocation="urn:tolven-org:trim:4.0 http://www.tolven.org/xsd/trim4">
+	<name>patient</name>
+	<act classCode="ORGANIZER" moodCode="EVN">
+			<participation name="subject" typeCode="SBJ">
+				<role classCode="PAT">
+				<player classCode="PSN" determinerCode="INSTANCE">
+					<name>
+						<label>Patient Name</label>
+						<EN>
+							<label>Legal Name</label>
+							<use>L</use>
+							<part>
+								<label>First Name</label>
+								<type>GIV</type>
+								<ST>#{from(source.firstName,patient.firstName)}</ST>
+							</part>
+							
+						</EN>
+					</name>
+				</player>
+				</role>
+			</participation>
+	</act>
+</trim>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:trim:4.0 http://tolven.org/xsd/trim4">
+	<extends>patientAct</extends>
+	<abstract>true</abstract>
+	<name>sbadm/rqo/medication</name>
+	<page>medicationOrder.xhtml</page>
+	<drilldown>medicationOrderDD.xhtml</drilldown>
+	<menu>global:medicationMenu</menu>
+	<reference>http://www.wikihit.org/wiki/index.php/Medication</reference>
+	<application name="ephr">
+		<instance>ephr:patient:medication</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:medication</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="active">
+			<label language="en">Active</label>
+		</transition>		
+		<transition name="nullifiedActive" from="active" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>	
+		<transition name="abortedActive" from="active" to="aborted">
+			<label language="en">Discontinue</label>
+		</transition>
+		<transition name="reviseActive" from="active" to="active">
+			<label language="en">Revise</label>
+		</transition>
+	</transitions>
+	<act classCode="SBADM" moodCode="#{from(medication.mood,'RQO')}">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:medication</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:medication</path>
+			</placeholder>
+		</bind>
+		<id>					
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{medication.path}</extension>
+				<displayable>false</displayable>
+			</II>
+		</id>
+		<statusCode>active</statusCode>
+		<text>
+			<label>Instructions</label>
+			<ED>
+			    <value></value>
+			</ED>
+		</text>
+		<effectiveTime>
+			<label>Start time</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<substanceAdministration>
+			<routeCode>
+				<valueSet>route</valueSet>	
+				<CE>#{medication.routeCE}</CE>			
+			</routeCode>
+		</substanceAdministration>
+		<participation name="consumable" typeCode="CSM">
+			<role classCode="ADMM">
+				<player classCode="MMAT" determinerCode="KIND">
+					<code>
+						<valueSet>#{trimName}/material</valueSet>
+						<CE>#{medication.codeCE}</CE>
+					</code>
+					<quantity>
+						<PQ>
+							<value>0.0</value>
+							<unit>tablets</unit>
+						</PQ>
+					</quantity>
+				</player>
+			</role>
+		</participation>
+		<participation name="author" typeCode="AUT">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:admin:staff:all</path>
+					</list>
+				</bind>
+				<id />
+			</role>
+		</participation>
+		<relationship name="encounter" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>ephr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:encounters:active</path>
+					</list>
+				</bind>
+				<id>
+					<II>
+						<root>#{computeIDRoot(account)}</root>
+						<extension>#{encounter.path}</extension>
+					</II>
+				</id>
+				<title>
+					<ST>Encounter</ST>
+				</title>
+			</act>
+		</relationship>
+		
+		<relationship typeCode="PERT" direction="OUT" name="frequency">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>
+					<value>
+						<valueSet>frequency</valueSet>
+						<CE>#{medication.frequencyCE}</CE>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="PERT" direction="OUT" name="numberOfTimes">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>
+					<value>
+						<ST>#{medication.numberOfTimes}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="PERT" direction="OUT" name="timing">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>
+					<value>
+						<ST>#{medication.timing}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>	
+	</act>
+	<valueSet name="route">
+	    <bind>
+			<include>valueSet/medicationRouteVS</include>
+		</bind>	
+		
+	</valueSet>
+	<valueSet name="frequency">
+		<bind>
+			<include>valueSet/medicationFrequencyVS</include>
+		</bind>	
+	</valueSet>
+		
+</trim>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="build-glassfish">
+
+	<target name="props">
+		<dirname property="glassfish3.parent.dir" file="${appserver.home}" />
+		<property name="imq.dest.config.properties.file" value="${appserver.home}/glassfish/domains/tolven/imq/instances/imqbroker/props/config.properties" />
+		<property name="imq.accesscontrol.properties" value="${appserver.home}/glassfish/domains/tolven/imq/instances/imqbroker/etc/accesscontrol.properties" />
+		<property name="imq.passwd.file" value="${appserver.home}/glassfish/domains/tolven/imq/instances/imqbroker/etc/passwd" />
+		<property name="glassfish.lib.dir" value="${appserver.home}/glassfish/domains/tolven/lib" />
+		<property name="glassfish.config.dir" value="${appserver.home}/glassfish/domains/tolven/config" />
+		<property name="glassfish.deploy.dir" value="${appserver.home}/glassfish/domains/tolven/autodeploy" />
+		<property name="initialComponents.glassfish3Zip.internal.dir" value="glassfish3" />
+		<property name="glassfish3.debugMode" value="false" />
+		<condition property="backslash" value="\" else="\">
+			<os family="windows" />
+		</condition>
+		<condition property="asadmin" value="${appserver.home}/bin/asadmin.bat" else="${appserver.home}/bin/asadmin">
+			<os family="windows" />
+		</condition>
+		<condition property="imqusermgr" value="${appserver.home}/mq/bin/imqusermgr.exe" else="${appserver.home}/mq/bin/imqusermgr">
+			<os family="windows" />
+		</condition>
+		<condition property="start.command" value="--echo start-domain --debug tolven" else="--echo start-domain tolven">
+			<equals arg1="${glassfish3.debugMode}" arg2="true" />
+		</condition>
+		<condition property="glassfish3.on.win">
+			<os family="windows" />
+		</condition>
+	</target>
+
+	<target name="requirements-guide">
+		<basename property="initialComponents.glassfish3Zip.full-basename" file="${initialComponents.glassfish3Zip}" />
+		<guide-echo args="Download Glassfish: ${initialComponents.glassfish3Zip.full-basename}" />
+		<guide-echo args="Place ${initialComponents.glassfish3Zip.full-basename} in: ${initialComponentsDir}" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="install-requirements" depends="props">
+		<fail message="${initialComponents.glassfish3Zip} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.glassfish3Zip}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${appserver.home} exists">
+			<condition>
+				<available file="${appserver.home}" />
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} install-requirements VERIFIED" />
+	</target>
+
+	<target name="config-requirements" if="${include.configAppserver}">
+		<fail message="${appserver.home} does not exist">
+			<condition>
+				<not>
+					<available file="${appserver.home}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.jdbcDriver} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.jdbcDriver}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonKeystoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonKeystoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonTruststoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonTruststoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} config-requirements VERIFIED" />
+	</target>
+
+	<target name="install" depends="props" description="install" if="${include.installAppserver}">
+		<guide-echo args="Install Glassfish" />
+		<guide-echo args="" />
+
+		<guide-echo args="Unzip: ${initialComponents.glassfish3Zip} to ${glassfish3.parent.dir}" />
+		<delete dir="${java.io.tmpdir}/${initialComponents.glassfish3Zip.internal.dir}" />
+		<unzip src="${initialComponents.glassfish3Zip}" dest="${java.io.tmpdir}" />
+		<move todir="${appserver.home}">
+			<fileset dir="${java.io.tmpdir}/${initialComponents.glassfish3Zip.internal.dir}" />
+		</move>
+
+		<guide-echo args="Rename ${appserver.home}/glassfish/domains/domain1 to ${appserver.home}/glassfish/domains/tolven" />
+		<move todir="${appserver.home}/glassfish/domains/tolven">
+			<fileset dir="${appserver.home}/glassfish/domains/domain1" />
+		</move>
+		<guide-echo args="" />
+
+		<guide-echo args="Copy SSL keystore from ${glassfish3.keystore} to ${commonKeystore}" />
+		<copy file="${initialComponents.commonKeystoreSrc}" tofile="${glassfish3.keystore}" overwrite="false" verbose="true" />
+
+		<guide-echo args="Copy SSL truststore from ${initialComponents.commonTruststoreSrc} to ${opends.truststore}" />
+		<copy file="${initialComponents.commonTruststoreSrc}" tofile="${glassfish3.truststore}" overwrite="false" verbose="true" />
+
+		<guide-echo args="Copy mdbuser keystore from ${initialComponents.mdbuserKeystoreSrc} to ${mdbuser.keystore}" />
+		<copy file="${initialComponents.mdbuserKeystoreSrc}" tofile="${mdbuser.keystore}" overwrite="false" verbose="true" />
+
+		<guide-echo args="In ${appserver.home}/mq/etc/imqenv.conf replace the entry 'domain1' with 'tolven'" />
+		<replace token="domain1" value="tolven" file="${appserver.home}/mq/etc/imqenv.conf" />
+		<guide-echo args="" />
+
+		<guide-echo args="For linux ensure that the following are executable" />
+		<guide-echo args="All *.sh files in ${appserver.home} and its subdirectories" />
+		<chmod dir="${appserver.home}" perm="u+x" includes="**/*.sh" />
+		<guide-echo args="${appserver.home}/bin/*.sh" />
+		<chmod dir="${appserver.home}/bin" perm="u+x" includes="*" />
+		<guide-echo args="${appserver.home}/mq/bin/*" />
+		<chmod dir="${appserver.home}/mq/bin" perm="u+x" includes="*" />
+		<guide-echo args="${appserver.home}/glassfish/bin/*" />
+		<chmod dir="${appserver.home}/glassfish/bin" perm="u+x" includes="*" />
+		<guide-echo args="" />
+
+		<guide-echo args="Set Up a Persistent Master Password" />
+		<guide-echo args="Execute the command below and set the password (e.g: tolven) when prompted" />
+		<echo message="NOW SAVE MASTER PASSWORD USING FOLLOWING COMMAND" />
+		<echo message="glassfish default master password is: changeit, which is changed to Tolven default: tolven" />
+		<antcall target="install-masterpassword-linux" />
+		<antcall target="install-masterpassword-win" />
+		<guide-echo args="" />
+
+	</target>
+
+	<target name="install-masterpassword-linux" unless="glassfish3.on.win">
+		<guide-echo args="${appserver.home}/bin/asadmin change-master-password --savemasterpassword=true tolven" />
+		<echo message="${appserver.home}/bin/asadmin change-master-password --savemasterpassword=true tolven" />
+	</target>
+
+	<target name="install-masterpassword-win" if="glassfish3.on.win">
+		<property name="glassfish.ant.tmp.file" value="${java.io.tmpdir}/glassfish.ant.tmp" />
+		<concat destfile="${glassfish.ant.tmp.file}" append="false">${appserver.home}/bin/asadmin change-master-password --savemasterpassword=true tolven</concat>
+		<loadfile srcfile="${glassfish.ant.tmp.file}" property="escaped.masterpassword.info">
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="/" to="${backslash}" />
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<delete file="${glassfish.ant.tmp.file}" />
+		<guide-echo args="${escaped.masterpassword.info}" />
+		<echo message="${escaped.masterpassword.info}" />
+	</target>
+
+	<target name="config-tolven" depends="props" description="config-tolven" if="${include.configAppserver}">
+		<guide-echo args="Install Database Driver" />
+		<guide-echo args="Copy ${initialComponents.jdbcDriver} to ${glassfish.lib.dir}" />
+		<copy file="${initialComponents.jdbcDriver}" todir="${glassfish.lib.dir}" verbose="true" />
+		<guide-echo args="" />
+			
+		<guide-echo args="Update Glassfish KeyStore and TrustStore" />
+		<guide-echo args="Copy ${glassfish3.keystore} to ${glassfish.config.dir}" />
+		<guide-echo args="Copy ${glassfish3.truststore} to ${glassfish.config.dir}" />
+		<copy toDir="${glassfish.config.dir}" preservelastmodified="true" overwrite="true" verbose="true">
+			<fileset file="${glassfish3.keystore}" />
+			<fileset file="${glassfish3.truststore}" />
+		</copy>
+		<guide-echo args="" />
+
+		<guide-echo args="Deploy Tolven Libraries" />
+		<tpf args="-plugin org.tolven.deploy.glassfish3 -config" />
+
+		<guide-echo args="Delete ${appserver.home}/glassfish/domains/tolven/docroot/index.html" />
+		<delete file="${appserver.home}/glassfish/domains/tolven/docroot/index.html" />
+		<guide-echo args="" />
+		
+		<antcall target="start-glassfish" />
+		<antcall target="config-glassfish" />
+		<antcall target="config-tolven-glassfish" />
+		<antcall target="stop-glassfish" />
+		<antcall target="include-gatekeeper-ear-deploy" />
+		<antcall target="include-tolven-ear-deploy" />
+		<antcall target="start-glassfish" />
+		<antcall target="include-gatekeeper-ear-deploy-wait" />
+		<antcall target="include-tolven-ear-deploy-wait" />
+	</target>
+
+	<target name="start-glassfish" depends="props" if="${include.startAppserver}">
+		<guide-echo args="Start glassfish" />
+		<guide-echo args="${asadmin} ${start.command}" />
+		<exec executable="${asadmin}" dir="${appserver.home}/bin" spawn="true">
+			<arg line="${start.command}" />
+		</exec>
+		<echo message="Waiting for glassfish to start..." />
+		<waitfor maxwait="300" maxwaitunit="second" timeoutproperty="timed.out">
+			<socket server="${tolvenDomain}" port="${glassfish3.adminPort}" />
+		</waitfor>
+		<fail message="glassfish appears to not have started. Nothing listening on port: ${glassfish3.adminPort}" if="timed.out" />
+		<echo message="Done" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="stop-glassfish" depends="props">
+		<guide-echo args="Stop glassfish" />
+		<guide-echo args="${asadmin} --echo stop-domain tolven" />
+		<exec executable="${asadmin}" dir="${appserver.home}/bin" spawn="true">
+			<arg line="--echo stop-domain tolven" />
+		</exec>
+		<echo message="Waiting for Glassfish to stop..." />
+		<waitfor maxwait="120" maxwaitunit="second" timeoutproperty="timed.out">
+			<not>
+				<socket server="${tolvenDomain}" port="${glassfish3.adminPort}" />
+			</not>
+		</waitfor>
+		<fail message="glassfish appears to still be listening on port: ${glassfish3.adminPort}" if="timed.out" />
+		<echo message="Done" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-glassfish" depends="props" description="config-glassfish">
+		<guide-echo args="Configure Glassfish" />
+		<guide-echo args="" />
+
+		<guide-echo args="Execute the following asadmin commands" />
+		<guide-echo args="cd ${appserver.home}/bin" />
+		<sleep seconds="60" />
+		<asadmin args="set server-config.iiop-service.iiop-listener.orb-listener-1.enabled=false" />
+		<asadmin args="set server-config.iiop-service.iiop-listener.SSL.enabled=false" />
+		<asadmin args="set server-config.iiop-service.iiop-listener.SSL_MUTUALAUTH.enabled=false" />
+		<asadmin args="set server-config.iiop-service.iiop-listener.SSL.ssl.cert-nickname=tolven" />
+		<asadmin args="set server-config.iiop-service.iiop-listener.SSL_MUTUALAUTH.ssl.cert-nickname=tolven" />
+		<asadmin args="set server-config.network-config.network-listeners.network-listener.http-listener-1.address=${tolvenDomain}" />
+		<asadmin args="set server-config.network-config.network-listeners.network-listener.http-listener-1.port=${tolvenHttpPort}" />
+		<asadmin args="set server-config.network-config.network-listeners.network-listener.http-listener-2.address=${tolvenDomain}" />
+		<asadmin args="set server-config.network-config.network-listeners.network-listener.http-listener-2.port=${tolvenHttpsPort}" />
+		<asadmin args="set server-config.network-config.protocols.protocol.http-listener-1.http.server-name=${tolvenDomain}:${tolvenHttpPort}" />
+		<asadmin args="set server-config.network-config.protocols.protocol.http-listener-2.ssl.ssl3-enabled=true" />
+		<asadmin args="set server-config.network-config.protocols.protocol.http-listener-2.ssl.cert-nickname=tolven" />
+		<asadmin args="set server-config.network-config.protocols.protocol.http-listener-2.http.server-name=${tolvenDomain}:${tolvenHttpsPort}" />
+		<asadmin args="set property.administrative.domain.name.value=tolven" />
+		<asadmin args="delete-jvm-options -client" />
+		<asadmin args="delete-jvm-options -XX\:MaxPermSize=192m" />
+		<asadmin args="create-jvm-options -server" fail="false" />
+		<asadmin args="create-jvm-options -Xms512m" fail="false" />
+		<asadmin args="delete-jvm-options -Xmx512m" />
+		<asadmin args="create-jvm-options -Xmx1024m" fail="false" />
+		<asadmin args="create-jvm-options -XX\:PermSize=256m" fail="false" />
+		<asadmin args="create-jvm-options -XX\:MaxPermSize=512m" fail="false" />
+		<asadmin args="create-jvm-options -XX\:+CMSClassUnloadingEnabled" fail="false" />
+		<asadmin args="create-jvm-options -Dsun.rmi.dgc.client.gcInterval=3600000" fail="false" />
+		<asadmin args="create-jvm-options -Dsun.rmi.dgc.server.gcInterval=3600000" fail="false" />
+		<asadmin args="create-jvm-options -Dxa-driver-does-not-support-non-tx-operations=true" fail="false" />
+		<asadmin args="create-jvm-options -Dlog4j.configuration=file\:///${com.sun.aas.instanceRoot}/config/log4j.xml" fail="false" />
+		<asadmin args="create-jvm-options -Djava.security.egd=file\:///dev/urandom" fail="false" />
+		<asadmin args="create-jvm-options -Dcom.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace=false" fail="false" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-tolven-glassfish" depends="props">
+		<guide-echo args="Configure Tolven Glassfish" />
+		<guide-echo args="" />
+
+		<sleep seconds="60" />
+		<guide-echo args="Execute the following commands:" />
+		<asadmin args="${dbAsadminCommand}" fail="false" />
+		<asadmin args="list-jdbc-connection-pools" />
+		<asadmin args="create-jdbc-resource --description &quot;TolvenDataSource&quot; --connectionpoolid TolvenDataSource TolvenDS" fail="false" />
+		<asadmin args="list-jdbc-resources" />
+
+		<guide-echo args="Ping JMS in order to start the broker" />
+		<asadmin args="jms-ping" />
+
+		<guide-echo args="Create file ${imq.accesscontrol.properties}" />
+		<guide-echo args="Add the content between asterisks to it" />
+		<guide-echo args="**********" />
+		<guide-echo args="version=JMQFileAccessControlModel/100" />
+		<concat destfile="${imq.accesscontrol.properties}" append="false">version=JMQFileAccessControlModel/100</concat>
+		<concat destfile="${imq.accesscontrol.properties}" append="true">${line.separator}</concat>
+		<guide-echo args="connection.NORMAL.allow.user=admin" />
+		<concat destfile="${imq.accesscontrol.properties}" append="true">connection.NORMAL.allow.user=admin</concat>
+		<concat destfile="${imq.accesscontrol.properties}" append="true">${line.separator}</concat>
+		<guide-echo args="connection.ADMIN.allow.user=admin" />
+		<concat destfile="${imq.accesscontrol.properties}" append="true">connection.ADMIN.allow.user=admin</concat>
+		<guide-echo args="**********" />
+		<guide-echo args="" />
+
+		<guide-echo args="Change the default JMS host admin password" />
+		<asadmin args="--user admin set server.jms-service.jms-host.default_JMS_host.admin-password=${password.glassfish3Imquser}" />
+		<guide-echo args="Create admin as an imquser" />
+		<guide-echo args="${imqusermgr} update -u ${glassfish3.imquser} -p ${password.glassfish3Imquser}" />
+		<exec executable="${imqusermgr}" dir="${appserver.home}/mq/bin" failonerror="true">
+			<arg line="update -f -u ${glassfish3.imquser} -p ${password.glassfish3Imquser}" />
+		</exec>
+		<guide-echo args="${imqusermgr} remove -u guest" />
+		<exec executable="${imqusermgr}" dir="${appserver.home}/mq/bin" failonerror="false">
+			<arg line="delete -f -u guest" />
+		</exec>
+		<guide-echo args="" />
+		<asadmin args="create-jms-resource --restype javax.jms.ConnectionFactory --property UserName=${glassfish3.imquser}:Password=${password.glassfish3Imquser} jms/JmsXA" fail="false" />
+		<asadmin args="list-jms-resources" />
+		<guide-echo args="" />
+
+		<antcall target="config-gatekeeper" />
+
+		<property name="jms.dest.list.file" value="${java.io.tmpdir}/jmsdest-list.txt" />
+		<delete file="${jms.dest.list.file}" />
+		<exec executable="${asadmin}" dir="${appserver.home}/bin" failonerror="true" output="${jms.dest.list.file}">
+			<arg line="--echo list-jmsdest" />
+		</exec>
+		<condition property="jmsdest.adminApp.exists">
+			<resourcecontains resource="${jms.dest.list.file}" substring="adminApp" />
+		</condition>
+		<condition property="jmsdest.generator.exists">
+			<resourcecontains resource="${jms.dest.list.file}" substring="generator" />
+		</condition>
+		<condition property="jmsdest.rule.exists">
+			<resourcecontains resource="${jms.dest.list.file}" substring="rule" />
+		</condition>
+		<delete file="${jms.dest.list.file}" />
+
+		<guide-echo args="Create JMS Queues" />
+		<antcall target="create-jmsdest-adminApp" />
+		<antcall target="create-jmsdest-generator" />
+		<antcall target="create-jmsdest-rule" />
+		<guide-echo args="" />
+
+		<guide-echo args="Execute the following asadmin commands" />
+		<asadmin args="list-jms-resources" />
+		<asadmin args="create-jms-resource --restype javax.jms.Queue --property Name=adminApp queue/adminApp" fail="false" />
+		<asadmin args="create-jms-resource --restype javax.jms.Queue --property Name=generator queue/generator" fail="false" />
+		<asadmin args="create-jms-resource --restype javax.jms.Queue --property Name=rule queue/rule" fail="false" />
+
+		<asadmin args="set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=100" />
+		<guide-echo args="" />
+		<echo message="Done" />
+	</target>
+
+	<target name="config-gatekeeper" depends="props" if="${include.configAppserver}">
+
+		<guide-echo args="Execute the following asadmin commands:" />
+		<tpf args="-plugin org.tolven.deploy.glassfish3 -jndi" />
+		<asadmin args="list-custom-resources" />
+		<guide-echo args="" />
+
+	</target>
+
+	<target name="include-gatekeeper-ear-deploy" if="${include.gatekeeperearDeploy}">
+		<echo message="Deploy glassfish EAR File" />
+		<delete file="${appserver.home}/glassfish/domains/tolven/autodeploy/gatekeeper.ear_deployed" />
+		<tpf args="-plugin org.tolven.deploy.glassfish3 -earPlugins org.tolven.gatekeeper" />
+	</target>
+
+	<target name="include-gatekeeper-ear-deploy-wait" if="${include.gatekeeperearDeploy}">
+		<echo message="Waiting for gatekeeper.ear to deploy..." />
+		<guide-echo args="Check that gatekeeper.ear has deployed by the existence of ${appserver.home}/glassfish/domains/tolven/autodeploy/gatekeeper.ear_deployed" />
+		<waitfor maxwait="600" maxwaitunit="second">
+			<available file="${appserver.home}/glassfish/domains/tolven/autodeploy/gatekeeper.ear_deployed" />
+		</waitfor>
+		<guide-echo args="" />
+		<fail message="gatekeeper.ear failed to deploy">
+			<condition>
+				<not>
+					<available file="${appserver.home}/glassfish/domains/tolven/autodeploy/gatekeeper.ear_deployed" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="Done" />
+	</target>
+
+	<target name="include-tolven-ear-deploy" if="${include.tolvenearDeploy}">
+		<echo message="Deploy Tolven EAR File" />
+		<delete file="${appserver.home}/glassfish/domains/tolven/autodeploy/tolven.ear_deployed" />
+		<tpf args="-plugin org.tolven.deploy.glassfish3 -earPlugins org.tolven.component.tolvenear" />
+	</target>
+
+	<target name="include-tolven-ear-deploy-wait" if="${include.tolvenearDeploy}">
+		<echo message="Waiting for tolven.ear to deploy..." />
+		<guide-echo args="Check that tolven.ear has deployed by the existence of ${appserver.home}/glassfish/domains/tolven/autodeploy/tolven.ear_deployed" />
+		<waitfor maxwait="600" maxwaitunit="second">
+			<available file="${appserver.home}/glassfish/domains/tolven/autodeploy/tolven.ear_deployed" />
+		</waitfor>
+		<guide-echo args="" />
+		<fail message="tolven.ear failed to deploy">
+			<condition>
+				<not>
+					<available file="${appserver.home}/glassfish/domains/tolven/autodeploy/tolven.ear_deployed" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="Done" />
+	</target>
+
+	<target name="create-jmsdest-adminApp" unless="jmsdest.adminApp.exists">
+		<asadmin args="create-jmsdest --desttype queue adminApp" />
+	</target>
+
+	<target name="create-jmsdest-generator" unless="jmsdest.generator.exists">
+		<asadmin args="create-jmsdest --desttype queue generator" />
+	</target>
+
+	<target name="create-jmsdest-rule" unless="jmsdest.rule.exists">
+		<asadmin args="create-jmsdest --desttype queue rule" />
+	</target>
+
+	<macrodef name="asadmin">
+		<attribute name="args" />
+		<attribute name="fail" default="true" />
+		<sequential>
+			<basename property="asadmin.basename" file="${asadmin}" />
+			<guide-echo args="${asadmin.basename} --echo @{args}" />
+			<exec executable="${asadmin}" dir="${appserver.home}/bin" failonerror="@{fail}">
+				<arg line="--echo @{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+		</sequential>
+	</macrodef>
+
+</project>

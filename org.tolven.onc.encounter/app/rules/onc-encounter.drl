@@ -1,0 +1,14 @@
+package onc_encounter
+
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+
+global org.tolven.app.AppEvalAdaptor app;
+
+rule "Assign Discharge Date to Encounter from Discharge Document"
+	when
+		$msDischarge: MenuStructure(role == "placeholder", path == "echr:patient:encounter:discharge")
+		$mdDischarge: MenuData(menuStructure == $msDischarge, $mdEncounter:parent01)
+	then
+		$mdEncounter.setDate02($mdDischarge.getDate01());
+end

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.document.store" version="2.1.1" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+	<extension-point extension-multiplicity="none" id="tolvenProperties">
+		<parameter-def id="org.tolven.document.store.contentprovider" default-value="#{pluginProperty['org.tolven.document.store.contentprovider']}" />
+		<parameter-def id="org.tolven.document.store.mutablestores" default-value="#{pluginProperty['org.tolven.document.store.mutablestores']}" />
+		<parameter-def id="org.tolven.document.store.immutablestores" default-value="#{pluginProperty['org.tolven.document.store.immutablestores']}" />
+	</extension-point>
+</plugin>

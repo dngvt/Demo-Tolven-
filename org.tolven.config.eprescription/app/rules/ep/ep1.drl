@@ -1,0 +1,123 @@
+package ep
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.logging.TolvenLogger;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//rule "Place Pharmacy on Preferred Pharmacy  list"
+//	when		
+//		$msList: MenuStructure( path == "ephr:patient:myPharmacy:all" )
+//		$ms: MenuStructure( role == "placeholder", path == "ephr:patient:pharmacy" )
+//		$md: MenuData( menuStructure == $ms )
+//	then
+//		app.info( "Place pharmacy on preferred pharmacy  list");
+//		MenuData md = app.createReferenceMD( $md, $msList );
+//end
+rule "Place Pharmacy on Pharmacy  list"
+	when		
+		$msList: MenuStructure( path == "ephr:patient:pharmacies:all" )
+		$ms: MenuStructure( role == "placeholder", path == "ephr:patient:pharmacy" )
+		$md: MenuData( menuStructure == $ms )
+		$trim:TrimEx(name=="docclin/evn/pharmacy")
+	then
+		app.info( "Place pharmacy on pharmacy  list");
+		MenuData md = app.createReferenceMD( $md, $msList );
+end
+rule "Place Pharmacy on Pharmacy summary list"
+when
+	$msPharmacy: MenuStructure( role == "placeholder", path == "ephr:patient:pharmacy" )
+	$mdPharmacy: MenuData( menuStructure == $msPharmacy )
+then
+	// Add act to patient's Pharmacy list
+	app.createReferenceMD( $mdPharmacy, "ephr:patient:summary:pharmsum" );
+end
+
+rule "Place Medication History on Current Medication list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:history" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:medicationHistory" )
+	$md: MenuData( menuStructure == $ms)
+then
+	MenuData md = app.createReferenceMD( $md, $msList);
+	app.info("Patient Medication History on Current Medication list"); 
+end
+rule "Place Active Medication History on Current Medication list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:active" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:medicationHistory" )
+	$md: MenuData( menuStructure == $ms, string06=="Active")
+then
+	MenuData md = app.createReferenceMD( $md, $msList);
+	app.info("Patient Active Medication History on Active Medication list"); 
+end
+rule "Place Inactive Medication History on Current Medication list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:inactive" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:medicationHistory" )
+	$md: MenuData( menuStructure == $ms, string06=="Inactive")
+then
+	MenuData md = app.createReferenceMD( $md, $msList);
+	app.info("Patient Inactive Medication History on Inactive Medication list");
+end
+
+rule "Place over-the-counter medication on Medication list"
+when
+	$msList: MenuStructure(path == "ephr:patient:medications:current" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms )
+	$trim:TrimEx(name=="obs/evn/overCounter")
+then
+	app.createReferenceMD( $md, $msList );
+	app.info("Place over the counter  medication on medication  list");
+end
+rule "Place active over-the-counter medication on Active Medication list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:active" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms ,string06=="Active")
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("Place active over the counter medication on Active Medication list"); 
+end
+rule "Place inactive over-the-counter medication on Inactive Medication list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:inactive" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms ,string06=="Inactive")
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("Place inactive over-the-counter medication on Inctive Medication list"); 
+end
+
+rule "Place Administration Wizard on Administration list"
+when
+	$msList: MenuStructure( path == "ephr:patient:medications:administration" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:currentMedication:administerMedication" )
+	$md: MenuData( menuStructure == $ms)
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info( "Place Administration Wizard on Administration list"); 
+end
+rule "Place Administered Medication on Medication Specific List"
+when
+	$msList: MenuStructure( path == "ephr:patient:currentMedication:administration" )
+	$ms: MenuStructure( role == "placeholder", path == "ephr:patient:currentMedication:administerMedication" )
+	$md: MenuData( menuStructure == $ms)
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("Place Administered Medication on Medication Specific List"); 
+end
+
+
+		

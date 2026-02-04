@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+	    <title>RxChangeRequest- Drilldown</title>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<ui:composition>
+			<input type="text" id="hasDrugFoodInterraction" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[3].ST.value}" style="display:none" />
+			<input type="text" id="hasDuplicateTherapy" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[4].ST.value}" style="display:none" />
+			<input type="text" id="drugFoodCause" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[1].ST.value}" style="display:none" />
+			<input type="text" id="duplicateCause" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[2].ST.value}" style="display:none" />
+			<input type="text"  id="formIdValue" value="#{menu.elementLabel}"  style="display:none"/>
+  			<input type="text"  id="elementValue" value="#{menu.element}"  style="display:none" />
+			<wiz:body>
+				<script>
+					alertMessageReq();
+				</script>
+			 	<script>
+<!--			  				 if ($("#{menu.elementLabel}submitButton")!=null){-->
+<!--			                           $("#{menu.elementLabel}submitButton").observe('click', function() {-->
+<!--			                           		submitPrescription('#{menu.element}');-->
+<!--			                           });-->
+<!--			                 }                              -->
+  				</script>
+	  			<wiz:group title="Request details">
+		  			<table width="80%" cellpadding="5">
+			  			<tr>
+							<td width="50%">
+								<h:outputText value="Medication prescribed by the prescriber : " />
+							</td>
+							<td width="50%">
+								<h:outputText value="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values[0].ST.value}"  />
+							</td>
+						</tr>
+		  			</table>
+	  			</wiz:group>
+	  			<wiz:group title="Response Type">
+	  				<table width="80%" cellpadding="5">
+		  				<tr>
+			  				<td width="10%">
+								#{trim.trim.act.relationship['responseType'].act.observation.values[0].label.value} : 
+							</td>         
+			               	<td width="40%">
+								<h:outputText id="response" value="#{act.relationship['responseType'].act.observation.values[0].CE}"/>
+							</td>	
+						</tr>
+					</table>
+				</wiz:group>
+				<wiz:group title = "Medicatiion Details">
+					<table width="80%" cellpadding="5">
+						<c:if test="#{trim.trim.act.relationship['responseType'].act.observation.values[0].CE=='Approved'}">
+							<tr>
+								<td width="20%">
+									 Approved Medication :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['FinalMedication'].act.observation.values[0].ST.value}"/>
+								</td>	
+							</tr>
+							<tr>
+								<td width="20%">
+									 Dispense Amount :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['FinalMedication'].act.observation.values[1].INT.value}"/>
+								</td>
+							</tr>
+							<tr>
+								<td width="20%">
+									 Refill :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['FinalMedication'].act.observation.values[2].INT.value}"/>
+								</td>
+							</tr>
+							<tr>
+								<td width="20%">
+									 Note :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{trim.trim.act.relationship['responseType'].act.observation.values[1].ST.value}"/>
+								</td>
+							</tr>
+						</c:if>
+						<c:if test="#{trim.trim.act.relationship['responseType'].act.observation.values[0].CE=='Approved With Change'}">
+							<tr>
+								<td width="20%">
+									 Approved Medication :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['RequestedChange'].act.observation.values[0].ST.value}"/>
+								</td>	
+							</tr>
+							<tr>
+								<td width="20%">
+									 Dispense Amount :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['RequestedChange'].act.observation.values[8].ST.value}"/>
+								</td>
+							</tr>
+							<tr>
+								<td width="20%">
+									Refill :
+								</td>
+								<td width="40%">
+									<h:outputText value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[10].CE}"/>
+								</td>
+							</tr>
+							<c:if test="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[10].CE=='R'}">
+								<tr>
+									<td width="20%">
+										Refill(Quantity) :
+									</td>	
+									<td width="80%">
+										<h:outputText id="refill" value="#{act.relationship['RequestedChange'].act.observation.values[9].INT.value}"  />
+									</td>
+								</tr>
+							</c:if>
+							<tr>
+								<td width="20%">
+									 Note :
+								</td>         
+				               	<td width="40%">
+									<h:outputText  value="#{act.relationship['responseType'].act.observation.values[4].ST.value}"/>
+								</td>
+							</tr>
+						</c:if>
+						<c:if test="#{trim.trim.act.relationship['responseType'].act.observation.values[0].CE=='Denied'}">
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['responseType'].act.observation.values[2].label.value}:
+								</td>
+								<td width="40%">
+									<h:outputText  value="#{act.relationship['responseType'].act.observation.values[2].CE}"/>
+								</td>
+							</tr>
+							<tr>
+								<c:if test="#{trim.trim.act.relationship['responseType'].act.observation.values[2].CE=='Others'}">
+									<td width="10%">
+										#{trim.trim.act.relationship['responseType'].act.observation.values[3].label.value}:
+									</td>
+									<td width="40%">
+										<h:outputText value="#{act.relationship['responseType'].act.observation.values[3].ST}"/>
+									</td>
+								</c:if>
+							</tr>
+						</c:if>
+	  				</table>
+	  			</wiz:group>
+			</wiz:body>
+		</ui:composition>
+	</body>
+</html>		

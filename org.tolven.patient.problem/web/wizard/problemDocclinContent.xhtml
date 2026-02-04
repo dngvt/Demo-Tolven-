@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+ <body>
+		<ui:composition>
+			<tr>
+				<td><h:outputText value="#{rel.act.observation.value.CE.displayName}"/></td>
+				<td><trim:TS id="problemtime#{index}#{thisStep}" value="#{rel.act.effectiveTime.TS}" dateStyle="short" readonly="false" style="width:100px;"/></td>
+				<td><trim:valueSetMenu id="severity#{index}#{thisStep}"  slot="#{rel.act.relationship['severity'].act.observation.value}" /></td>
+				<td><trim:valueSetMenu id="course#{index}#{thisStep}" slot="#{rel.act.relationship['course'].act.observation.value}" /></td>
+				<td><trim:valueSetMenu id="outcome#{index}#{thisStep}" slot="#{rel.act.relationship['outcome'].act.observation.value}" /></td>
+				<td><h:inputTextarea id="treatment#{index}#{thisStep}" value="#{rel.act.relationship['treatment'].act.text.ST.value}" cols="30"/></td>
+				<td><h:inputTextarea id="comments#{index}#{thisStep}"  value="#{rel.act.relationship['comments'].act.text.ST.value}" cols="30"/></td>
+				<td><a href="#" onclick="javascript:removeTemplate('#{menu.elementLabel}',#{rel.sequenceNumber},#{thisStep})" title="Remove this #{type}"><img src="#{facesContext.externalContext.request.contextPath}/images/delete.png"/></a></td>
+			</tr>		
+		</ui:composition>
+</body>
+</html>

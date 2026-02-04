@@ -1,0 +1,22 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient">
+		<placeholder name="advancedirective" title="Advance Directive" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/advanceDirectiveLink.xhtml">
+      			<field name="effectiveTime" internal="date01">
+				<from>#{act.effectiveTime.TS.date}</from>
+				<from>#{act.effectiveTime.IVLTS.low.date}</from>
+      			</field>
+      			<field name="title" internal="string01">
+				<from>#{act.observation.value.CE.displayName}</from>
+      			</field>
+      			<field name="status" internal="string04">
+				<from>#{act.statusCode}</from>
+      			</field>
+      			<field name="enteredBy" internal="string05">
+				<from>#{internalId(account, act.participation['dataEnterer'].role.id)}</from>
+      			</field>
+      			<field name="patient" internal="parent01">
+				<from>#{patient}</from>
+      			</field>
+    		</placeholder>
+	</extends>
+</application>

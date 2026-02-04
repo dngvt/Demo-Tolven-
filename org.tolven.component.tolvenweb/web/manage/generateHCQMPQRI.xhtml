@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+    <title>HCQM PQRI</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition template="/templates/simplePage.xhtml">
+        <ui:param name="pageTitle" value="HCQM Measures"/>
+        <ui:define name="body">
+        <h:form id="hcqmpqriMeasures">
+        	<div class="breadcrumbs">
+				<h:commandLink value="#{msg.Application}" action="dispatch" immediate="true"/>
+				<h:outputText value="&nbsp; &gt; &nbsp;" escape="false"/>
+				<h:commandLink value="#{msg.Preferences}" action="preferences" immediate="true"/>
+				<h:outputText value="&nbsp; &gt; &nbsp;" escape="false"/>
+				<h:outputText value="HCQM Measures" />				
+			</div>
+			<fieldset>
+				<legend>HCQM Measures</legend>
+				<table cellpadding="3">
+					<thead>
+						<th>Account Id</th>
+						<th>Measure ID</th>
+						<th>Measure</th>
+						<th>Numerator</th>
+						<th>Denominator</th>
+						<th>Exclusions</th>
+						<th>Performance Not Met</th>
+						<th>Percentage</th>					
+					</thead>
+				<c:forEach var="measure" items="#{mu.hcqmMeasures}">
+					<tr>
+						<td align="center">#{measure.accountId}</td>
+						<td align="center">#{measure.measureNumber}</td>
+						<td align="center">#{measure.measureName}</td>
+						<td align="center">#{measure.numerator}
+							<c:if test="#{measure.emergencyDepartmentMeasure == 'true'}">*</c:if>
+						</td>
+						<td align="center">#{measure.denominator}</td>
+						<td align="center">#{measure.exclusionsStr}</td>
+						<td align="center">#{measure.performanceNotMetStr}</td>
+						<td align="center">
+							<c:choose>
+								<c:when test="#{measure.emergencyDepartmentMeasure == 'true'}">**</c:when>
+								<c:otherwise>#{measure.percentage}</c:otherwise>
+							</c:choose>
+						</td>						
+					</tr>
+				</c:forEach>
+				<tr><td colspan="7">*Median Time in minutes from ED arrival to ED departure</td></tr>
+				<tr><td colspan="7">**Percentage not calculated for Emergency Department Throughput</td></tr>
+				</table>
+			</fieldset>			
+				<h:inputTextarea id="hcqmpqri" value="#{mu.hcqmpqri}" readonly="true" cols="100" rows="50"/>
+			</h:form>
+      </ui:define>
+    </ui:composition>
+  </body>
+</html>

@@ -1,0 +1,427 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="ephr:patient">
+		<placeholder name="pharmacy" title="Pharmacy" eventInstance="ephr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="NCPDPID" internal="string01">
+				<from>#{act.observation.values[0].CE.code}</from>
+			</field>
+			<field name="storeName" internal="string02">
+				<from>#{act.observation.values[0].CE.displayName}</from>
+			</field>
+			<field name="addressLine1" internal="string03">
+				<from>#{act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="city" internal="string04">
+				<from>#{act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="state" internal="string05">
+				<from>#{act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="zip" internal="string06">
+				<from>#{act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="primaryPhone" internal="string07">
+				<from>#{act.observation.values[5].ST.value}</from>
+			</field>
+			<field name="fax" internal="string08">
+				<from>#{act.observation.values[6].ST.value}</from>
+			</field>
+<!--		<field name="pharmacyId" internal="long01" >-->
+<!--			<from>#{trim.field['pharmacyId']}</from>-->
+<!--		</field>-->
+<!--		<field name="name" internal="string01" >-->
+<!--			<from>#{act.relationship['pharmacy'].act.observation.value.CE.displayName}</from>	-->
+<!--			<from>#{act.text.ST.value}</from>-->
+<!--			<from>#{trim.description}</from>-->
+<!--		</field>-->
+		</placeholder>
+	</extends>	
+	<extends path="ephr:patient">
+		<placeholder name="medicationHistory" eventInstance="ephr:patient:wip" 
+					page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="prescriberOrderNumber" internal="long04">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[10].INT.value}</from>
+			</field>
+			<field name="medicationDate" internal="date01">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[1].TS.date}</from>
+			</field>
+			<field name="medicationName" internal="string01">								
+				<from>#{act.relationship['medicationRecord'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="medicationStrength" internal="string02">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[2].ST.value}</from>
+			</field>			
+			<field name="medicationFrequency" internal="long01">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[3].INT.value}</from>
+			</field>
+			<field name="medicationRoute" internal="string04">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="date03">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[5].TS.date}</from>
+			</field>
+			<field name="medicationEndDate" internal="date02">				
+				<from>#{act.relationship['medicationRecord'].act.observation.values[6].TS.date}</from>
+			</field>
+			<field name="status" internal="string06">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[7].CE.displayName}</from>
+			</field>
+			<field name="messageID" internal="string07">
+				<from>#{act.relationship['medicationRecord'].act.observation.values[8].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>	 
+	<extends path="ephr:patient">
+		<placeholder name="currentMedication" eventInstance="ephr:patient:wip"
+					 page="/five/provider.xhtml" heading="/five/wipLink.xhtml">
+			<field name="prescriberOrderNumber" internal="long04">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[10].INT.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[10].INT.value : act.observation.values[8].ST.value}</from>
+			</field>
+			<field name="prescriptionDate" internal="date01">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[1].TS.date}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? '' : act.observation.values[7].TS.date}</from>
+			</field>
+			<field name="medicationName" internal="string01">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[0].ST.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[0].ST.value : act.text.ST.value}</from>
+			</field>
+			<field name="medicationStrength" internal="string02">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[2].ST.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[2].ST.value : act.observation.values[0].ST.value}</from>
+			</field>			
+			<field name="medicationFrequency">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[3].INT.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[6].CE.displayName : act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="medicationRoute" internal="string04">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[4].ST.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[4].CE.displayName : act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="date03">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[5].TS.date}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.effectiveTime.IVLTS.low.TS.date : act.observation.values[3].TS.date}</from>
+			</field>
+			<field name="medicationEndDate" internal="date02">				
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[6].TS.date}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.effectiveTime.IVLTS.high.TS.date : act.observation.values[4].TS.date}</from>
+			</field>
+			<field name="status" internal="string06">	
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[7].CE.displayName}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? act.observation.values[11].CE.displayName : act.observation.values[5].ST.value}</from>	
+			</field>
+			<field name="messageID" internal="string07">
+				<from>#{trim.isName['obs/evn/overCounter'].act.relationship['overCounter'].act.observation.values[8].ST.value}</from>
+				<from>#{trim.name=='docclin/evn/shareMedicationHistoryIn' ? '' : act.observation.values[6].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="ephr:patient:currentMedication">
+		<placeholder name="administerMedication" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="medicationName" internal="string01">
+				<from>#{act.relationship['administration'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="medicationStrength" internal="string02">
+				<from>#{act.relationship['administration'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="medicationFrequency" internal="long01">
+				<from>#{act.relationship['administration'].act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="medicationRoute" internal="string03">
+				<from>#{act.relationship['administration'].act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="string04">
+				<from>#{act.relationship['administration'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="medicationEndDate" internal="string05">
+				<from>#{act.relationship['administration'].act.observation.values[5].ST.value}</from>
+			</field>
+			<field name="status" internal="string06">
+				<from>#{act.relationship['administration'].act.observation.values[7].CE.displayName}</from>
+			</field>
+			<field name="messageID" internal="string07">
+				<from>#{act.relationship['administration'].act.observation.values[9].ST.value}</from>
+			</field>	
+		</placeholder>
+	</extends>
+<!--	<extends path="ephr:patient">-->
+<!--		<placeholder name="administerMedication" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">-->
+<!--			<field name="medicationName" internal="string01">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[0].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="medicationStrength" internal="string02">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[1].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="medicationFrequency" internal="long01">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[2].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="medicationRoute" internal="string03">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[3].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="medicationStartDate" internal="string04">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[4].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="medicationEndDate" internal="string05">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[5].ST.value}</from>-->
+<!--			</field>-->
+<!--			<field name="status" internal="string06">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[7].CE.displayName}</from>-->
+<!--			</field>-->
+<!--			<field name="messageID" internal="string07">-->
+<!--				<from>#{act.relationship['administration'].act.observation.values[9].ST.value}</from>-->
+<!--			</field>	-->
+<!--		</placeholder>-->
+<!--	</extends>-->
+		
+<!--	<extends path="ephr:patient">-->
+<!--		<menu name="myPharmacy" title="My Pharmacy" page="/five/bar2.xhtml" visible="false">-->
+<!--			<list name="all" title="All Pharmacy" page="/five/list.xhtml" visible="true" drilldown="ephr:patient:pharmacy">-->
+<!--				<column name="pharmacyId" internal="long01" width="10.0" visible="false">-->
+<!--					<from>#{pharmacy.pharmacyId}</from>-->
+<!--				</column>-->
+<!--				<column name="Name" internal="string01" reference="true" width="25.0">-->
+<!--					<from>#{pharmacy.name}</from>-->
+<!--				</column>-->
+<!--				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:pharmacyMenu">-->
+<!--					<column name="Name" internal="string01" instantiate="true" width="40.0"/>-->
+<!--				</action>-->
+<!--			</list>-->
+<!--		</menu>-->
+<!--	</extends>-->
+	<extends path="ephr">
+		<list name="pharmacies" title="Pharmacies" page="/five/list.xhtml" visible="never" query="global:pharmacyMenu">
+			<column name="pharmacy" title="Pharmacy" internal="string01" visible="never" width="30.0" />
+			<column name="description" internal="string05" width="20.0" />
+			<column name="address" title="Address" internal="string03" width="20.0" />
+			<column name="city" title="City" internal="pqStringVal01" width="10.0" /> 
+			<column name="state" title="State" internal="string06" width="5.0" />	
+			<column name="zip" title="Zip" internal="string04" width="5.0" />						
+		</list>
+	</extends>
+	<extends path="ephr:patient">
+		<menu name="pharmacies" title="Pharmacies" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="Current" page="/five/list.xhtml" visible="true" drilldown=":pharmacy">
+				<column name="NCPDPID" internal="string01" width="10.0">
+					<from>#{pharmacy.NCPDPID}</from>
+				</column>
+				<column name="storeName" internal="string02"  width="20.0">
+					<from>#{pharmacy.storeName}</from>
+				</column>
+				<column name="addressLine1" internal="string03" width="20.0">
+					<from>#{pharmacy.addressLine1}</from>
+				</column>
+				<column name="city" internal="string04" width="20.0">
+					<from>#{pharmacy.city}</from>
+				</column>
+				<column name="state" internal="string05" width="10.0">
+					<from>#{pharmacy.state}</from>
+				</column>
+				<column name="zip" internal="string06" width="10.0">
+					<from>#{pharmacy.zip}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:pharmacyDocMenu">
+					<column name="Pharmacy" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+			</list>
+		</menu>
+	</extends>
+<!--	<extends path="ephr:patient">-->
+<!--		<menu name="pharmacies"  title="Pharmacies" page="/five/bar2.xhtml" visible="false">-->
+<!--			<list name="all" title="Current" page="/five/list.xhtml" visible="true" drilldown=":pharmacy">-->
+<!--				<column name="Name" internal="string01" reference="true" width="25.0">-->
+<!--						<from>#{pharmacy.name}</from>-->
+<!--				</column>-->
+<!--				<action name="menu" title="New" page="/five/list.xhtml" visible="false" query="global:pharmacyMenu">-->
+<!--					<column name="Name" internal="string01" instantiate="true" width="40.0"/>-->
+<!--				</action>-->
+<!--			</list>-->
+<!--		</menu>-->
+<!--	</extends>-->
+	<extends path="ephr:patient">
+		<list name="patientActivity" title="PatientActivity" page="/five/list.xhtml" visible="true" drilldown="">
+			<column name="Date" internal="date01" format="d MMM yyyy" width="7.0"/>
+			<column name="For" internal="string01" width="20.0">
+				<from>#{trim.act.participation['recordTarget'].role.player.name.EN['L'].formatted}</from>
+				<from>#{trim.act.participation['subject'].role.player.name.EN['L'].formatted}</from>				
+			</column>
+			<column name="Action" internal="string02" reference="true" width="20.0">
+				<from>#{trim.description}</from>
+			</column>
+			<column name="RequestedBy" internal="string03" width="15.0"/>			
+		</list>
+	</extends>	
+	<!-- exists in onc-ephr-application.xml  Srini 12/13/11
+	<extends path="ephr:patient:medications">
+		<list name="current" title="Current" page="/five/listMedication.xhtml" visible="true">
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title} </from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{medication.frequency}</from>
+				</column>
+				<column name="instructions" internal="string06" width="10.0">
+					<from>#{medication.instructions}</from>
+				</column>	
+				<column name="comments" internal="string07" width="10.0">
+					<from>#{medication.comments}</from>
+				</column>	
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientMedicationMenu" >
+					<column name="Form" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+			</list>
+	</extends>
+	 -->
+	<extends path="ephr:patient:medications">
+		<list name="history" title="MedicationHistory" page="/five/list.xhtml" visible="true">
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title} </from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{medication.frequency}</from>
+				</column>
+				<column name="instructions" internal="string06" width="10.0">
+					<from>#{medication.instructions}</from>
+				</column>		
+				<column name="comments" internal="string07" width="10.0">
+					<from>#{medication.comments}</from>
+				</column>							
+			</list>
+	</extends>
+	<extends path="ephr:patient:medications">
+		<list name="active" title="Active" page="/five/list.xhtml" visible="true">
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title} </from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{medication.frequency}</from>
+				</column>
+				<column name="instructions" internal="string06" width="10.0">
+					<from>#{medication.instructions}</from>
+				</column>
+				<column name="comments" internal="string07" width="10.0">
+					<from>#{medication.comments}</from>
+				</column>					
+		</list>
+	</extends>
+	<extends path="ephr:patient:medications">
+		<list name="inactive" title="Inactive" page="/five/list.xhtml" visible="true" drilldown="ephr:patient:medication">
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title} </from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{medication.frequency}</from>
+				</column>
+				<column name="instructions" internal="string06" width="10.0">
+					<from>#{medication.instructions}</from>
+				</column>
+				<column name="comments" internal="string07" width="10.0">
+					<from>#{medication.comments}</from>
+				</column>					
+		</list>
+	</extends>
+	<extends path="ephr:patient:medications">
+		<list name="administration" title="Administration" page="/five/list.xhtml" visible="true">
+				<column name="medicationName" reference="true" internal="string01" width="16.0">
+					<from>#{administerMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10.0">
+					<from>#{administerMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="long01" width="10.0">
+					<from>#{administerMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string03" width="10.0">
+					<from>#{administerMedication.medicationRoute}</from>
+				</column>
+				<column name="medicationStartDate" internal="string04" width="10.0">
+					<from>#{administerMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string05" width="10.0">
+					<from>#{administerMedication.medicationEndDate}</from>
+				</column>
+				<column name="status" internal="string06" width="10.0">
+					<from>#{administerMedication.status}</from>
+				</column>
+				<column name="messageID" internal="string07" width="20.0">
+					<from>#{administerMedication.messageID}</from>
+				</column>
+		</list>
+	</extends>	
+	<extends path="ephr:patient:currentMedication">
+	 	<list name="administration" title="Administration" page="/five/list.xhtml" visible="true" >
+				<column name="medicationName" internal="string01" width="20.0">
+					<from>#{administerMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10.0">
+					<from>#{administerMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="string08" width="10.0">
+					<from>#{administerMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string03" width="5">
+					<from>#{administerMedication.medicationRoute}</from>
+				</column>
+				<column name="medicationStartDate" internal="string04" width="10.0">
+					<from>#{administerMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string05" width="10.0">
+					<from>#{administerMedication.medicationEndDate}</from>
+				</column>
+				<column name="status" internal="string06" width="10.0">
+					<from>#{administerMedication.status}</from>
+				</column>
+				<column name="messageID" internal="string07" width="20.0" visible="false">
+					<from>#{administerMedication.messageID}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:administrationMenu" >
+					<column name="Form" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+		</list>
+	</extends>
+	<extends path="ephr:patient:summary">
+		<list name="pharmsum" visible="never">
+			<column name="NCPDPID" internal="string01">
+				<from>#{pharmacy.NCPDPID}</from>
+			</column>
+			<column name="storeName" internal="string02">
+				<from>#{pharmacy.storeName}</from>
+			</column>			
+			<column name="state" internal="string05">
+				<from>#{pharmacy.state}</from>
+			</column>
+			<column name="zip" internal="string06">
+				<from>#{pharmacy.zip}</from>
+			</column>		
+		</list>
+	</extends>
+	<extends path="ephr:patient:summary:portal">
+		<portlet name="pharmacysum" portalColumn="1" title="Pharmacy" page="/five/summaryPortletList.xhtml" query="ephr:patient:summary:pharmsum" visible="true" drilldown=":pharmacy">
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:pharmacyDocMenu">
+				<column name="Pharmacy" internal="string02" instantiate="true" width="40.0"/>
+			</action>
+		</portlet>  
+	</extends>
+</application>

@@ -1,0 +1,98 @@
+package ccdsharing
+ /* Tolven */
+import org.tolven.app.bean.Mode;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+
+/**
+ * ****** SHARING ******
+ * Phase one: An outShare, by patient - created in sending account
+ * phase two: An inShare, not by patient - a holding place until receiver agrees to accept 
+ * Phase three: An inShare by patient - only if user has accepted the share
+ */
+
+rule "Share CCD"
+	when
+		$trim: Trim(name=="doc/ccdsummary", $message : message )
+		Mode( direction == "local" )
+		$tp: ProcessTrim()
+	then		
+		$tp.outboundScan($trim);
+		app.info("Executing rule: Share CCD");
+		//Send it
+		$tp.send($message);		
+end
+
+
+/**
+ * Create placeholders from inbound patient share components
+ */
+rule "Create inbound share placeholders"
+	when
+		Mode( direction == "local" )
+		$trim: TrimEx( $msg : message !=null, name=="docclin/evn/shareCCD", message.receiver.status == "accept" )
+		$tp: ProcessTrim( )
+	then
+		$tp.createPlaceholders( $trim, BindPhase.RECEIVE );
+		$tp.insertPlaceholders($trim, BindPhase.RECEIVE);
+end
+
+rule "Display components from inbound patient share"
+	when
+		$trim: Trim( name matches "docclin/evn/shareCCD" )
+		$act: Act( ) from $trim.act 
+		$rel: ActRelationship( typeCode==ActRelationshipType.COMP ) from $act.relationships
+		$comp: Act() from $rel.act
+	then
+		app.info( "ShareComponent: " + $rel.getName());
+end
+
+rule "Process inbound patient share reject"
+	when
+		Mode( direction == "local" )
+		$trim: Trim( $msg : message !=null, name=="docclin/evn/shareCCD", message.receiver.status != "accept", $act : act !=null )
+	then
+		app.info( "Patient share rejected");
+end
+
+
+/**
+ * Process a patient share document, based on user's decisions. In this case, the user accepted.
+ */
+rule "Process echr inbound patient share accept"
+	when
+		Mode( direction == "local" )
+		$trim: Trim( name=="docclin/evn/shareCCD", message.receiver.status == "accept", $act : act !=null )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:inShare" )
+		$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+		$mdPatient: MenuData( menuStructure == $msPatient)
+	then
+		app.info( "Patient share accepted");
+		MenuData mdPatientInShare = app.createPlaceholder( $ms, "patient", $mdPatient );
+		insert( mdPatientInShare );
+end
+
+
+/**
+ * Process a patient share document, based on user's decisions. In this case, the user accepted.
+ */
+rule "Process ephr inbound patient share accept"
+	when
+		Mode( direction == "local" )
+		$trim: Trim( name=="docclin/evn/shareCCD", message.receiver.status == "accept", $act : act !=null )
+		$ms: MenuStructure( role == "placeholder", path == "ephr:patient:inShare" )
+		$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+		$mdPatient: MenuData( menuStructure == $msPatient)
+	then
+		app.info( "Patient share accepted");
+		MenuData mdPatientInShare = app.createPlaceholder( $ms, "patient", $mdPatient );
+		insert( mdPatientInShare );
+end
+
+
+

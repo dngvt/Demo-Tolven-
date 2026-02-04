@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+	<title>Patient Problems - Drilldown</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+		<wiz:body>
+			<table width="100%">
+        		<thead>
+					<tr>
+						<th>Immunization</th>
+						<th>Time</th>
+						<th>Administered Amount</th>
+						<th>LOT #</th>
+						<th>ManufacturerName</th>
+					</tr>
+				</thead>
+					<tbody style="width: 100%;">
+						
+						<c:if test="#{act.relationshipsList[act.computes[0].property['arName']]!=null}">
+							<c:forEach var="rel" items="#{act.relationshipsList[act.computes[0].property['arName']]}" varStatus="widgetIndex">
+								<c:set var="class" value="odd"/>
+								<c:set var="i" value="0"/>
+								<c:if test="#{(widgetIndex.index%2)==1}"><c:set var="class" value="even"/><c:set var="i" value="1"/></c:if>
+								<tr class="#{class}">
+									<td style="width: 12%;">#{rel.act.observation.value.CE.displayName}</td>
+									<td style="width: 8%;">
+										<trim:TS value="#{rel.act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+									</td>
+									<td style="width: 10%;"><h:outputText value="#{rel.act.substanceAdministration.doseQuantity.PQ.value} #{rel.act.substanceAdministration.doseQuantity.PQ.unit}"/></td>
+									<td style="width: 10%;"><h:outputText value="#{rel.act.relationship['LOTnumber'].act.observation.value.ST.value}" /></td>
+									<td style="width: 10%;"><h:outputText value="#{rel.act.relationship['manufacturer'].act.observation.values[0].ST.value}"/></td>
+								</tr>
+          					</c:forEach>
+          				</c:if>
+					</tbody>			
+				</table>				
+				
+				
+				
+    </wiz:body>
+  </ui:composition>
+</body>
+</html>

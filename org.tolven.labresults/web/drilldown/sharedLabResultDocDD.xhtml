@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+      
+	<head>
+	    <title>Laboratory Result Drilldown</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	
+	<body>
+	    <ui:composition>
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tbody>
+				<c:forEach var="labResult" items="#{trim.trim.act.relationshipsList['labresult']}" varStatus="widgetIndex">
+					<tr class="#{class}">
+						<td><b>Laboratory Result</b></td>
+						<td>
+							#{labResult.act.title.ST.value}							
+						</td>
+					</tr>
+					<tr>
+					<td nowrap="nowrap"><b>Date Of Result*</b></td>
+						<td nowrap="nowrap">
+							<trim:TS id="time#{widgetIndex.index}" value="#{labResult.act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+						</td>
+					</tr>
+					<tr>
+					<td><b>Value</b></td>
+						<td>
+							<h:outputText id="value#{widgetIndex.index}" value="#{labResult.act.observation.values[3].PQ.value}"/>
+						</td>
+					</tr>
+					<tr>
+					<td><b>Unit</b></td>
+						<td>
+							<h:outputText id="unit#{widgetIndex.index}" value="#{labResult.act.observation.values[4].ST.value}"/>
+						</td>
+					</tr>
+					<tr>
+					<td><b>Lab Name</b></td>
+						<td>
+							<h:outputText id="comment#{widgetIndex.index}" value="#{trim.trim.message.sender.accountName}"/>
+						</td>
+					</tr>									
+					<tr>
+					<td><b>Address</b></td>
+						<td>
+							<h:outputText id="comment#{widgetIndex.index}" value="#{labResult.act.observation.values[12].ST.value}"/>
+						</td>
+					</tr>														
+				</c:forEach>	
+				</tbody>			
+			</table>
+		</ui:composition>
+	</body>
+</html>

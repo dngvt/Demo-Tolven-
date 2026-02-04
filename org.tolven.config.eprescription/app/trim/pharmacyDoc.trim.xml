@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<name>docclin/evn/pharmacy</name>
+	<description>Pharmacy Document</description>
+	<page>pharmacyDoc.xhtml</page>
+	<drilldown>pharmacyDocDD.xhtml</drilldown>
+	<menu>global:pharmacyDocMenu</menu>	
+	<application name="ephr">
+		<instance>ephr:patient:pharmacy</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:pharmacy</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="DOCCLIN" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:pharmacy</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:pharmacy</path>
+			</placeholder>
+		</bind>
+		<code>
+			<CD>
+				<code>OINT</code>
+				<codeSystemName>HL7</codeSystemName>
+				<codeSystemVersion>3.0</codeSystemVersion>
+			</CD>
+		</code>
+		<statusCode>active</statusCode>		
+		<title>
+			<ST>Pharmacy</ST>
+		</title>
+		<effectiveTime>
+			<label>Time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>
+		<participation name="subject" typeCode="SBJ">
+			<role classCode="PAT">
+				<bind application="echr">
+					<placeholder>
+						<path>echr:patient</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr">
+					<placeholder>
+						<path>ephr:patient</path>
+					</placeholder>
+				</bind>
+				<id>
+					<II>
+						<root>#{computeIDRoot(account)}</root>
+						<extension>#{patient.path}</extension>
+					</II>
+				</id>				
+			</role>
+		</participation>
+		<relationship name="pharmacyId" direction="OUT" typeCode="PERT" >
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+	                <value>
+	                    <label>NCPDP ID</label>
+	                    <ST></ST>
+	                </value>
+	            </observation>
+			</act>
+		</relationship>
+		<relationship name="pharmacyDetails" direction="OUT" typeCode="PERT" >
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+	                <value>
+	                    <label>Store Name</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+                        <label>AddressLine1</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>City</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>State</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>Zip</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>PrimaryPhone</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>Fax</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>Email</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>PhoneAlt1</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>PhoneAlt1Qualifier</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>ActiveStartTime</label>
+                        <TS>
+                            <value></value>
+                        </TS>
+                    </value>
+                    <value>
+                        <label>ActiveEndTime</label>
+                        <TS>
+                            <value></value>
+                        </TS>
+                    </value>
+                    <value>
+                        <label>ServiceLevel</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>PartnerAccount</label>
+                        <ST></ST>
+                    </value>
+                    <value>
+                        <label>LastModifedDate</label>
+                        <TS>
+                            <value></value>
+                        </TS>
+                    </value>
+                    <value>
+                        <label>NPI</label>
+                        <ST></ST>
+                    </value>
+	            </observation>
+			</act>
+		</relationship>
+	</act>
+</trim>

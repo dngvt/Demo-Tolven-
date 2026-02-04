@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/surescriptsPrescriberRegistration</name>
+	<description>Surescripts Prescriber Wizard</description>
+	<page>surescriptsPrescriberRegistration.xhtml</page>
+	<drilldown>surescriptsPrescriberRegistrationDD.xhtml</drilldown>
+	<menu>global:prescriberRegistration</menu>
+ 	<tolvenId application="#{knownType}" accountId="#{account.id}"/>
+	<application name="echr" signatureRequired="true">
+		<instance>echr:admin:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+	<transition name="create" to="active">
+		<label language="en">Active</label>
+	</transition>
+	<transition name="complete" from="active" to="completed">
+		<label language="en">Completed</label>
+	</transition>
+	<transition name="reviseActive" from="active" to="active">
+		<label language="en">Revise</label>
+	</transition>
+	<transition name="eie" from="active" to="nullified">
+		<label language="en">Entered in Error</label>
+	</transition>
+	<transition name="reviseCompleted" from="completed" to="completed">
+		<label language="en">Revise</label>
+	</transition>
+	</transitions>
+	<act classCode="REG" moodCode="EVN">
+		<bind application="echr" phase="create">
+      		<placeholder bindAction="merge">
+        		<path>echr:surescriptsPrescriber</path>
+      		</placeholder>
+   		</bind>
+		<code>
+			<CD>
+				<code>C0017594</code>
+				<codeSystemName>UMLS</codeSystemName>
+				<codeSystemVersion>2007AA</codeSystemVersion>
+			</CD>
+		</code>
+		<title>
+			<ST>Surescripts Prescriber Wizard</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>
+		<relationship typeCode="NAME" direction="IN" name="prescriber">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>Account ID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Portal ID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Backup Portal ID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Service Level</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Active Start Time</label>
+						<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+					</value>
+					<value>
+						<label>Active End Time</label>
+						<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+					</value>
+					<value>
+						<label>SPI</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>DEA</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Clinic Name</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>First Name</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Middle Name</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Last Name</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Suffix</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Prefix</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Speciality</label>
+						<valueSet>speciality</valueSet>
+					</value>
+					<value>
+						<label>Speciality Code</label>
+						<valueSet>specialityCode</valueSet>
+					</value>
+					<value>
+						<label>Address Line 1</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Address Line 2</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>City</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>State</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Zip</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Email</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Qualifier</label>
+						<valueSet>qualifier</valueSet>
+					</value>
+					<value>
+						<label>Message Id</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Status</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="phoneNumber">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>TE - phone (telephone)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>FX (fax)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>WP (work)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>CP (cellular)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>BN (beeper)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>HP (home)</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>NP (night)</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="additionalIdentifiers">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>File ID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>State License Number</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Medicare Number</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>MedicaidNumber</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dentist License Number</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>UPIN</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>PPO Number</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Social Security</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>NPI</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Prior Authorization</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>	
+		<compute>
+        	<type>org.tolven.process.MessageID</type>
+        	<property name="enabled">
+            	<value xsi:type="xs:boolean">true</value>
+        	</property>
+        	<property name="action">
+		        <value xsi:type="xs:string">prescriberRegistration</value>
+			</property>
+   		</compute>
+	</act>
+	<valueSet name="speciality"> 
+ 		<CE>
+ 			<displayName>AM-American National Associations</displayName>
+ 			<code>C0024114</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>DE-Drug Enforcement Agency</displayName>
+ 			<code>C0024115</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet>
+ 	<valueSet name="specialityCode"> 
+ 		<CE>
+ 			<displayName>AMA Specialty Codes</displayName>
+ 			<code>C0024116</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet>
+ </trim>

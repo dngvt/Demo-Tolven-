@@ -1,0 +1,18 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient:encounter">
+		<placeholder name="hcqmeasure" title="HCQM" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/encounterLink.xhtml">
+	
+		<field name="measure" internal="string01">
+			<from>#{act.code.code}</from>
+		</field>
+
+		<field name="value1" internal="pqValue01">
+			<from>#{act.observation.value.PQ.value}</from>
+		</field>		
+
+		</placeholder>
+	</extends>
+</application>
+        

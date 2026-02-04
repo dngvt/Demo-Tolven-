@@ -1,0 +1,64 @@
+package echrappointments
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+//@use echr placeholders
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+
+
+rule "Place Appointment on staff appointment list"
+	when
+		$msAppointment: MenuStructure( role == "placeholder", path == "echr:patient:appointment" )
+		$mdAppointment: MenuData( menuStructure == $msAppointment, actStatus=='active', $attender: parent02!=null )
+		$list: MenuStructure( path == "echr:assigned:appointments:all" )
+	then
+		// Add appointment to staff (attender) Appointment summary (list)
+		MenuData md = app.createReferenceMD( $mdAppointment, $list, $attender );
+end
+
+rule "Place Appointment on appointment summary list"
+	when
+		$msAppointment: MenuStructure( role == "placeholder", path == "echr:patient:appointment" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:apptsum" )
+		$mdAppointment: MenuData( menuStructure == $msAppointment, actStatus=='active' )
+	then
+		// Add act to patient's Appointment summary (list)
+		MenuData md = app.createReferenceMD( $mdAppointment, $msList );
+end
+
+rule "Place Appointment on active appointment list"
+	when
+		$msAppointment: MenuStructure( role == "placeholder", path == "echr:patient:appointment" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:appointments:future" )
+		$mdAppointment: MenuData( menuStructure == $msAppointment, actStatus=='active' )
+	then
+		app.createReferenceMD( $mdAppointment, $msList );
+end
+
+rule "Place Appointment on completed appointment list"
+	when
+		$msAppointment: MenuStructure( role == "placeholder", path == "echr:patient:appointment" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:appointments:past" )
+		$mdAppointment: MenuData( menuStructure == $msAppointment, actStatus!='active' )
+	then
+		app.createReferenceMD( $mdAppointment, $msList );
+end

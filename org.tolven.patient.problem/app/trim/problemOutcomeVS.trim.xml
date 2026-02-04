@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0 http://www.tolven.org/xsd/trim4">
+	<name>valueSet/problemOutcomeVS</name>
+	<description />
+	<author>Tolven</author>
+	<reference />
+	<valueSet name="problemOutcome">
+		<CE>
+			<displayName>Sequelae</displayName>
+			<code>C0543419</code>
+			<codeSystem>HL7V2.5	S</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Died</displayName>
+			<code>C1546956</code>
+			<codeSystem>HL7V2.5	D</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Fully recovered</displayName>
+			<code>C1546957</code>
+			<codeSystem>HL7V2.5	F</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Not recovering/unchanged</displayName>
+			<code>C1546958</code>
+			<codeSystem>HL7V2.5	N</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Recovering</displayName>
+			<code>C1546959</code>
+			<codeSystem>HL7V2.5	R</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Worsening</displayName>
+			<code>C1546960</code>
+			<codeSystem>HL7V2.5	W</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Unknown</displayName>
+			<code>C1556127</code>
+			<codeSystem>HL7V2.5	U</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+</trim>

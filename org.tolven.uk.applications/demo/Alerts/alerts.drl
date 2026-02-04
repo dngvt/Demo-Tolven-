@@ -1,0 +1,271 @@
+package PatientAlerts
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+//TODO REMOVE ME!!! 
+rule "Assert Patient For Assessments"
+  when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:assessment" )
+		$md: MenuData( menuStructure == $ms, $mdPatient:parent01) 
+  then
+  		app.assertPlaceholder($mdPatient);
+  		app.info( "Asserting Patient for Assessment");
+ end
+
+//Rule 1
+rule "PatientAlerts Screen for abdominal aortic aneurysm placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'Screen for abdominal aortic aneurysm'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient, ageInYears > 64, ageInYears < 76, sex == "Male")
+    // TODO Recode 1,2,3 or 5 on a smoking assessment
+    $msAssessList: MenuStructure( path == "echr:patient:assessments:active" )
+    $msProcedureList: MenuStructure( path == "echr:patient:procedures:pxList" )
+    
+    eval( (app.onList($mdPatient, $msAssessList, "lower(string03) like '%current every day smoker%'") ||
+    	   app.onList($mdPatient, $msAssessList, "lower(string03) like '%current some day smoker%'") ||
+           app.onList($mdPatient, $msAssessList, "lower(string03) like '%former smoker%'") ||
+           app.onList($mdPatient, $msAssessList, "lower(string03) like '%smoker, current status unknown%'") ) &&
+               !app.onList($mdPatient, $msProcedureList, "lower(string01) like '%diagnostic ultrasound of abdomen%'")
+         )
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "Screen for abdominal aortic aneurysm");
+	mdAlert.setField("text", "The USPSTF recommends one-time screening for abdominal aortic aneurysm (AAA) by ultrasonography in men aged 65 to 75 who have ever smoked.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Aortic aneurysm screening ordered");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+
+//Rule 2
+rule "PatientAlerts Screen for syphilis infection placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'Screen for syphilis infection'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient, sex=="Female")
+
+    // VDRL ser Ql in lab orders if not in last 4 weeks
+    $msOrderList: MenuStructure( path == "echr:patient:orders:active" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    eval( !app.onList($mdPatient, $msOrderList, "lower(string01) like '%vdrl ser ql%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-28,'day')}", "date2","#{now}") &&
+           app.onList($mdPatient, $msProblemList, "lower(string01) like '%currently pregnant%'") )
+
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "Screen for syphilis infection");
+	mdAlert.setField("text", "The USPSTF strongly recommends that clinicians screen all pregnant women for syphilis infection.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Syphilis screening ordered");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+
+//Rule 3
+rule "PatientAlerts Screen for hepatitis B infection placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'Screen for hepatitis B infection'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient, sex=="Female")
+
+    // HBV e AG Ser QI EIA in lab orders if not in last 4 weeks
+    $msOrderList: MenuStructure( path == "echr:patient:orders:active" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    eval( !app.onList($mdPatient, $msOrderList, "lower(string01) like '%hbv e ag ser ql eia%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-28,'day')}", "date2","#{now}") &&
+           app.onList($mdPatient, $msProblemList, "lower(string01) like '%currently pregnant%'") )
+
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "Screen for hepatitis B infection");
+	mdAlert.setField("text", "The U.S. Preventive Services Task Force (USPSTF) strongly recommends screening for hepatitis B virus (HBV) infection in pregnant women at their first prenatal visit.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Hepatitis B screening ordered");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+
+//Rule 4
+rule "PatientAlerts Screen patient for type 2 Diabetes Mellitus placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'Screen patient for type 2 Diabetes Mellitus'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient)
+
+    // TODO Problem entry of Essential Hypertension - disorder 
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $msOrderList: MenuStructure( path == "echr:patient:orders:active" )
+    eval( app.onList($mdPatient, $msProblemList, "lower(string01) like '%essential hypertension%'") &&
+          (!app.onList($mdPatient, $msProblemList, "lower(string01) like '%diabetes mellitus type 2%'")  &&
+          !app.onList($mdPatient, $msOrderList, "lower(string01) like '%hgb a1c%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-28,'day')}", "date2","#{now}")) )
+
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "Screen patient for type 2 Diabetes Mellitus");
+	mdAlert.setField("text", "The USPSTF recommends screening for type 2 diabetes in asymptomatic adults with sustained blood pressure (either treated or untreated) greater than 135/80 mm Hg.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Diabetes screening ordered");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+
+//Rule 5
+rule "PatientAlerts Anticoagulation in CHF with a fib placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'Anticoagulation in CHF with a fib'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient)
+
+    // TODO Congestive heart failure disorder in problems
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $msMedicationList: MenuStructure( path == "echr:patient:medications:active" )
+    eval( (app.onList($mdPatient, $msProblemList, "lower(string01) like '%congestive heart failure%'") && 
+           app.onList($mdPatient, $msProblemList, "lower(string01) like '%atrial fibrillation%'")) &&
+          !app.onList($mdPatient, $msMedicationList, "lower(string01) like '%warfarin%'") )
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "Anticoagulation in CHF with a fib");
+	mdAlert.setField("text", "The NQF 0084 recommends that any patient with the diagnoses of heart failure and atrial fibrillation be placed on chronic warfarin therapy.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Warfarin therapy initiated");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+
+/*
+// TODO: Create one of these rules for each sample set that Tom provided
+rule "PatientAlerts alert placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+	eval( !app.onList($mdPatient, $msAlert, "string01 = 'PatientAlerts'") )   
+	 
+    //  Rule: Check general criteria to get on this list
+    org.tolven.model.Patient( placeholder == $mdPatient)
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    eval( app.onList($mdPatient, $msProblemList, "lower(string01) like '%asthma%'") )
+  then
+    app.info( "*** FIRING PatientAlerts PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientAlertsFact"));
+
+	MenuData mdAlert = app.createPlaceholder( $msAlert, "patient", $mdPatient );
+	mdAlert.setField("title", "PatientAlerts");
+	mdAlert.setField("text", "The USPSTF recommends one-time screening for abdominal aortic aneurysm (AAA) by ultrasonography in men aged 65 to 75 who have ever smoked.");
+	mdAlert.setField("effectiveTime", now);
+	mdAlert.setField("patient", $mdPatient);
+	mdAlert.setField("reviewed", "false");
+	mdAlert.setField("sent", "false");
+	mdAlert.setField("recommendedAction", "Aortic aneurysm screening ordered");
+	mdAlert.setField("recommendedActionTaken", "true");
+    app.assertPlaceholder( mdAlert );
+end
+*/
+rule "PatientAlerts Account list generation"
+  when
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+    $mdAlert: MenuData( menuStructure == $msAlert, string05 == "false")
+    $msAlertList: MenuStructure( role == "list", path == "echr:patients:alerts" )
+  then
+    app.info( "*** FIRING PatientAlerts Account LIST ***" );
+    app.createReferenceMD( $mdAlert, $msAlertList);
+end
+
+
+
+rule "PatientAlerts Patient list generation"
+  when
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+    $mdAlert: MenuData( menuStructure == $msAlert, string05 == "false")
+    $msAlertList: MenuStructure( role == "list", path == "echr:patient:alerts:current" )
+  then
+    app.info( "*** FIRING PatientAlerts Patient LIST ***" );
+    app.createReferenceMD( $mdAlert, $msAlertList);
+end
+
+rule "PatientAlerts Patient Completed list generation"
+  when
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+    $mdAlert: MenuData( menuStructure == $msAlert, string05 == "true")
+    $msAlertList: MenuStructure( role == "list", path == "echr:patient:alerts:completed" )
+  then
+    app.info( "*** FIRING PatientAlerts Patient LIST ***" );
+    app.createReferenceMD( $mdAlert, $msAlertList);
+end
+
+rule "PatientAlerts Portal list generation"
+  when
+    $msAlert: MenuStructure( role == "placeholder", path == "echr:patient:alert" )
+    $mdAlert: MenuData( menuStructure == $msAlert, string05 == "false")
+    $msAlertList: MenuStructure( role == "list", path == "echr:patient:summary:alertsum" )
+  then
+    app.info( "*** FIRING PatientAlerts Portal LIST ***" );
+    app.createReferenceMD( $mdAlert, $msAlertList);
+end
+
+
+
+
+

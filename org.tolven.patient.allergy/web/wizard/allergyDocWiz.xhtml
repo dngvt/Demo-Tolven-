@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"  
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Allergies</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+    	<wiz:step title="Allergies">
+    		<div id="popupGrids">
+				<div id="#{menu.elementLabel}:#{act.computes[0].property['templateLookupPath']}" class="popupgrid"/>          
+			</div>
+		
+			<h:inputHidden id="computeEnable#{thisStep}"  value="#{act.computes[0].property['enabled']}"  converter="javax.faces.Boolean"/>			
+			<h:inputHidden  id="computeTemplate#{thisStep}" value="#{act.computes[0].property['template']}"  />
+			<h:inputHidden id="computePosition#{thisStep}" value="#{act.computes[0].property['position']}" />					
+			<h:inputHidden id="computeAction#{thisStep}" value="#{act.computes[0].property['action']}"  />		
+			<table style="margin-left:10px;width:80%;">
+				<tr>
+					<th>Allergy</th>
+					<th>Time</th>
+					<th>Reaction</th>
+					<th>Severity</th>
+					<th></th>
+					<th/>					
+				</tr>
+				<c:forEach items="#{patHistory.getMenuDataList(':allergies:active')}" var="allergy">
+	    			<tr id="#{allergy.referencePath}_delete">
+	    			<td>#{allergy.Allergy}</td>
+	    			<td>#{allergy.Occurred}</td>
+	    			<td>#{allergy.Reaction}</td>
+	    			<td>#{allergy.Severity}</td>
+	    			<td>   <a href="#" onclick="javascript:wizDeleteActiveListItem('#{allergy.referencePath}','nullifiedActive','#{act.computes[0].property['arName']}','#{allergy.referencePath}_delete');return false;" title="Remove this #{act.computes[0].property['arName']}"><img src="#{facesContext.externalContext.request.contextPath}/images/delete.png"/></a> </td>
+	    			</tr>
+	    		</c:forEach>
+				
+	    		<c:forEach var="rel" items="#{act.relationships}" varStatus="relIndex">
+					<c:if test="#{rel.name==act.computes[0].property['arName']}">
+		    			<ui:include src="#{act.computes[0].property['arName']}DocclinContent.xhtml">
+							<ui:param name="rel" value="#{rel}"/>
+		           			<ui:param name="type" value="#{act.computes[0].property['arName']}"/>
+		           			<ui:param name="index" value="#{relIndex.index}"/>
+		           			<ui:param name="thisStep" value="#{thisStep}"/>
+		           	</ui:include>	     			
+					</c:if>
+				</c:forEach>
+			</table>		
+			<div> 
+          <a class="inactive" href="#" onclick="javascript:openTemplate('#{act.computes[0].property['templateLookupPath']}','#{menu.elementLabel}:#{act.computes[0].property['templateLookupPath']}', 'addTemplate', '#{menu.elementLabel}', #{thisStep})">Add Allergy</a>
+        </div>	
+        </wiz:step>   
+	</ui:composition>	
+</body>
+</html>

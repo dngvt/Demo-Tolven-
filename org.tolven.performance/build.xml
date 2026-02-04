@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.performance">
+
+	<import file="../plugin/buildImport.xml" />
+
+	<property name="buildFolder" value="build" />
+	<property name="includeSourceInDevLib" value="true" />
+
+	<target name="createBuildFolders">
+        <mkdir dir="${buildFolder}/legacypostgresql" />
+        <mkdir dir="${buildFolder}/oracle" />
+    </target>
+
+	<target name="build-plugin" depends="init, createBuildFolders" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest" />
+		</zip>
+		<!-- Begin list of sections to build. Each section is added to the plugin zip file. -->
+		<antcall target="buildSection">
+			<param name="section" value="performance-lib" />
+			<param name="sectionZipExcludes" value="**/*" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="app" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="ejb" />
+			<param name="lib" value="${buildFolder}/performance-lib/classes" />
+			<param name="sectionZipExcludes" value="**/*" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="web" />
+			<param name="lib" value="${buildFolder}/performance-lib/classes:${buildFolder}/ejb/classes" />
+			<param name="sectionZipExcludes" value="**/*.class,**/*.java" />
+		</antcall>
+		<!-- End of list of sections to build -->
+		<jar destfile="${buildFolder}/legacypostgresql/performance-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/performance-lib/classes" />
+			<zipfileset dir="performance-lib/META-INF-legacypostgresql" prefix="META-INF">
+				<include name="orm.xml" />
+			</zipfileset>
+		</jar>
+		<jar destfile="${buildFolder}/oracle/performance-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/performance-lib/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/performance-ejb.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/ejb/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/performance-web.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/web/classes" />
+		</jar>
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar" />
+				<include name="legacypostgresql/**" />
+				<include name="oracle/**" />
+				<include name="performance-ejb.jar" />
+				<include name="performance-web.jar" />
+			</zipfileset>
+			<zipfileset dir=".">
+				<include name="app/**" />
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven Performance" packagenames="*" classpathref="project.classpath" source="1.6" sourcepath="ejb/source:web/source" splitindex="true" use="true" version="true" encoding="UTF-8" docencoding="UTF-8" />
+	</target>
+</project>

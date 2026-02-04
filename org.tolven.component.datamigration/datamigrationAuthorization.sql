@@ -1,0 +1,2 @@
+insert into @tablePrefix@tolvenauth (contextPath, policy, url, urlMethod, filters) values ('/Tolven','default','*.migrate','GET','tssl,preauthc,af');
+insert into @tablePrefix@tolvenauth (contextPath, policy, url, urlMethod, filters) values ('/Tolven','default','*.migrate','GET','tssl,preauthc,af');

@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<head>
+<title>Pharmacy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<ui:composition>
+	<div id="popupGrids">
+	<div id="#{top.accountType}:pharmacies" class="popupgrid"
+		style="top: 200px; left: 150px;" />
+	</div>
+	<wiz:step title="Add #{trim.trim.act.title.ST.value}">
+		<wiz:body>
+			<wiz:group title="#{trim.trim.act.title.ST.value}">
+				<table>
+				</table>
+				<a id="pharmacyPopup" class="inactive" href="#" onclick="javascript:showPharmacies('#{menu.element}');">Add	#{trim.trim.act.title.ST.value}</a>
+				<br /><br />
+				<div id="pharmacyWiz"></div>
+				<c:if test="#{trim.trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value != ''}">
+					<div id="pharmacyWizClosed"><script>
+							insertPharmacyDetails("#{trim.trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value}", '#{menu.element}', 'pharmacyWizClosed', 0);
+						</script></div>
+				</c:if>
+			</wiz:group>
+		</wiz:body>
+	</wiz:step>
+</ui:composition>
+</body>
+</html>

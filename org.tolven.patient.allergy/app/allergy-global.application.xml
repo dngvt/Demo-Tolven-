@@ -1,0 +1,23 @@
+<application name="global" creatable="false" title="Global Menus" xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure ">
+	<trimMenu name="global:allergyMenu" initialSort="allergy">
+		<field name="allergy" internal="string01">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="trimName" internal="string02">
+			<from>#{trim.name}</from>
+		</field>
+		<field name="code" internal="string03">
+			<from>#{trim.act.observation.value.CE.code}</from>
+		</field>
+	</trimMenu>
+
+	<trimMenu name="global:allergyDocMenu">
+		<field name="name" internal="string01">
+			<from>#{trim.description}</from>
+		</field>
+		<field name="trimName" internal="string02">
+			<from>#{trim.name}</from>
+		</field>
+	</trimMenu>
+</application>

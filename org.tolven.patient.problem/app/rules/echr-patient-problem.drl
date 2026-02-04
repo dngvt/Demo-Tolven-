@@ -1,0 +1,103 @@
+package base_echr_patient_problem
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+rule "Add problem name to patient list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$mdProblem: MenuData( menuStructure == $msProblem )
+		$msPatList: MenuStructure( path == "echr:patients:all" )
+		$mdPatList: MenuData( menuStructure == $msPatList )
+	then
+		$mdPatList.addPhrase( $mdProblem.getString01(), "problem", "en_US" );
+end
+
+rule "Assert Patient For Problems"
+  when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$md: MenuData( menuStructure == $ms, $mdPatient:parent01) 
+  then
+  		app.assertPlaceholder($mdPatient);
+  		app.info( "Asserting Patient for Problems");
+ end
+
+rule "Place Problem on Problems list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:all" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus != "nullified")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+		app.info("Place Problem on Problem List. [Unique Problem]");
+end
+rule "Place Problem on Problems Resolved list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:completed" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "resolved")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+end
+rule "Place Problem on Problems Active list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:active" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "active")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+end
+
+rule "Place Problem on Problems ActiveAssociations list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:activeAssociations" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "active")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+end
+
+rule "Place Problem on Problems Nullified  list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:nullified" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "nullified")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+end
+
+rule "Place Problem on Problems Inactive list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:problems:inactive" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "inactive")
+	then
+		app.createReferenceMD( $mdProblem, $msList );
+end
+rule "Place problem on probsum summary list"
+	when
+		$msProblem: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:probsum" )		
+		$mdProblem: MenuData( menuStructure == $msProblem, actStatus == "active" )
+	then
+		MenuData mdPXList = app.createReferenceMD( $mdProblem, $msList );
+end
+
+

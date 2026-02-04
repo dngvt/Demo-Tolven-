@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Assembled dynamically during configuration (see manifest for org.tolven.component.tolvenweb) -->
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<servlet>
+		<servlet-name>Graph Servlet</servlet-name>
+		<servlet-class>org.jfree.chart.servlet.DisplayChart</servlet-class>
+		<load-on-startup>7</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Graph Servlet</servlet-name>
+		<url-pattern>*.graph</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Ajax Command Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.AjaxServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Ajax Command Servlet</servlet-name>
+		<url-pattern>*.ajax</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Ajax Instantiation Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.InstantiateServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Ajax Instantiation Servlet</servlet-name>
+		<url-pattern>*.ajaxi</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Favorites Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.FavoritesServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Favorites Servlet</servlet-name>
+		<url-pattern>*.ajaxf</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Tolven Document Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.DocServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Tolven Document Servlet</servlet-name>
+		<url-pattern>/document</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Tolven Document Servlet</servlet-name>
+		<url-pattern>*.tdoc</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Generic Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.GenericServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Generic Servlet</servlet-name>
+		<url-pattern>*.ajaxc</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Async Servlet</servlet-name>
+		<servlet-class>org.tolven.ajax.AsyncServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Async Servlet</servlet-name>
+		<url-pattern>*.async</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Tolven Report Servlet</servlet-name>
+		<servlet-class>org.tolven.web.servlet.ReportServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Tolven Report Servlet</servlet-name>
+		<url-pattern>/report/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Resource Servlet</servlet-name>
+		<servlet-class>org.tolven.web.servlet.ResourceServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>*.gif</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>*.png</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>*.js</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<env-entry>
+		<env-entry-name>webContextId</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>tolvenweb</env-entry-value>
+	</env-entry>
+</web-app>
+	

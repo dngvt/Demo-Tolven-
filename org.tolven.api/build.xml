@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.api">
+
+	<import file="../plugin/buildImport.xml" />
+
+	<property name="buildFolder" value="build" />
+	<property name="includeSourceInDevLib" value="true" />
+
+	<target name="build-plugin" depends="init" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest" />
+		</zip>
+		<!-- Begin list of sections to build. Each section is added to the plugin zip file. -->
+		<antcall target="buildSection">
+			<param name="section" value="api" />
+			<param name="lib" value="lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar:lib/gson-2.2.4.jar" />
+		</antcall>
+		<!-- End of list of sections to build -->
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar" />
+			</zipfileset>
+			<zipfileset dir="lib">
+				<include name="gson-2.2.4.jar" />			
+			</zipfileset>
+		</zip>
+	</target>
+	<!-- Unless you are changing the XSD, this doesn't need to be run because the generated code is checked into CVS -->
+	<target name="gen_xAccountUsers" description="Generate userAccount java from XSD">
+		<exec executable="xjc">
+			<arg line="-p org.tolven.api.rs.accountuser"/>
+			<arg line="-d api/source"/>
+			<arg line="-extension"/>
+			<arg line="-no-header"/>
+			<arg file="xsd/xAccountUsers.xsd"/>
+		</exec>
+	</target>
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven API"
+			packagenames="*"
+			classpathref="project.classpath" 
+			source="1.6" sourcepath="api/source" splitindex="true" use="true" version="true"
+			encoding="UTF-8" docencoding="UTF-8"/>
+	</target>
+</project>

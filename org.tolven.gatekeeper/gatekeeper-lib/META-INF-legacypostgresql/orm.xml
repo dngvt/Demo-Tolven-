@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_2_0.xsd" version="2.0">
+	<table-generator name="CORE_SEQ_GEN" table="SEQUENCE_GENERATOR" schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL" pk-column-value="CORE" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<entity class="org.tolven.gatekeeper.entity.DefaultPasswordBackup">
+		<table name="PASSWORD_BACKUP" schema="core" />
+		<attributes>
+			<basic name="encryptedPassword">
+				<column name="ENCRYPTED_PASSWORD"></column>
+				<lob></lob>
+			</basic>
+			<basic name="iterationCount">
+				<column name="PBE_KEY_ITERATION_COUNT"></column>
+			</basic>
+			<basic name="securityQuestion">
+				<column name="SECURITY_QUESTION"></column>
+			</basic>
+			<basic name="passwordPurpose">
+				<column name="PASSWORD_PURPOSE"></column>
+			</basic>
+			<basic name="salt">
+				<column name="PBE_KEY_SALT"></column>
+				<lob></lob>
+			</basic>
+			<basic name="userId">
+				<column name="USER_ID"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.gatekeeper.entity.DefaultSecurityQuestion">
+		<table name="SECURITY_QUESTION" schema="core" />
+	</entity>
+		<entity class="org.tolven.gatekeeper.entity.Property">
+		<table name="PROPERTY" schema="core"></table>
+		<attributes>
+			<id name="name">
+				<column name="PROPERTY_NAME"></column>
+			</id>
+			<basic name="value">
+				<column name="PROPERTY_VALUE"></column>
+			</basic>
+		</attributes>
+	</entity>
+</entity-mappings>

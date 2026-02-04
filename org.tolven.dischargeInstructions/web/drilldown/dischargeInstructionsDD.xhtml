@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Discharge Instructions - Drilldown</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:body>
+	 		<c:if test="#{menu.xmlNS==null}">
+	 			<p>No document available</p>
+	 		</c:if>		
+	 		<c:if test="#{menu.xmlNS=='urn:tolven-org:trim:4.0'}">
+				<h2><h:outputText value="#{trim.trim.act.code.CE.displayName}"/></h2>
+				<script language="javascript" type="text/javascript">
+					encounterItems('#{trim.trim.act.relationship['encounter'].act.id.IIS[0].extension }','#{menu.elementLabel}','true');
+				</script>	
+				<h:panelGrid columns="2" >
+					<h:outputText value="EncounterType :" />
+					<span id="drilldown:encType" ></span>
+					<h:outputText value="Admit Date :" />
+					<span id="drilldown:admitDate" ></span>
+					<h:outputText value="Discharge Date :" />
+					<span id="drilldown:dischargeDate" ></span>
+					<h:outputText value="Location :" />
+					<span id="drilldown:loc" ></span>
+					<h:outputText value="#{trim.trim.act.label.value}		:" />
+					<trim:ED id="dischargeInstruction" value="#{trim.trim.act.observation.value}" readonly="true"/>
+				</h:panelGrid>
+			</c:if>
+		</wiz:body>
+	</ui:composition>
+</body>
+</html>

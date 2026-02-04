@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+	
+	<plugin id="org.tolven.assembler.jboss6.legacypostgresql">
+		<root />
+	</plugin>
+	
+	<property name="appserver">
+		<!-- Only one code and home should be defined -->
+
+		<property name="code" value="jboss6" />
+		
+		<property name="home" value="#{rootDir}/tolven-#{appserver['code']}" />
+	</property>
+	
+	<property name="jboss6">
+		<property name="keystore" value="#{commonKeystore}" />
+		<property name="truststore" value="#{commonTruststore}" />
+		<!-- only started in debug mode immediately after installation or upgrade -->
+		<property name="debugMode" value="false" />
+		<property name="debugPort" value="8787" />
+	</property>
+	
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		<property name="jboss6Keystore" value="#{_tolvenPasswordDefault}" />
+		<property name="jboss6Truststore" value="#{_tolvenPasswordDefault}" />
+	</property>
+	
+	<includes>
+		<include pluginsRef="appserver-plugins.xml" includeType="default" />
+		<include pluginsRef="db-oracle-plugins.xml" includeType="default" />
+	</includes>
+	
+</plugins>

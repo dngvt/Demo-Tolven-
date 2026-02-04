@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugin id="org.tolven.assembler.war" version="2.1.6" class="org.tolven.assembler.war.WARAssembler" vendor="Tolven" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<attributes>
+		<attribute value="template-web.xml" id="template-webxml" />
+		<attribute value="template-faces-config.xml" id="template-faces-config.xml" />
+	</attributes>
+	<requires>
+		<import plugin-id="org.tolven.component.war" />
+		<import plugin-id="org.tolven.component.faces" />
+		<import plugin-id="org.tolven.component.faces.taglib" />
+	</requires>
+	<runtime>
+		<library type="code" path="tpf/classes/" id="tpfclasses" />
+	</runtime>
+	<extension-point extension-multiplicity="none" id="devLib">
+		<parameter-def default-value="devLib.jar" id="jar" />
+	</extension-point>
+	<extension-point id="abstractWAR" parent-plugin-id="org.tolven.component.war" parent-point-id="abstractWAR" extension-multiplicity="none" />
+	
+	<extension-point id="faces" parent-plugin-id="org.tolven.component.faces" parent-point-id="faces" extension-multiplicity="none" />
+	<extension-point id="taglib" parent-plugin-id="org.tolven.component.faces.taglib" parent-point-id="taglib" extension-multiplicity="none" />
+	
+	<extension-point id="classes" extension-multiplicity="none">
+		<parameter-def id="dir" />
+	</extension-point>
+	<extension-point id="META-INF" extension-multiplicity="none">
+		<parameter-def id="dir" />
+	</extension-point>
+	<extension-point id="WEB-INF-LIB" extension-multiplicity="none">
+		<parameter-def id="jar" />
+	</extension-point>
+	<extension-point id="property" extension-multiplicity="none">
+		<parameter-def id="class" />
+		<parameter-def id="name" />
+		<parameter-def id="value" />
+	</extension-point>
+	<extension-point id="propertySequence" extension-multiplicity="none">
+		<parameter-def id="class" />
+		<parameter-def id="name" />
+		<parameter-def id="sequence" />
+		<parameter-def id="defaultSequence" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="fileInclude" extension-multiplicity="none">
+		<parameter-def id="matchExp" />
+		<parameter-def id="targetFile" />
+		<parameter-def id="includeFile" />
+	</extension-point>
+	
+</plugin>

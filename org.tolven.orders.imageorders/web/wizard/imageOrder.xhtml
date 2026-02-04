@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Image Order</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+		<c:set var="hasOrders" value="false"/>
+		<div class="widget">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<thead>
+					<tr>
+						<th style="text-align:center; width:30%;"><b>Image Order</b></th>
+						<th style="text-align:center; width:10%;" nowrap="nowrap"><b>Date Of Order*</b></th>
+						<th style="text-align:center; width:10%;"><b>Reason</b></th>
+						<th style="text-align:center; width:10%;"><b>Priority</b></th>
+						<th style="text-align:center; width:10%;"><b>Frequency</b></th>
+						<th style="text-align:center; width:10%;"><b>Timing</b></th>
+						<th style="text-align:center; width:10%;"><b>Start Immediately</b></th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:forEach var="imgOrder" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="widgetIndex">
+					<c:set var="hasOrders" value="true"/>
+					<c:set var="class" value="odd"/>
+					<c:if test="#{(widgetIndex.index%2)==1}">
+						<c:set var="class" value="even"/>
+					</c:if>
+						<tr class="#{class}">
+								<td style="text-align:center; width:30%;">
+									#{imgOrder.act.code.CD.displayName}
+									<h:inputHidden id="saveImageOrder#{widgetIndex.index}" value="#{imgOrder.enableRelationship}"/>
+								</td>
+								<td style="text-align:center; width:10%;">
+									<trim:TSNew id="dateOfOrder#{widgetIndex.index}" value="#{imgOrder.act.effectiveTime.TS}" dateStyle="short" style="width:68%;" readonly="false" required="true"/>
+								</td>
+								<td style="text-align:center; width:10%;">
+									<h:inputTextarea id="reason#{widgetIndex.index}" value="#{imgOrder.act.relationship['reason'].act.observation.value.ST.value}"/>
+								</td>
+								<td style="width:10%;" >
+									<trim:valueSetMenu  id="imagePriority#{widgetIndex.index}" slot="#{imgOrder.act.relationship['priority'].act.observation.value}"/>
+		      					</td>
+								<td style="text-align:center; width:10%;">
+									<trim:valueSetMenu  id="frequency#{widgetIndex.index}" slot="#{imgOrder.act.relationship['frequency'].act.observation.value}"/>
+								</td>
+								<td style="text-align:center; width:10%;">
+									<h:inputTextarea id="timing#{widgetIndex.index}" value="#{imgOrder.act.relationship['timing'].act.observation.value.ST.value}"/>
+								</td>	
+								<td style="text-align:center; width:10%;">
+									<trim:valueSetMenu  id="start#{widgetIndex.index}" slot="#{imgOrder.act.relationship['startImmediately'].act.observation.value}" />
+								</td>								
+							</tr>		
+				</c:forEach>	
+				</tbody>			
+			</table>
+		</div>
+		<c:if test="#{hasOrders == 'false'}">
+			<script language="JavaScript" type="text/javascript">
+				// <![CDATA[
+				openTemplate('#{top.accountType}:imageOrderList','#{menu.elementLabel}:#{top.accountType}:imageOrderList', 'saveImageOrder', '#{menu.elementLabel}', 0);		
+				// ]]>			
+			</script>
+			<div id="addNewOrderAnchor" class="widgetAction">
+				<a onclick="openTemplate('#{top.accountType}:imageOrderList','#{menu.elementLabel}:#{top.accountType}:imageOrderList', 'saveImageOrder', '#{menu.elementLabel}', 0)" href="#">Select Image Order</a>					
+			</div>
+		</c:if>
+		<div id="msgImageOrder" style="color:red; font-weight:bold; text-align:center;" ></div>
+		<!--h:inputHidden id="preProcessStepParams" value="2,saveImageOrderOnStepChange;3,saveImageOrderOnStepChange"/-->
+	</ui:composition>
+</body>
+</html>

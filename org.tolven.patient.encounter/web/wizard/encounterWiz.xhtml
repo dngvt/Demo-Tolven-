@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Encounter Wizard</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+	<wiz:step title="Encounter Details" >
+			<wiz:body>
+<!--				An empty encounter wizard DD is included to allow localization overide in a customers plugin -->				
+				<ui:include src="encounterExt.xhtml"/>
+				
+				<c:if test="#{act.effectiveTime.IVLTS!=null}">
+					<wiz:group title="#{act.effectiveTime.IVLTS.low.label.value}">
+						<trim:TS id="effectiveTimeLow" value="#{act.effectiveTime.IVLTS.low.TS}" dateStyle="short" timeStyle="short" />
+					</wiz:group>
+					<wiz:group title="#{act.effectiveTime.IVLTS.high.label.value}">
+						<trim:TS id="effectiveTimeHigh" value="#{act.effectiveTime.IVLTS.high.TS}" dateStyle="short" timeStyle="short" />
+					</wiz:group>
+				</c:if>
+				
+				<c:if test="#{act.effectiveTime.IVLTS==null}">
+					<wiz:group title="#{act.effectiveTime.TS.label.value}">
+						<trim:TS id="effectiveTime" value="#{act.effectiveTime.TS}" dateStyle="short" />
+					</wiz:group>
+				</c:if>
+				<c:if test="#{act.participation['admitter']!=null}">
+					<wiz:group title="Admitting physician">
+		    			<p>Select an Admitting physician:</p>
+						<h:selectOneMenu id="admit" value="#{act.participation['admitter'].role.id.for[top.accountUser.account].extension}">
+							<f:selectItems value="#{trim.list['echr:admin:staff:all~Name']}"/>
+						</h:selectOneMenu>			    			
+					</wiz:group>
+				</c:if>
+				<c:if test="#{act.participation['attender']!=null}">
+					<wiz:group title="Attending physician">
+		    			<p>Select an Attending physician:</p>
+						<h:selectOneMenu id="attend" value="#{act.participation['attender'].role.id.for[top.accountUser.account].extension}">
+							<f:selectItems value="#{trim.list['echr:admin:staff:all~Name']}"/>
+						</h:selectOneMenu>		    			
+					</wiz:group>
+				</c:if>
+				<c:if test="#{act.participation['location']!=null}">
+					<wiz:group title="Location">
+		    			<p>Select a location:</p>
+						<h:selectOneMenu id="loc" value="#{act.participation['location'].role.id.for[top.accountUser.account].extension}">
+							<f:selectItems value="#{trim.list['echr:admin:locations:all~Name']}"/>
+						</h:selectOneMenu>
+					</wiz:group>
+				</c:if>
+				<wiz:group title="Patient Discharged From">
+					<h:inputTextarea style="width: 94%;" id="dischargedFrom" value="#{act.relationship['patientFrom'].act.observation.values[0].ST.value}" readonly="false" />
+				</wiz:group>
+				<wiz:group title="Patient Transferred From">
+					<h:inputTextarea style="width: 94%;" id="transferredFrom" value="#{act.relationship['patientFrom'].act.observation.values[1].ST.value}" readonly="false" />								    		
+				</wiz:group>				
+			</wiz:body>
+			<wiz:help>
+				<h1>Encounter</h1>
+			</wiz:help>
+		</wiz:step>
+	</ui:composition>
+</body>
+</html>

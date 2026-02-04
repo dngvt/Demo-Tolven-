@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.document.store.s3" version="2.1.3" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenear" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+	</requires>
+
+	<!-- DEV EXTENSION POINTS -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<!-- DEV EXTENSION POINTS End -->
+
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="httpclient" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="httpclient-4.1.1.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="httpcore" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="httpcore-4.1.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="aws-java-sdk" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="aws-java-sdk-1.3.6.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="doc-store-s3-lib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="doc-store-s3-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="doc-store-s3-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="doc-store-s3-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="doc-store-s3-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="doc-store-s3-web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+	<!-- EJB Extensions -->
+	<extension id="doc-store-s3-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.s3" />
+		<parameter id="extension-point" value="doc-store-s3-ejb" />
+	</extension>
+	<!-- EJB EXTENSIONS End -->
+
+	<extension id="ejbClasses" plugin-id="org.tolven.component.tolvenejb" point-id="classes">
+		<parameter id="dir" value="java/classes" />
+	</extension>
+	
+	<extension id="aws-java-sdk-libProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.s3" />
+		<parameter id="extension-point" value="aws-java-sdk" />
+	</extension>
+	<extension id="httpcore-libProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.s3" />
+		<parameter id="extension-point" value="httpcore" />
+	</extension>
+	<extension id="httpclient-libProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.s3" />
+		<parameter id="extension-point" value="httpclient" />
+	</extension>
+	
+	<!-- WAR EXTENSIONS -->
+	<extension id="doc-store-s3-web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.s3" />
+		<parameter id="extension-point" value="doc-store-s3-web" />
+	</extension>
+	<!-- WAR EXTENSIONS End -->
+	
+	<extension-point extension-multiplicity="none" id="tolvenProperties">
+		<parameter-def id="org.tolven.document.store.s3.accesskey" default-value="#{pluginProperty['org.tolven.document.store.s3.accesskey']}" />
+		<parameter-def id="org.tolven.document.store.s3.secretkey" default-value="#{pluginProperty['org.tolven.document.store.s3.secretkey']}" />
+		<parameter-def id="org.tolven.document.store.s3.tmp-bucket" default-value="#{pluginProperty['org.tolven.document.store.s3.tmp-bucket']}" />
+		<parameter-def id="org.tolven.document.store.s3.mutable-bucket" default-value="#{pluginProperty['org.tolven.document.store.s3.mutable-bucket']}" />
+		<parameter-def id="org.tolven.document.store.s3.immutable-bucket" default-value="#{pluginProperty['org.tolven.document.store.s3.immutable-bucket']}" />
+	</extension-point>
+	
+</plugin>

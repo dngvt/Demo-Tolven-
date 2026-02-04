@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="security/source"/>
+	<classpathentry kind="src" path="common-ejb-impl/source"/>
+	<classpathentry kind="src" path="gatekeeper-client-lib/source"/>
+	<classpathentry kind="src" path="gatekeeper-lib/source"/>
+	<classpathentry kind="src" path="client-ejb-impl/source"/>
+	<classpathentry kind="src" path="web/source"/>
+	<classpathentry kind="src" path="ejb-impl/source"/>
+	<classpathentry kind="src" path="rs/source"/>
+	<classpathentry kind="src" path="common-lib/source"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/devLib"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

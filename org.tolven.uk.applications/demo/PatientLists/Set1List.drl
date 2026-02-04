@@ -1,0 +1,48 @@
+package AdvairAsthma1
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//Demographics:                     patient age <12 years old
+//Problem:                          asthma
+//Medication:                       Advair
+ 
+  
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "AdvairAsthma1 list determination"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $msMedicationList: MenuStructure( path == "echr:patient:medications:active" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    org.tolven.model.Patient( placeholder == $mdPatient, ageInYears < 12 )
+    eval( app.onList($mdPatient, $msMedicationList, "lower(string01) like '%advair%'") )
+    eval( app.onList($mdPatient, $msProblemList, "lower(string01) like '%asthma%'") )
+  then
+    insert (new PatientFact( $mdPatient, "AdvairAsthma1Fact"));
+    app.info( "*** FIRING AdvairAsthma1 PROCESS ***" );
+    
+end
+
+rule "AdvairAsthma1 list generation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    PatientFact( name=="AdvairAsthma1Fact", patient==$mdPatient ) 
+    $msList: MenuStructure( role == "list", path == "echr:patients:AdvairAsthma1" )
+  then
+    app.createReferenceMD( $mdPatient, $msList);
+    app.info( "*** FIRING AdvairAsthma1 LIST ***" );
+end
+

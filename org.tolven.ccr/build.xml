@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.ccr">
+	<!-- 
+	Build file for org.tolven.ccr 
+	-->
+	<import file="../plugin/buildImport.xml"/>
+
+	<property name="buildFolder" value="build"/>
+	<!-- 
+	Source code will be included in the devLib jar file if true. Otherwise, source code
+	known to this build script will not be in the plugin
+	 -->
+	<property name="includeSourceInDevLib" value="true"/>
+
+	<target name="build-plugin" depends="init" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest"/>
+		</zip>
+		<!-- Each section adds itself to the zip file-->
+		<antcall target="buildSection">
+			<param name="section" value="app"/>
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="ejb"/>
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="web"/>
+		</antcall>
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar"/>
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven CCR"
+			packagenames="*"
+			classpathref="project.classpath" 
+			source="1.6" sourcepath="ejb/source" splitindex="true" use="true" version="true"
+			encoding="UTF-8" docencoding="UTF-8"/>
+	</target>
+</project>

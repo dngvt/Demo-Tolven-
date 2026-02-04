@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml 
+		file or an overlay plugins.xml -->
+
+	<plugin id="org.tolven.base.applications">
+		<root />
+	</plugin>
+
+	<plugin id="org.tolven.patient.encounter">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.personal-event">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.observation">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.patient.problem">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.admin.location">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.admin.staff">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.deploy.problems">
+		<root />
+	</plugin>
+
+</plugins>

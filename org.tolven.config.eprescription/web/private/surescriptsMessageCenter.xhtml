@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Surescripts Message Center</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition template="/templates/simplePage.xhtml">
+        <ui:param name="pageTitle" value="surescripts"/>
+        <ui:define name="body">
+	        <h:form id="surescriptsMessageCenter">
+	        	<div class="breadcrumbs">
+					<h:commandLink value="Application " action="dispatch" immediate="true"/>
+					<h:outputText value="&nbsp; &gt; &nbsp;" escape="false"/>
+					<h:outputText value="Surescripts Message Center"/><br/>
+				</div>
+				<fieldset>
+					<legend>Search Criteria</legend>
+			        <table width="100%" cellspacing="2" cellpadding="2">
+			        	<tr style="width:100%">
+			        		<td style="width:30%">
+			        			<h:outputText value="Message Type"/>
+			        			<h:selectOneMenu id="searchMsgType" value="#{sureMsgAct.searchMessageType}">
+			        			<f:selectItem itemLabel="Select" itemValue="#{null}"/>
+			        			<f:selectItem itemLabel="AddPrescriber" itemValue="AddPrescriber"/>
+			        			<f:selectItem itemLabel="AddPrescriberResponse" itemValue="AddPrescriberResponse"/>
+			        			<f:selectItem itemLabel="AddPrescriberLocation" itemValue="AddPrescriberLocation"/>
+			        			<f:selectItem itemLabel="AddPrescriberLocationResponse" itemValue="AddPrescriberLocationResponse"/>
+			        			<f:selectItem itemLabel="GetPrescriber" itemValue="GetPrescriber"/>
+			        			<f:selectItem itemLabel="GetPrescriberResponse" itemValue="GetPrescriberResponse"/>
+			        			<f:selectItem itemLabel="UpdatePrescriberLocation" itemValue="UpdatePrescriberLocation"/>
+			        			<f:selectItem itemLabel="NewRx" itemValue="NewRx"/>
+			        			<f:selectItem itemLabel="RefillRequest" itemValue="RefillRequest"/>
+			        			<f:selectItem itemLabel="RefillResponse" itemValue="RefillResponse"/>
+			        			<f:selectItem itemLabel="Status" itemValue="Status"/>
+			        			<f:selectItem itemLabel="Error" itemValue="Error"/>
+			        			<f:selectItem itemLabel="Verify" itemValue="Verify"/>
+			        			</h:selectOneMenu>
+			        		</td>
+			        		<td style="width:30%">
+			        			<h:outputText value="Date"/>
+			        			<h:inputText id="searchDate" value="#{sureMsgAct.searchDate}"/>
+			        			<h:graphicImage id="calendarSearch" value="/images/cal-image.png" style="cursor:pointer; margin-left:5px" onclick="displayDatePicker('surescriptsMessageCenter:searchDate' ,this);"/>
+			        		</td>
+			        		<td style="width:30%">
+			        			<h:outputText value="Message ID"/>
+			        			<h:inputText id="searchMsgId" value="#{sureMsgAct.searchMessageId}" />
+			        		</td>
+			        		<td style="text-align:right;">
+			        			<h:commandButton id="search" value="Search" actionListener="#{sureMsgAct.retrieveFilteredSurescriptsMessages}" />
+			        		</td>
+			        	</tr>
+			        </table>
+				</fieldset>
+				<fieldset>
+					<legend>Surescripts Messages</legend>
+					<div  id="mainDiv">
+					 <h:dataTable id="surescriptsMessage" value="#{sureMsgAct.surescriptsMessages}" var="au"  styleClass="general" style="width:100%" rowClasses="odd,even" columnClasses="col25,col15,col15,col15,col25" >
+			            <h:column>
+			            	<f:facet name="header" >
+							  <h:outputText value="Message ID"/>
+						  	</f:facet>  
+			                <h:outputText value="#{au.messageId}"/>
+			            </h:column>
+			            <h:column>
+			            <f:facet name="header" >
+							  <h:outputText value="Message Type"/>
+						  	</f:facet>
+			               <h:outputText value="#{au.messageType}"/>
+			            </h:column>
+			            <h:column>
+			            <f:facet name="header" >
+							  <h:outputText value="Direction"/>
+						  	</f:facet>
+			               <h:outputText value="#{au.direction}"/>
+			            </h:column>
+			            <h:column>
+			            <f:facet name="header" >
+							  <h:outputText value="Date"/>
+						  	</f:facet>
+			                <h:outputText value="#{au.recievedTime}"/>
+			            </h:column>
+			            <h:column>
+			            <f:facet name="header" >
+							  <h:outputText value="Message XML"/>
+						  	</f:facet>
+							<a href="#" onclick="showXML(#{au.id})">View XML</a>				           
+			           </h:column>
+	          		</h:dataTable>
+	          		<table class="filter">
+							<tbody>
+								<tr>
+									<td>
+										<h:messages/>
+									</td>
+									<td style="text-align: right;">
+		 				 				<div>
+		 				 					<h:commandButton value="First"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" actionListener="#{sureMsgAct.clickFirst}" disabled="#{sureMsgAct.rowId=='0'}"/>
+		 				 					<h:commandButton value="Previous"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" actionListener="#{sureMsgAct.clickPrevious}" disabled="#{sureMsgAct.rowId=='0'}"/>
+		 				 					<h:commandButton value="Next"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" actionListener="#{sureMsgAct.clickNext}" disabled="#{sureMsgAct.rowId==sureMsgAct.maxCount}"/>
+		 				 					<h:commandButton value="Last"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" actionListener="#{sureMsgAct.clickLast}" disabled="#{sureMsgAct.rowId==sureMsgAct.maxCount}"/>
+		 				 				</div>
+		 				 			</td>
+								</tr>
+							</tbody>
+						</table>
+	          		</div>
+	          	<div id="messageDetailsDiv" style="top:250px;left:250px;overflow:none;height:250px;width:800px;background-color: #FFBBBB;display: none;z-index: 20; position: absolute;border-style: solid;border-color: #000000;">
+	          	<div style="margin-left:320px;"><h3>Message Body</h3></div>
+	          	<div style="width:100%;text-align:center;"><h:inputTextarea style="width:95%;" id="messageDetails" rows="10"/></div>
+	          	<div style="margin-left:350px;"><input type="button" value="Close" onclick="closeMessageDetails();"></input></div>
+	          	</div>
+				</fieldset>	
+			</h:form>
+        </ui:define>
+    </ui:composition>
+  </body>
+</html>

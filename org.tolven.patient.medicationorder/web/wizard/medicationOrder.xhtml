@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<body>
+  	<ui:composition>
+		
+		<wiz:step title="Medication Order" >
+			<wiz:body>
+				<wiz:group title="Effective">
+					<trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" />
+				</wiz:group>
+				<wiz:group title="Product">
+					<trim:CE id="product" layout="pageDirection" valueSet="material" value="#{trim.trim.act.participation['consumable'].role.player.code}" required="true"/>
+				</wiz:group>
+				<wiz:group title="Strength">
+					<trim:ST id="Strength" value="#{trim.trim.act.relationship['strength'].act.observation.value}"/>
+				</wiz:group>
+				<wiz:group title="Quantity">
+				Units:	<trim:PQ id="quantity" value="#{trim.trim.act.participation['consumable'].role.player.quantity}"/>   &#160;&#160;&#160; Number Of Times :<trim:ST id="refills" value="#{trim.trim.act.relationship['numberOfTimes'].act.observation.value}"/>
+				</wiz:group>
+				<wiz:group title="Route">
+ 					<trim:valueSetMenu  id="route#{rel.sequenceNumber}#{thisStep}" slot="#{trim.trim.act.substanceAdministration.routeCode}" required="true"/>
+ 				</wiz:group>
+ 				<wiz:group title="Frequency">
+ 					<trim:valueSetMenu id="frequency#{rel.sequenceNumber}#{thisStep}"  slot="#{trim.trim.act.relationship['frequency'].act.observation.value}" required="true"/>
+ 				</wiz:group>
+ 				<wiz:group title="Start Immediatly">
+ 					<trim:valueSetMenu id="startNow#{rel.sequenceNumber}#{thisStep}"  slot="#{trim.trim.act.relationship['startImmediately'].act.observation.value}" required="true"/>
+ 				</wiz:group>
+ 			</wiz:body>
+		</wiz:step>
+    </ui:composition>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/pharmacyRegistration</name>
+	<description>New Pharmacy</description>
+	<page>pharmacyRegistration.xhtml</page>
+	<drilldown>pharmacyRegistrationDD.xhtml</drilldown>
+	<menu>global:registerPharmacyMenu</menu>
+ 	<tolvenId application="#{knownType}" accountId="#{account.id}"/>
+	<application name="echr" signatureRequired="true">
+		<instance>echr:admin:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="REG" moodCode="EVN"> 
+		<bind application="echr" phase="create">
+      		<placeholder bindAction="merge">
+        		<path>echr:addPharmacy</path>
+      		</placeholder>
+   		</bind>
+		<title>
+			<ST>Pharmacy Registration</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective Time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>
+		<relationship typeCode="NAME" direction="IN" name="registration">
+			<act moodCode="EVN" classCode="ENTRY">
+				<effectiveTime>
+					<IVL_TS>
+						<low>
+							<label>Active Start Time</label>
+							<TS>
+								<value>#{TS[now]}</value>
+							</TS>
+						</low>
+						<high>
+							<label>Active End Time</label>
+							<TS>
+								<value>#{TS[now]}</value>
+							</TS>
+						</high>
+					</IVL_TS>
+				</effectiveTime>				
+				<observation>
+					<value>
+						<label>NCPDPID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Store Name</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Address Line1</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Address Line2</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>City</label>
+						<ST></ST>
+					</value>					
+					<value>
+						<label>State</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Zip</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>FAX</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Partner Account</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Last Modified Date</label>
+						<TS>
+							<value>#{TS(now)}</value>
+						</TS>
+					</value>					
+				</observation>
+			</act>
+		</relationship>
+	</act>
+</trim>

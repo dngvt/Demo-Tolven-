@@ -1,0 +1,125 @@
+package base_echr_patient_observation
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+rule "Place all observation on all observations list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:all" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, actStatus!="nullified" )
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+/**
+ * If we find an observation placeholder, add it to the observation list. 
+ */
+rule "Place observation on active observation list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:active" )
+		$mdObservation: MenuData( menuStructure == $msObservation, actStatus!="nullified", string06!="EDIT" )
+	then
+		// Add act to patient's observation list
+		MenuData mdObsList = app.createReferenceMD( $mdObservation, $msList );
+		mdObsList.addPhrase( $mdObservation.getString01(), "obs", "en_US" );
+end
+/**
+ * If we find an observation nullified, add it to the nullified observation list. 
+ */
+rule "Place  observation on observation nullified  list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:nullified" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, actStatus=="nullified" )
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+/**
+ * If we find an observation revised, add it to the nullified observation list.
+ * author: Thom Cherryhomes <thom.cherryhomes@tolvenhealth.com>
+ * why is this here?   How does "EDIT" get in as a status?   Commenting out for now...
+ *
+rule "Place  revised observation on observation nullified  list"
+        when
+                $msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+                $msList: MenuStructure( role == "list", path == "echr:patient:observations:nullified" )
+                $mdObservation: MenuData( menuStructure == $msObservation, string06 == "EDIT" )
+        then
+                app.createReferenceMD( $mdObservation, $msList );
+end
+*/
+
+/**
+ * If we find an observation active, add it to the active observation list. 
+ *  FS comeenting out., redundant
+rule "Place  observation on observation active  list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:active" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, actStatus=="active" )
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+*/
+
+/**
+ * If we find an observation inactive, add it to the inactive observation list. 
+ *  FS commenting out
+rule "Place  observation on observation inactive  list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:suspended" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, string06 == "SUSPENDED" )
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+*/
+/**
+ * If we find an observation resolved, add it to the resolved observation list. 
+ *  FS commenting out
+rule "Place  observation on observation resolved  list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:observations:completed" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, string06 == "COMPLETED" )
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+*/
+/**
+ * If we find an observation placeholder, add it to the observation summary. 
+ */
+rule "Place observation on observation summary list"
+	when
+		$msObservation: MenuStructure( role == "placeholder", path == "echr:patient:observation" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:obssum" )		
+		$mdObservation: MenuData( menuStructure == $msObservation, actStatus!="nullified" )
+		//$obs: observation( actStatus=="active", knownType=="echr")
+	then
+		app.createReferenceMD( $mdObservation, $msList );
+end
+/**
+ * If we find an observation placeholder, add it to the observation summary. 
+ */
+
+
+

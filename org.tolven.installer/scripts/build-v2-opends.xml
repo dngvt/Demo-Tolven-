@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="build-opends">
+
+	<target name="props">
+		<property name="opends.host.default" value="localhost" />
+		<property name="opends.admin.port.default" value="4444" />
+		<property name="opends.example.basedn.default" value="dc=example,dc=com" />
+		<basename property="initialComponents.opendsZip.prefix" file="${initialComponents.opendsZip}" suffix=".zip" />
+		<condition property="opends.dir.bin" value="${opends.dir}/bat" else="${opends.dir}/bin">
+			<os family="windows" />
+		</condition>
+		<condition property="start-ds" value="${opends.dir.bin}/start-ds.bat" else="${opends.dir.bin}/start-ds">
+			<os family="windows" />
+		</condition>
+		<condition property="stop-ds" value="${opends.dir.bin}/stop-ds.bat" else="${opends.dir.bin}/stop-ds">
+			<os family="windows" />
+		</condition>
+		<condition property="dsconfig" value="${opends.dir.bin}/dsconfig.bat" else="${opends.dir.bin}/dsconfig">
+			<os family="windows" />
+		</condition>
+		<condition property="import-ldif" value="${opends.dir.bin}/import-ldif.bat" else="${opends.dir.bin}/import-ldif">
+			<os family="windows" />
+		</condition>
+		<condition property="ldapmodify" value="${opends.dir.bin}/ldapmodify.bat" else="${opends.dir.bin}/ldapmodify">
+			<os family="windows" />
+		</condition>
+	</target>
+
+	<target name="requirements-guide" if="${include.opends}" />
+
+	<target name="install-requirements" if="${include.installLdap}">
+		<fail message="initialComponents.opendsZip must be set" unless="initialComponents.opendsZip" />
+		<fail message="${initialComponents.opendsZip} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.opendsZip}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${opends.dir} exists">
+			<condition>
+				<available file="${opends.dir}" />
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} install-requirements VERIFIED" />
+	</target>
+
+	<target name="config-requirements" if="${include.configLdap}">
+		<fail message="${initialComponents.commonKeystoreSrc} must exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonKeystoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonTruststoreSrc} must exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonTruststoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${opends.dir} does not exist">
+			<condition>
+				<not>
+					<available file="${opends.dir}" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} config-requirements VERIFIED" />
+	</target>
+
+	<target name="install" depends="props" description="install" if="${include.installLdap}">
+		<guide-echo args="Install OpenDS" />
+		<guide-echo args="" />
+
+		<guide-echo args="Unzip: ${initialComponents.opendsZip} to ${opends.parentDir}" />
+		<guide-echo args="" />
+
+		<unzip src="${initialComponents.opendsZip}" dest="${opends.parentDir}" />
+		<replace token="389" value="1389" file="${opends.parentDir}/${initialComponents.opendsZip.prefix}/config/tools.properties" />
+		<replace token="389" value="1389" file="${opends.parentDir}/${initialComponents.opendsZip.prefix}/config/upgrade/config.ldif.6500" />
+		<replace token="389" value="1389" file="${opends.parentDir}/${initialComponents.opendsZip.prefix}/config/config.ldif" />
+		<move todir="${opends.dir}">
+			<fileset dir="${opends.parentDir}/${initialComponents.opendsZip.prefix}" />
+		</move>
+		<guide-echo args="For linux ensure that *.sh in ${opends.dir} and its subdirectories are executable" />
+		<chmod dir="${opends.dir}" perm="u+x" includes="**/*.sh" />
+		<guide-echo args="For linux ensure that ${opends.dir.bin}/* are executable" />
+		<chmod dir="${opends.dir.bin}" perm="u+x" includes="*" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-tolven" depends="props" description="config-tolven">
+		<antcall target="start-opends" />
+		<condition property="intialConfigLdap" else="false">
+			<and>
+				<istrue value="${include.configLdap}" />
+				<not>
+					<available file="${opends.keystorePinFile}" />
+				</not>
+			</and>
+		</condition>
+		<condition property="current.opends.host.default" value="${opends.host.default}" else="${opends.domain}">
+			<istrue value="${intialConfigLdap}" />
+		</condition>
+		<condition property="current.opends.admin.port.default" value="${opends.admin.port.default}" else="${opends.adminPort}">
+			<istrue value="${intialConfigLdap}" />
+		</condition>
+		<condition property="current.opends.rootdn.password" value="${_opendsRootdnPasswordDefault}" else="${password.opendsRootdn}">
+			<istrue value="${intialConfigLdap}" />
+		</condition>
+		<property name="dsconfig.common" value="-h ${current.opends.host.default} -p ${current.opends.admin.port.default} -D &quot;${opends.rootdn}&quot; -w ${current.opends.rootdn.password} -X --no-prompt" />
+		<antcall target="config-opends-stage-1" />
+		<antcall target="config-opends-initial" />
+		<antcall target="config-opends-stage-2" />
+	</target>
+
+	<target name="start-opends" if="${include.startLdap}">
+		<guide-echo args="Start OpenDS server" />
+		<echo message="Starting server..." />
+		<guide-echo args="${start-ds}" />
+		<exec executable="${start-ds}" dir="${opends.dir.bin}" failonerror="true" />
+	</target>
+
+	<target name="config-opends-stage-1" if="${include.configLdap}">
+		<guide-echo args="Copy SSL keystore from ${initialComponents.commonKeystoreSrc} to ${opends.keystore}" />
+		<copy file="${initialComponents.commonKeystoreSrc}" tofile="${opends.keystore}" overwrite="true" verbose="true" />
+		<guide-echo args="Copy SSL truststore from ${initialComponents.commonTruststoreSrc} to ${opends.truststore}" />
+		<copy file="${initialComponents.commonTruststoreSrc}" tofile="${opends.truststore}" overwrite="true" verbose="true" />
+		<guide-echo args="" />
+
+		<guide-echo args="Unzip OpenDS Plugin" />
+		<tpf args="-plugin ${opends.configPlugin} -unzip -dir ${opends.dir}" />
+
+		<guide-echo args="Config OpenDS" />
+		<guide-echo args="" />
+
+		<guide-echo args="Update the admin cn, sn, ou, o and st in ${opends.dir}/tolven-admin.ldif" />
+		<replace token="adminCN" value="${opends.adminCN}" file="${opends.dir}/tolven-admin.ldif" />
+		<replace token="adminSN" value="${opends.adminSN}" file="${opends.dir}/tolven-admin.ldif" />
+		<replace token="adminORG" value="${opends.adminORG}" file="${opends.dir}/tolven-admin.ldif" />
+		<replace token="adminOU" value="${opends.adminOU}" file="${opends.dir}/tolven-admin.ldif" />
+		<replace token="adminST" value="${opends.adminST}" file="${opends.dir}/tolven-admin.ldif" />
+		<guide-echo args="Check the default admin SSHA password in ${opends.dir}/tolven-admin.ldif matches your password (default: ${_adminSshaPasswordDefault})" />
+		<replace token="${_adminSshaPasswordDefault}" value="${password.adminSSHA}" file="${opends.dir}/tolven-admin.ldif" />
+		<guide-echo args="" />
+		<property name="opends.ant.tmp.file" value="${java.io.tmpdir}/tolven.opends.tmp" />
+
+		<guide-echo args="Create an SSL keystore pin file with one line with the password (default: ${password.opendsKeystore})" />
+		<concat destfile="${opends.keystorePinFile}" append="false">${password.opendsKeystore}</concat>
+		<guide-echo args="The SSL truststore pin file can be the same as that of the SSL keystore" />
+		<concat destfile="${opends.truststorePinFile}" append="false">${password.opendsTruststore}</concat>
+		<guide-echo args="" />
+		<guide-echo args="For linux ensure that the following are executable" />
+		<guide-echo args="All *.sh file in ${opends.dir} and its subdirectories" />
+		<chmod dir="${opends.dir}" perm="u+x" includes="**/*.sh" />
+		<guide-echo args="${opends.dir.bin}/*" />
+		<chmod dir="${opends.dir.bin}" perm="u+x" />
+		<guide-echo args="" />
+		<guide-echo args="Execute the following OpenDS commands" />
+		<guide-echo args="cd ${opends.dir.bin}" />
+		<dsconfig args="set-password-policy-prop --policy-name &quot;Default Password Policy&quot; --set allow-pre-encoded-passwords:true" />
+		<dsconfig args="set-key-manager-provider-prop --provider-name &quot;JKS&quot; --set enabled:true --set key-store-type:JKS --set key-store-file:${opends.keystore} --set key-store-pin-file:${opends.keystorePinFile}" />
+		<dsconfig args="set-trust-manager-provider-prop --provider-name &quot;JKS&quot; --set enabled:true --set trust-store-type:JKS --set trust-store-file:${opends.truststore} --set trust-store-pin-file:${opends.truststorePinFile}" />
+		<dsconfig args="set-connection-handler-prop --handler-name &quot;LDAPS Connection Handler&quot; --reset listen-address" />
+		<dsconfig args="set-connection-handler-prop --handler-name &quot;LDAPS Connection Handler&quot; --set enabled:true --set listen-address:${opends.domain} --set listen-port:${opends.ldapPort}" />
+		<dsconfig args="set-connection-handler-prop --handler-name &quot;LDAP Connection Handler&quot; --set enabled:false" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-opends-initial" if="${intialConfigLdap}">
+		<dsconfig args="set-connection-handler-prop --handler-name &quot;LDAPS Connection Handler&quot; --set ssl-client-auth-policy:optional --remove ssl-cert-nickname:server-cert" />
+		<dsconfig args="set-backend-prop --backend-name userRoot --add base-dn:${opends.baseDN} --noPropertiesFile" />
+		<dsconfig args="set-backend-prop --backend-name userRoot --remove base-dn:${opends.example.basedn.default}" />
+		<echo message="Import ${opends.dir}/tolven-admin.ldif" />
+		<import-ldif args="-h ${opends.host.default} -p ${opends.admin.port.default} -X --bindDN &quot;${opends.rootdn}&quot; --bindPassword ${password.opendsRootdn} -l ${opends.dir}/tolven-admin.ldif --backendID userRoot --append --noPropertiesFile" />
+		<echo message="Done" />
+		<echo message="ldapmodify using ${opends.dir}/tolven-aci.ldif" />
+		<ldapmodify args="--filename ${opends.dir}/tolven-aci.ldif" />
+		<echo message="ldapmodify using ${opends.dir}/tolven-user-status.ldif" />
+		<ldapmodify args="--filename ${opends.dir}/tolven-user-status.ldif" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-opends-stage-2" if="${include.configLdap}">
+		<dsconfig args="set-administration-connector-prop --reset listen-address" />
+		<dsconfig args="set-administration-connector-prop --set listen-address:${opends.domain} --set listen-port:${opends.adminPort}" />
+		<guide-echo args="Restart OpenDS server in order to start listening on ${opends.domain}:${opends.adminPort}" />
+		<antcall target="stop-opends" />
+		<antcall target="start-opends" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="stop-opends" depends="props">
+		<guide-echo args="Stop OpenDS server" />
+		<echo message="Stopping opends..." />
+		<guide-echo args="${stop-ds}" />
+		<exec executable="${stop-ds}" dir="${opends.dir.bin}" failonerror="true" />
+	</target>
+
+	<macrodef name="dsconfig">
+		<attribute name="args" />
+		<sequential>
+			<guide-echo args="${dsconfig} ${dsconfig.common} @{args}" />
+			<echo message="${dsconfig} ${dsconfig.common} @{args}" />
+			<exec executable="${dsconfig}" dir="${opends.dir.bin}" failonerror="true">
+				<arg line="${dsconfig.common} @{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="import-ldif">
+		<attribute name="args" />
+		<sequential>
+			<guide-echo args="${import-ldif} @{args}" />
+			<echo message="${import-ldif} @{args}" />
+			<exec executable="${import-ldif}" dir="${opends.dir.bin}" failonerror="true">
+				<arg line="@{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="ldapmodify">
+		<attribute name="args" />
+		<sequential>
+			<property name="args.prefix" value="-h ${current.opends.host.default} -p ${current.opends.admin.port.default} -D &quot;${opends.rootdn}&quot; -w ${password.opendsRootdn} -X --useSSL --keyStorePath ${opends.keystore} -u ${opends.keystorePinFile}" />
+			<basename property="ldap.modify.basename" file="${ldapmodify}" />
+			<guide-echo args="${ldap.modify.basename} ${args.prefix} @{args}" />
+			<echo message="${ldapmodify} ${args.prefix} @{args}" />
+			<exec executable="${ldapmodify}" dir="${opends.dir.bin}" failonerror="true">
+				<arg line="${args.prefix} @{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+		</sequential>
+	</macrodef>
+
+</project>

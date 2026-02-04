@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="build-v2-kit">
+
+	<target name="props">
+		<condition property="repositoryInit" value="${kitDir}/bin/repositoryInit.bat" else="${kitDir}/bin/repositoryInit.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="checkIntegrity" value="${kitDir}/bin/checkIntegrity.bat" else="${kitDir}/bin/checkIntegrity.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="genMetadata" value="${kitDir}/bin/genMetadata.bat" else="${kitDir}/bin/genMetadata.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="configPhase1" value="${kitDir}/bin/configPhase1.bat" else="${kitDir}/bin/configPhase1.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="configPhase3" value="${kitDir}/bin/configPhase3.bat" else="${kitDir}/bin/configPhase3.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="tpfenv" value="${kitDir}/bin/tpfenv.bat" else="${kitDir}/bin/tpfenv.sh">
+			<os family="windows" />
+		</condition>
+	</target>
+
+	<target name="requirements-guide" />
+
+	<target name="install-requirements" depends="props">
+		<fail message="${initialComponents.commonKeystoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonKeystoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonTruststoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonTruststoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="_tolvenDomainDefault must be set" unless="_tolvenDomainDefault" />
+		<fail message="tolvenDomain must be set" unless="tolvenDomain" />
+		<fail message="tolvenHttpsPort must be set" unless="tolvenHttpsPort" />
+		<fail message="_tolvenPasswordDefault must be set" unless="_tolvenPasswordDefault" />
+		<fail message="commonKeystore must be set" unless="commonKeystore" />
+		<fail message="commonTruststore must be set" unless="commonTruststore" />
+		<echo message="${ant.project.name} install-requirements VERIFIED" />
+	</target>
+
+	<target name="config-requirements" depends="props">
+		<fail message="${kitDir} does not exist">
+			<condition>
+				<not>
+					<available file="${kitDir}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${tolvenConfigDir} does not exist">
+			<condition>
+				<not>
+					<available file="${tolvenConfigDir}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${initialComponents.commonKeystoreSrc} does not exist">
+			<condition>
+				<not>
+					<available file="${initialComponents.commonKeystoreSrc}" />
+				</not>
+			</condition>
+		</fail>
+		<echo message="${ant.project.name} config-requirements VERIFIED" />
+	</target>
+
+	<target name="config-tolven" description="config-tolven">
+		<antcall target="assemble-tolven" />
+		<antcall target="create-db-schemas" />
+	</target>
+
+	<target name="assemble-tolven" depends="props">
+		<guide-echo args="Assemble Tolven" />
+		<guide-echo args="" />
+
+		<mkdir dir="${tolvenConfigDir}/repositoryLocal/plugins" />
+		<genMetadata repository="${tolvenConfigDir}/repositoryLocal" />
+		<guide-echo args="Initialize the Runtime Repository" />
+		<guide-echo args="cd ${kitDir}/bin" />
+		<guide-echo args="${repositoryInit}" />
+		<exec executable="${repositoryInit}" dir="${kitDir}/bin" failonerror="true" />
+		<guide-echo args="" />
+		<guide-echo args="After repositoryInit, ${tolvenConfigDir}/build is deleted if ${tolvenConfigDir}/plugins.xml was changed or any plugins were downloaded" />
+		<delete dir="${tolvenConfigDir}/build" />
+		<guide-echo args="" />
+		<guide-echo args="Run Phase 1 Configuration" />
+		<guide-echo args="cd ${kitDir}/bin" />
+		<guide-echo args="${configPhase1}" />
+		<exec executable="${configPhase1}" dir="${kitDir}/bin" failonerror="true" />
+		<guide-echo args="" />
+		<antcall target="assemble-gatekeeper-ear" />
+		<guide-echo args="Assemble Tolven EAR File" />
+		<tpf args="-plugin org.tolven.assembler.ear -earPlugin org.tolven.component.tolvenear -earFile tolven.ear" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="create-db-schemas" depends="props" if="${include.dbSchemas}">
+		<guide-echo args="Update DB Schemas" />
+		<tpf args="-plugin ${db.plugin} -schemas -dbUrl ${db.url} -driverClass ${db.driverClass} -driverClasspath ${initialComponents.jdbcDriver} -user ${db.user} -password ${password.dbUser}" />
+	</target>
+
+	<target name="config-application">
+		<antcall target="update-authorization-urls" />
+		<antcall target="update-appserver-properties" />
+		<antcall target="create-db-indexes" />
+		<antcall target="create-system-queue-users" />
+		<antcall target="update-usStates" />
+		<antcall target="configPhase3" />
+	</target>
+
+	<target name="assemble-gatekeeper-ear" if="${include.gatekeeperearDeploy}">
+		<guide-echo args="Assemble Gatekeeper EAR File" />
+		<tpf args="-plugin org.tolven.assembler.ear -earPlugin org.tolven.gatekeeper -earFile gatekeeper.ear" />
+	</target>
+
+	<target name="update-authorization-urls" depends="props" if="${include.authorizationURLs}">
+		<guide-echo args="Update Authorization URLs" />
+		<condition property="tablePrefixOption" value="" else="-tablePrefix ${gatekeeper.tablePrefix}">
+			<equals arg1="${gatekeeper.tablePrefix}" arg2="" />
+		</condition>
+		<tpf args="-plugin ${gatekeeper.authzPlugin} ${tablePrefixOption} -dbUrl ${db.url} -driverClass ${db.driverClass} -driverClasspath ${initialComponents.jdbcDriver} -user ${db.user} -password ${password.dbUser}" />
+	</target>
+
+	<target name="create-db-indexes" depends="props" if="${include.dbIndexes}">
+		<guide-echo args="Update DB Indexes" />
+		<tpf args="-plugin ${db.plugin} -indexes -dbUrl ${db.url} -driverClass ${db.driverClass} -driverClasspath ${initialComponents.jdbcDriver} -user ${db.user} -password ${password.dbUser}" />
+	</target>
+
+	<target name="update-appserver-properties" depends="props" if="${include.appserverProperties}">
+		<guide-echo args="Update Server Properties" />
+		<tpf args="-plugin org.tolven.appserverproperties -load" />
+	</target>
+
+	<target name="update-usStates" depends="props" if="${include.usStatesUpload}">
+		<guide-echo args="Update US States" />
+		<tpf args="-plugin org.tolven.us.states -ifRuntimeExists" />
+	</target>
+
+	<target name="create-system-queue-users" depends="props" if="${include.systemQueueUsers}">
+		<guide-echo args="Create adminAppQueue User" />
+		<tpf args="-plugin org.tolven.user -create -uid ${tolvenContext.adminApp.user} -givenName ${tolvenContext.adminApp.user} -surname ${tolvenContext.adminApp.user} -realm ${tolvenContext.adminApp.realm} -userPassword ${password.adminApp} -emails dev.adminApp@tolven.org -organizationUnit tolven -organization tolven -stateOrProvince CA" fail="false" />
+		<tpf args="-plugin org.tolven.user -addRole -role ${opends.tolvenPersonRole} -uid ${tolvenContext.adminApp.user} -realm ${tolvenContext.adminApp.realm}" fail="false" />
+		<guide-echo args="" />
+		<guide-echo args="Create generatorQueue User" />
+		<tpf args="-plugin org.tolven.user -create -uid ${tolvenContext.generator.user} -givenName ${tolvenContext.generator.user} -surname ${tolvenContext.generator.user} -realm ${tolvenContext.generator.realm} -userPassword ${password.generator} -emails dev.generator@tolven.org -organizationUnit tolven -organization tolven -stateOrProvince CA" fail="false" />
+		<tpf args="-plugin org.tolven.user -addRole -role ${opends.tolvenPersonRole} -uid ${tolvenContext.generator.user} -realm ${tolvenContext.adminApp.realm}" fail="false" />
+		<guide-echo args="" />
+		<guide-echo args="" />
+		<guide-echo args="Create ruleQueue User" />
+		<tpf args="-plugin org.tolven.user -create -uid ${tolvenContext.rule.user} -givenName ${tolvenContext.rule.user} -surname ${tolvenContext.rule.user} -userPKCS12 ${mdbuser.keystore} -realm ${tolvenContext.rule.realm} -userPassword ${password.rule} -emails dev.rule@tolven.org -organizationUnit tolven -organization tolven -stateOrProvince CA" fail="false" />
+		<tpf args="-plugin org.tolven.user -addRole -role ${opends.tolvenPersonRole} -uid ${tolvenContext.rule.user} -realm ${tolvenContext.adminApp.realm}" fail="false" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="configPhase3" depends="props" if="${include.configPhase3}">
+		<exec executable="${configPhase3}" dir="${kitDir}/bin" failonerror="true" />
+	</target>
+
+	<macrodef name="genMetadata">
+		<attribute name="repository" />
+		<sequential>
+			<echo message="Update Local Repository" />
+			<guide-echo args="genMetadata will update @{repository}/plugins/plugins.xml if the contents of @{repository}/plugins have changed" />
+			<guide-echo args="cd ${kitDir}/bin" />
+			<basename property="genMetadata.basename" file="${genMetadata}" />
+			<guide-echo args="${genMetadata.basename} -plugins @{repository}/plugins" />
+			<echo message="${genMetadata.basename} -plugins @{repository}/plugins" />
+			<exec executable="${genMetadata}" dir="${kitDir}/bin" failonerror="true">
+				<arg line="-plugins @{repository}/plugins" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+			<guide-echo args="" />
+		</sequential>
+	</macrodef>
+
+</project>

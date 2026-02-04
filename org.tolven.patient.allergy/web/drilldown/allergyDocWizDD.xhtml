@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+	<title>Patient Allergies - Drilldown</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+		<wiz:body>
+			<table width="100%">
+        		<thead>
+					<tr>
+						<th style="width: 12%;"><b>Allergy</b></th>
+						<th style="width: 8%;"><b>Date Of Onset</b></th>
+						<th style="width: 10%;"><b>Severity</b></th>
+						<th style="width: 10%;"><b>Reaction</b></th>
+						<th style="width: 10%;"></th>
+					</tr>
+				</thead>
+					<tbody style="width: 100%;">
+						<c:forEach var="rel" items="#{act.relationshipsList[act.computes[0].property['arName']]}" varStatus="widgetIndex">
+							<tr>
+								<td style="width: 12%;">#{rel.act.observation.value.CE.displayName}</td>
+								<td style="width: 8%;">
+									<trim:TS value="#{rel.act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+								</td>
+								<td style="width: 10%;">#{rel.act.relationship['severity'].act.observation.value.CE.displayName}</td>
+								<td style="width: 10%;">#{rel.act.relationship['reaction'].act.observation.value.CE.displayName}</td>
+								<td style="width: 10%;">
+									<a href="javascript:displayMedLinePage('#{rel.act.observation.value.CE.code}','#{rel.act.observation.value.CE.displayName}','#{rel.act.observation.value.CE.codeSystem}');">
+										<h:outputText value="More Info"/>
+									</a>
+								</td>
+							</tr>
+   						</c:forEach>
+         		</tbody>			
+			</table>
+    </wiz:body>
+  </ui:composition>
+</body>
+</html>

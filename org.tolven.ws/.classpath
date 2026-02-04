@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="web/source"/>
+	<classpathentry kind="lib" path="lib/webservices-api.jar"/>
+	<classpathentry kind="lib" path="lib/webservices-extra-api.jar"/>
+	<classpathentry kind="lib" path="lib/webservices-extra-jdk-packages.jar"/>
+	<classpathentry kind="lib" path="lib/webservices-extra.jar"/>
+	<classpathentry kind="lib" path="lib/webservices-rt.jar"/>
+	<classpathentry kind="lib" path="lib/webservices-tools.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/devLib"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

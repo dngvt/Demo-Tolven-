@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0 http://www.tolven.org/xsd/trim4">
+	<extends>patientAct</extends>	
+	<name>pa/ambulatoryEncounter</name>
+	<description>Ambulatory Encounter</description>	
+	<author>Tolven</author>
+	<page>encounter.xhtml</page>
+	<drilldown>encounterDD.xhtml</drilldown>
+	<menu>global:encounterMenu</menu>	
+	<reference>http://www.hl7.org/v3ballot/html/domains/uvpa/editable/PRPA_RM401001UV.htm</reference>
+	<application name="ephr">
+		<instance>ephr:patient:wip</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+        <transition name="create" to="active">
+            <label language="en">Create</label>
+        </transition>
+        <transition name="activeCompleted" from="active" to="completed">
+            <label language="en">End</label>
+        </transition>
+        <transition name="nullifiedActive" from="active" to="nullified">
+            <label language="en">Entered in Error</label>
+        </transition>
+        <transition name="reviseActive" from="active" to="active">
+            <label language="en">Revise</label>
+        </transition>
+    </transitions>
+	<act classCode="ENC" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="create">
+				<path>echr:patient:encounter</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="create">
+				<path>ephr:patient:encounter</path>
+			</placeholder>
+		</bind>
+		<id>
+     		<II>
+     			<root>#{computeIDRoot(account)}</root>
+      			<extension>#{encounter.path}</extension>
+     		</II>
+    	</id>
+		<code>
+			<CD>
+				<code>AMB</code>
+				<codeSystemName>HL7</codeSystemName>
+				<codeSystemVersion>3.0</codeSystemVersion>
+			</CD>
+		</code>
+		<statusCode>active</statusCode>
+		<title>
+			<ST>Ambulatory</ST>
+		</title>
+		<effectiveTime>
+			<IVL_TS>
+				<low>
+					<label>Admit Date</label>
+					<TS><value>#{TS(encounter.effectiveTimeLow)}</value></TS>
+				</low>
+				<high>
+					<label>Discharge Date</label>
+					<TS><value>#{TS(encounter.effectiveTimeHigh)}</value></TS>
+				</high>
+			</IVL_TS>
+		</effectiveTime>
+		<priorityCode>
+			<label>The urgency for this visit</label>
+			<valueSet>actPriority</valueSet>
+		</priorityCode>
+		<confidentialityCode>
+			<label />
+			<valueSet>confidentiality</valueSet>
+		</confidentialityCode>
+		<reasonCode />
+		<patientEncounter>
+			<admissionReferralSourceCode />
+			<dischargeDispositionCode />
+		</patientEncounter>
+		<participation name="attender" typeCode="ATND">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:admin:staff:all</path>
+					</list>
+				</bind>
+				<bind application="ephr" phase="request">
+					<list cardinality="multiple">
+						<path>ephr:admin:staff:all</path>
+					</list>
+				</bind>
+				<id>
+                   	<II>
+                      	<root>#{computeIDRoot(account)}</root>
+                       	<extension>#{encounter.attenderExtension}</extension>
+                   	</II>
+                </id>			
+			</role>
+		</participation>
+		<participation name="location" typeCode="LOC">
+			<role classCode="SDLOC">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:admin:locations:all</path>
+					</list>
+				</bind>
+				<bind application="ephr" phase="request">
+					<list cardinality="multiple">
+						<path>ephr:admin:locations:all</path>
+					</list>
+				</bind>			
+				<id>
+                   	<II>
+                      	<root>#{computeIDRoot(account)}</root>
+                       	<extension>#{encounter.locationExtension}</extension>
+                   	</II>
+                </id>	
+			</role>
+		</participation>
+		<relationship name="patientFrom" direction="IN" typeCode="PERT" >
+			<act classCode="OBS" moodCode="EVN">
+				<title>
+					<ST>Patient Discharged/Transfered From</ST>
+				</title>
+				<observation>
+					<value>
+						<ST>#{encounter.dischargedFrom}</ST>
+					</value>
+					<value>
+						<ST>#{encounter.transferredFrom}</ST>
+					</value>					
+				</observation>
+			</act>
+		</relationship>		
+		<relationship name="arrivedBy" direction="OUT" typeCode="ARR">
+			<act xsi:type="Act" moodCode="EVN" classCode="TRNS">
+				<text>
+					<ST />
+				</text>
+				<participation name="location" typeCode="LOC">
+					<role xsi:type="Role" classCode="LOCE">
+						<player xsi:type="Entity" classCode="PLC" determinerCode="INSTANCE">
+							<desc>
+								<ST />
+							</desc>
+						</player>
+					</role>
+				</participation>
+			</act>
+		</relationship>
+	</act>
+	<valueSet name="actPriority">
+		<CE>
+			<displayName>elective</displayName>
+			<code>EL</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>emergency</displayName>
+			<code>EM</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>routine</displayName>
+			<code>R</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>urgent</displayName>
+			<code>UR</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="confidentiality">
+		<CE>
+			<displayName>normal</displayName>
+			<code>N</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>restricted</displayName>
+			<code>R</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>very restricted</displayName>
+			<code>V</code>
+			<codeSystemName>HL7</codeSystemName>
+			<codeSystemVersion>3.0</codeSystemVersion>
+		</CE>
+	</valueSet>
+</trim>

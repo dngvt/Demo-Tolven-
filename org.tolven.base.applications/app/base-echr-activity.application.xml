@@ -1,0 +1,21 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr">
+		<menu name="activity" sequence="10" title="Activity" page="/five/activities.xhtml" visible="true">
+			<list name="all" title="All Activity" page="/five/list.xhtml" visible="true" sequence="1000">
+				<column name="Date" internal="date01" format="d MMM yyyy" width="7.0" />
+				<column name="For" internal="string01" width="20.0">
+					<from>#{trim.act.participation['recordTarget'].role.player.name.EN['L'].formatted}</from>
+					<from>#{trim.act.participation['subject'].role.player.name.EN['L'].formatted}</from>
+					<from>#{trim.act.participation['patient'].role.player.name.EN['L'].formatted}</from>					
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['prescriber'].act.observation.values[3].ST.value} #{trim.isName['obs/evn/refillRequest'].act.relationship['prescriber'].act.observation.values[4].ST.value}</from>
+				</column>
+				<column name="Action" internal="string02" reference="true" width="20.0">
+					<from>#{trim.description}</from>
+				</column>
+				<column name="RequestedBy" internal="string03" width="15.0" />
+				<column name="Priority" internal="long01" width="6.5" />
+				<column name="Due" internal="date02" format="d MMM yyyy" width="6.0" />
+			</list>
+		</menu>
+	</extends>
+</application>

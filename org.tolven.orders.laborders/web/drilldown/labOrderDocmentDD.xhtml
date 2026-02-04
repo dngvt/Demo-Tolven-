@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+  <title>Laboratory Order - Drilldown</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+	    <wiz:body>
+			 <table width="100%">
+				<thead>
+					<tr>
+						<th style=" width:44%;"><b>Laboratory Order</b></th>
+						<th style=" width:8%;" nowrap="nowrap"><b>Date Of Order*</b></th>
+						<th style=" width:8%;"><b>Specimen Type</b></th>
+						<th style=" width:8%;"><b>Container</b></th>
+						<th style=" width:8%;"><b>Reason</b></th>
+						<th style=" width:8%;"><b>Priority</b></th>
+						<th style=" width:8%;"><b>Frequency</b></th>
+						<th style=" width:8%;"><b>Timing</b></th>
+						<th style="width:8%;"><b>Start Immediately</b></th>
+					</tr>
+				</thead>
+				<tbody style="width:100%;">
+					<c:set var="i" value="1"/>
+					<c:if test="#{trim.trim.act.relationshipsList['entry']!=null}">
+						<c:forEach var="labOrder" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="widgetIndex">
+							<c:if test="#{labOrder!=null}">
+								<c:set var="class" value="odd"/>
+								<c:set var="i" value="0"/>
+								<c:if test="#{(widgetIndex.index%2)==1}"><c:set var="class" value="even"/><c:set var="i" value="1"/></c:if>
+								<tr class="#{class}">
+									<!--td style=" width:40%;">#{labOrder.act.code.CD.displayName}</td-->
+									<td style=" width:44%;">#{labOrder.act.text.ST.value}</td>
+									<td style=" width:8%;"><trim:TS value="#{labOrder.act.effectiveTime.TS}" dateStyle="short" readonly="true"/></td>
+									<td style=" width:8%;">#{labOrder.act.relationship['specimenType'].act.observation.value.CE.displayName}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['containerType'].act.observation.value.CE.displayName}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['reason'].act.observation.value.ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['priority'].act.observation.value.CE.displayName}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['frequency'].act.observation.value.CE.displayName}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['timing'].act.observation.value.ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.relationship['startImmediately'].act.observation.value.CE.displayName}</td>
+									
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</tbody>			
+			</table>
+			<br/>
+			<table width="100%">
+				<tr>
+					<td colspan="2">
+						<b><h:outputText value="Associated Problems : " /></b>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="widget" style="width: 80%;" id="problemDetails">
+							<table style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
+								<thead>
+									<tr>
+										<th style="width: 5%;" align="center">
+											#
+										</th>
+										<th style="width: 80%;">
+											Problem
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="labOrder" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="labOrderIndex">
+										<c:forEach var="probelmRelation" items="#{labOrder.act.relationshipsList['problem']}" varStatus="problemIndex">
+											<tr class="#{problemIndex.index % 2 == 0 ? 'odd' : 'even'}" >
+												<td align="center">
+													#{problemIndex.index+1}
+												</td>
+												<td align="left">
+													#{probelmRelation.act.observation.value.CE.displayName}
+												</td>
+											</tr>
+									</c:forEach>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<b><h:outputText value="Associated Diagnosis : " /></b>
+					</td>
+				</tr>			
+				<tr>
+					<td colspan="2">
+						<div class="widget" style="width: 80%;" id="diagnosisDetails">
+							<table style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
+								<thead>
+									<tr>
+										<th style="width: 5%;" align="center">
+											#
+										</th>
+										<th style="width: 80%;">
+											Diagnosis
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="labOrder" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" varStatus="labOrderIndex">
+										<c:forEach var="diagnosisRelation" items="#{labOrder.act.relationshipsList['diagnosis']}" varStatus="diagnosisIndex">
+											<tr class="#{diagnosisIndex.index % 2 == 0 ? 'odd' : 'even'}" >
+												<td align="center">
+													#{diagnosisIndex.index+1}
+												</td>
+												<td align="left">
+													#{diagnosisRelation.act.observation.value.CE.displayName}
+												</td>
+											</tr>
+									</c:forEach>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<c:if test="#{menu.menuDataItem.actStatus!='active'}">
+				<tr>
+					<td colspan="2">
+						<b><h:outputText value="Associated Results : " /></b>
+					</td>
+				</tr>			
+				<tr>
+					<td colspan="2">
+						<div class="widget" style="width: 80%;" id="resultsDetails">
+							<table style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
+								<thead>
+									<tr>
+										<th style="width: 5%;" align="center">#</th>									
+										<th style="width: 30%;">Result Name</th>
+										<th style="width: 10%;">Value</th>
+										<th style="width: 10%;">Unit</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="#{trim.placeholderList['echr:patient:labOrder:results~ResultName,Value,Unit']}" var="result" varStatus="resultsDetailIndex">
+										<c:set var="resultRow" value="${fn:split(result.label, ',')}"/>
+										<c:set var="resultPath" value="#{result.value}"/>
+										<tr>
+											<td align="center">
+												#{resultsDetailIndex.index+1}
+											</td>										
+											<td>
+												<h:outputLink value="javascript:showPane('#{resultPath}',false,'#{menu.drilldownItem.path}')">
+					        						<h:outputText value="#{resultRow[0]}" />
+					        					</h:outputLink>
+											</td>
+											<td><h:outputText value="#{resultRow[1]}" /></td>
+											<td><h:outputText value="#{resultRow[2]}" /></td>
+										</tr>				
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+				</c:if>
+			</table>
+			<table>
+				<tr>
+					<td><b><h:outputText value="#{trim.trim.act.relationship['encounter'].act.observation.value.label.value} :"/></b></td>
+					<td colspan="4">
+						#{trim.trim.act.relationship['encounter'].act.observation.value.CE.displayName}
+					</td>
+				</tr>
+			</table>
+			
+			<c:if test="#{menu.menuDataItem.actStatus!='active'}">
+				<br/>
+				<trim:action label="Enter Lab Result" status="active" trim="labResultDoc" />
+			
+				<ui:include src="diagnosisExtnDD.xhtml"/>
+			</c:if>
+	    </wiz:body>
+	</ui:composition>
+</body>
+</html>

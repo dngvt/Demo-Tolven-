@@ -1,0 +1,162 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+
+	<extends path="echr:patient:summary">
+		<calendar name="calendar" title="Calendar" page="/five/calendarView.xhtml" visible="true" />
+	</extends>
+	<extends path="echr:patient:summary">
+		<timeline name="timeline" title="Timeline" page="/five/timelineView.xhtml" visible="true" />
+	</extends>
+
+	<!-- Patient Docuemnts -->
+	<extends path="echr:patient">
+		<placeholder name="patDoc" title="Document" page="/wizard/wizard.xhtml" heading="/five/documentLink.xhtml">
+			<field name="effectiveTime" internal="date01">
+				<from>#{trim.act.effectiveTime.TS.date}</from>
+			</field>
+			<field name="title" internal="string01">
+			    <from>#{act.text.ST.value}</from>
+				<from>#{trim.description}</from>
+				<from>#{xpath["/ClinicalDocument/code/@displayName"]}</from>
+			</field>
+			<field name="source" internal="string05">
+				<from>#{trim.message.sender.accountName}</from>
+				<from>#{xpath["/ClinicalDocument/author/assignedAuthor/representedOrganization/name"]}</from>
+				<from>#{trim.field['letterType']}</from>
+			</field>
+			
+		</placeholder>
+	</extends>
+	<extends path="echr:patient">
+		<menu name="documents" sequence="21" title="Document" page="/five/bar2.xhtml" visible="true">
+			<list name="active" title="All Documents" page="/five/list.xhtml" visible="true" drilldown=":patDoc">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{patDoc.effectiveTime}</from>
+				</column>
+				<column name="Name" internal="string01" width="25.0" reference="true">
+					<from>#{patDoc.title}</from>
+				</column>
+				<column name="Source" internal="string02" width="35.0">
+					<from>#{patDoc.source}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientDocumentMenu">
+					<column name="Document" internal="string01" instantiate="true" width="25.0" />
+				</action>
+			</list>
+			<list name="all" title="All Documents" page="/five/list.xhtml" visible="true" drilldown=":patDoc">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{patDoc.effectiveTime}</from>
+				</column>
+				<column name="Name" internal="string01" width="25.0" reference="true">
+					<from>#{patDoc.title}</from>
+				</column>
+				<column name="Source" internal="string02" width="35.0">
+					<from>#{patDoc.source}</from>
+				</column>
+			</list>
+			<list name="nullified" title="All Documents" page="/five/list.xhtml" visible="true" drilldown=":patDoc">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{patDoc.effectiveTime}</from>
+				</column>
+				<column name="Name" internal="string01" width="25.0" reference="true">
+					<from>#{patDoc.title}</from>
+				</column>
+				<column name="Source" internal="string02" width="35.0">
+					<from>#{patDoc.source}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:patient:summary">
+		<list name="docsum" visible="never">
+			<column name="date" internal="date03">
+				<from>#{patDoc.effectiveTime}</from>
+			</column>
+			<column name="title" internal="string01">
+					<from>#{patDoc.title}</from>
+			</column>
+			<column name="source" internal="string02">
+					<from>#{patDoc.source}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="docsum" portalColumn="3" sequence="4" title="Personal Events" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:docsum" visible="true" drilldown=":documents">
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientDocumentMenu">
+				<column name="Document" internal="string01" instantiate="true" width="30.0" />
+			</action>
+		</portlet>
+	</extends>
+
+	<extends path="echr:patient">
+		<instance name="wip" title="New Patient Event" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml" />
+	</extends>
+
+	<!-- Patient lists -->
+	<extends path="echr">
+		<menu name="patients" sequence="30" title="Patients" page="/five/patients.xhtml" visible="true">
+			<!--  MY PATIENTS IS IN BASE TOLVEN -->
+			<!--  IN PATIENTS IS IN BASE TOLVEN -->
+
+			<list name="vip" title="VIP" page="/five/list.xhtml" visible="true" drilldown="echr:patient" sequence="3500">
+				<column name="Name" internal="string01,string02" format="%s, %s" reference="true" width="20.0" />
+				<column name="Last" internal="string01" visible="false">
+					<from>#{patient.lastName}</from>
+				</column>
+				<column name="First" internal="string02" visible="false">
+					<from>#{patient.firstName}</from>
+				</column>
+				<column name="Middle" internal="string03" visible="false">
+					<from>#{patient.middleName}</from>
+				</column>
+				<column name="DOB" internal="ts01" visible="false">
+					<from>#{patient.dob}</from>
+				</column>
+				<column name="Age" internal="ts01" format="age" width="6" />
+				<column name="Sex" internal="string04" width="6.0">
+					<from>#{patient.sex}</from>
+					<from>#{patient.gender}</from>
+				</column>
+			</list>
+			<list name="terminated" title="Terminated" page="/five/patientList.xhtml" visible="true" drilldown="echr:patient" sequence="8000">
+				<column name="Name" internal="string01,string02,string03" format="%s, %s %s" reference="true" width="20.0" />
+				<column name="Last" internal="string01" visible="false">
+					<from>#{patient.lastName}</from>
+				</column>
+				<column name="First" internal="string02" visible="false">
+					<from>#{patient.firstName}</from>
+				</column>
+				<column name="Middle" internal="string03" visible="false">
+					<from>#{patient.middleName}</from>
+				</column>
+				<column name="DOB" internal="ts01" format="d MMM yyyy" width="9.0">
+					<from>#{patient.dob}</from>
+				</column>
+				<column name="Age" internal="ts01" format="age" width="6" />
+				<column name="Sex" internal="string04" width="6.0">
+					<from>#{patient.sex}</from>
+					<from>#{patient.gender}</from>
+				</column>
+				<column name="Phone" width="11.0" internal="string06" visible="true">
+					<from>#{patient.homeTelecom}</from>
+				</column>
+				<column name="MRN" width="10.0" internal="string05" visible="true">
+					<from>#{patient.mrn}</from>
+				</column>
+			</list>
+
+			<instance name="wip" title="WIP" page="/wizard/wizard.xhtml" heading="/five/chartLink.xhtml" />
+		</menu>
+	</extends>
+	<extends path="echr:provider">
+		<menu name="patients" title="Patients" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown="echr:patient">
+				<column name="Name" internal="string01,string02,string03" format="%s, %s %s" reference="true" width="20.0" />
+				<column name="DOB" internal="ts01" format="d MMM yyyy" width="7.0" />
+				<column name="Sex" internal="string04" width="6.0" />
+				<column name="Status" internal="string05" width="6.0" />
+			</list>
+		</menu>
+	</extends>
+
+</application>

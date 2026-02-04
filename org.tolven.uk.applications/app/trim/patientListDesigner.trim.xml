@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<name>patientListDesigner</name>
+	<description>Patient List Designer</description>
+	<page>patientListDesigner.xhtml</page>
+	<drilldown>patientListDesignerDD.xhtml</drilldown>
+	<application name="ephr">
+		<instance>ephr:patients:wip</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patients:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="OBS" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patientListDefinition</path>
+			</placeholder>
+		</bind>
+		<id>
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{patientListDefinition.path}</extension>
+				<displayable>false</displayable>
+			</II>
+		</id>
+		<statusCode>#{patientListDefinition.actStatus}</statusCode>
+
+		<title>
+	      	<ST>Patient List Designer</ST>
+	    </title>
+	    
+	    <text>
+	    	<label>Rule Content</label>
+	    	<ST>#{from(source.rule,patientListDefinition.rule)}</ST>
+	    </text>
+
+	    <effectiveTime>
+	      	<label>Date</label>
+	      	<new datatype="TS" function="now" />
+	    </effectiveTime>
+
+		<relationship typeCode="NAME" direction="IN" name="advancedConfiguration">
+			<act moodCode="EVN" classCode="ENTRY">
+				<title>
+					<ST>Advanced Configuration</ST>
+				</title>
+
+				<text>
+					<label>List Metadata</label>
+					<ST>#{from(source.listContents,patientListDefinition.listContents)}</ST>
+				</text>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="generalDetails">
+			<act moodCode="EVN" classCode="ENTRY">
+				<title>
+					<ST>General Details</ST>
+				</title>
+
+				<text>
+					<label>List Name</label>
+					<ST>#{from(source.listName,patientListDefinition.listName)}</ST>
+				</text>
+			</act>
+		</relationship>
+		<!-- 
+		<relationship typeCode="NAME" direction="IN" name="existingPatients">
+			<act moodCode="EVN" classCode="ENTRY">
+				<title>
+					<ST>Process Against Existing Patients</ST>
+				</title>
+
+				<text>
+					<label>Process Against Existing Patients</label>
+					<ST>#{from(source.existingPatients,patientListDefinition.existingPatients)}</ST>
+				</text>
+			</act>
+		</relationship>
+		-->
+	</act>		
+	<field name="existingPatients">
+        <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	        xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">#{patientListDefinition.existingPatients}</value>
+	</field>    
+</trim>

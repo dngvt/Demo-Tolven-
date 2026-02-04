@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. -->
+	
+	<!-- #TOLVEN_TEMPLATES (DO NOT CHANGE OR OVERRIDE THESE VALUES) -->
+	<!-- passwords can be changed in the corresponding template-fragment files, where they default to the ones here -->
+	
+	<property name="_adminPasswordDefault" value="sysadmin" />
+	<property name="_adminSshaPasswordDefault" value="{SSHA}itMxgS8Bxm66xF58p+u02i9+byJlcYYM" />
+	<property name="_adminUserDefault" value="admin" />
+	<property name="_cookieDomainDefault" value=".example.com" />
+	<property name="_keystoreOrgDefault" value="tolven" />
+	<property name="_opendsBaseDNDefault" value="dc=tolven,dc=com" />
+	<property name="_opendsDomainDefault" value="#{_tolvenDomainDefault}" />
+	<property name="_opendsKeystorePasswordDefault" value="#{_tolvenPasswordDefault}" />
+	<property name="_opendsLdapPortDefault" value="636" />
+	<property name="_opendsRootdnPasswordDefault" value="password" />
+	<property name="_tolvenDomainDefault" value="#{_tolvenDomainShortNameDefault}#{_cookieDomainDefault}" />
+	<property name="_tolvenDomainShortNameDefault" value="dev" />
+	<property name="_tolvenHttpPortDefault" value="8080" />
+	<property name="_tolvenHttpsPortDefault" value="8443" />
+	<property name="_tolvenPasswordDefault" value="tolven" />
+	<property name="_tolvenRealmDefault" value="tolven" />
+	<property name="_queueRealmDefault" value="queue_REALM" />
+	<property name="_tolvenPersonRoleDefault" value="tolvenPerson_ROLE" />
+
+</plugins>

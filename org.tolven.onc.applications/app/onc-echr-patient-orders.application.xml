@@ -1,0 +1,212 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+
+	<extends path="echr:patient">
+		<menu name="orders" sequence="2" title="Orders" page="/five/bar2.xhtml" visible="true">
+			<list name="active" title="Active" page="/five/list.xhtml" visible="true" drilldown=":active">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="completed" title="Completed" page="/five/list.xhtml" visible="true" drilldown=":completed">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="inactive" title="Inactive" page="/five/list.xhtml" visible="true" drilldown=":inactive">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="cancelled" title="Cancelled" page="/five/list.xhtml" visible="true" drilldown=":cancelled">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="suspended" title="Suspended" page="/five/list.xhtml" visible="true" drilldown=":suspended">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="nullified" title="Entered in Error" page="/five/list.xhtml" visible="true" drilldown=":nullified">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown=":all">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{labOrder.date}</from>
+					<from>#{imageOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{labOrder.serviceName}</from>
+					<from>#{imageOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{labOrder.status}</from>
+					<from>#{imageOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{labOrder.author.lastName}</from>
+					<from>#{labOrder.enteredBy}</from>
+					<from>#{imageOrder.author.lastName}</from>
+					<from>#{imageOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="immunizationList" title="Immunization list" page="/five/list.xhtml" visible="true" drilldown=":immunizationOrder">
+				<column name="Date" internal="date01" format="MMM-dd-yyyy" width="15.0">
+					<from>#{immunizationOrder.date}</from>
+				</column>
+				<column name="Name" internal="string01" width="30.0" reference="true">
+					<from>#{immunizationOrder.serviceName}</from>
+				</column>
+				<column name="Status" internal="string02" width="30.0">
+					<from>#{immunizationOrder.status}</from>
+				</column>
+				<column width="15.0" internal="string03" name="Performer">
+					<from>#{immunizationOrder.author.lastName}</from>
+					<from>#{immunizationOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:immunizationOrderDocMenu">
+					<column name="Title" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+
+		</menu>
+	</extends>
+	<extends path="echr:patient:summary">
+		<list name="orderSummary" visible="never">
+			<column name="Date" internal="date01" format="MM/dd/yyyy">
+				<from>#{imageOrder.date}</from>
+				<from>#{labOrder.date}</from>
+			</column>
+			<column name="Name" internal="string01">
+				<from>#{imageOrder.serviceName}</from>
+				<from>#{labOrder.serviceName}</from>
+			</column>
+			<column name="Status" internal="string02">
+				<from>#{imageOrder.status}</from>
+				<from>#{labOrder.status}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="orderSummary" portalColumn="1" sequence="5" title="Orders" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:orderSummary" visible="true" drilldown=":orders:active">
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:newOrderMenu">
+				<column name="Title" internal="string01" instantiate="true" width="40.0" />
+			</action>
+		</portlet>
+	</extends>
+</application>

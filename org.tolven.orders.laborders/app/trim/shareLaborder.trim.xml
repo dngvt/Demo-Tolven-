@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<name>share/labordershare</name>
+	<description>Share A Lab Order</description>
+	<reference></reference>
+	<act classCode="ACT" moodCode="EVN">
+		<bind application="echr" phase="receive" >
+			<placeholder bindAction="merge">
+				<path>echr:patient:labOrder</path>
+			</placeholder>
+		</bind>
+		<id>
+			<II>
+				<root>OrderNumber</root>				
+				<extension>#{labOrder.path}</extension>
+				<assigningAuthorityName>#{computeIDRoot(account)}</assigningAuthorityName>
+			</II>			
+		</id>
+		<code>
+			<CD>
+				<code>ProcCode</code>
+				<codeSystemName>HL7</codeSystemName>
+				<codeSystemVersion>3.0</codeSystemVersion>
+			</CD>
+		</code>
+		<statusCode>active</statusCode>		
+		<text>
+			<label>labOrder</label>
+			<ST>#{labOrder.serviceName}</ST>			
+		</text>		
+		<observation>
+			<value>
+				<label>Status</label>
+				<ST>#{labOrder.status}</ST>
+			</value>					
+			<value>
+				<label>Longname</label>
+				<ST>#{labOrder.longName}</ST>
+			</value>
+			<value>
+				<label>Order Date</label>				
+				<TS><value>#{TS(labOrder.date)}</value></TS>
+			</value>
+			<value>
+				<label>author</label>
+				<ST>#{labOrder.enteredBy}-#{account.title}</ST>		
+			</value>	
+			<value>
+				<label>serviceName</label>
+				<ST>#{labOrder.serviceName}</ST>		
+			</value>
+			<value>
+				<label>Specimen</label>
+				<ST>#{labOrder.specimenType}</ST>				
+			</value>
+			<value>
+				<label>Container</label>
+				<ST>#{labOrder.container}</ST>				
+			</value>												
+ 			<value>
+ 				<label>Reason</label>
+				<ST>#{labOrder.reason}</ST> 				
+ 			</value>
+			<value>
+				<label>Priority</label>
+				<ST>#{labOrder.priority}</ST>				
+			</value>
+ 			<value>
+ 				<label>Frequency</label>
+				<ST>#{labOrder.frequency}</ST> 				
+ 			</value>
+ 			<value>
+ 				<label>Timing</label>
+				<ST>#{labOrder.timing}</ST> 				
+ 			</value>
+ 			<value>
+ 				<label>Ordercode</label>
+				<ST>#{labOrder.serviceNameCode}</ST> 				
+ 			</value>
+		</observation>
+	</act>
+</trim>

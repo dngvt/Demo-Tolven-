@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<extends>patientAct</extends>
+	<name>act/evn/smoking</name>
+	<description>Smoking Assessment</description>
+	<page>smokingAssessment.xhtml</page>
+	<drilldown>smokingAssessmentDD.xhtml</drilldown>
+	<menu>global:assessmentDocMenu</menu>
+	<reference>http://wikihit.org/wiki/index.php/Assessment</reference>
+	<application name="ephr">
+		<instance>ephr:patient:assessment</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:assessment</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="DOCCLIN" moodCode="EVN">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:assessment</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:assessment</path>
+			</placeholder>
+		</bind>
+		<statusCode>active</statusCode>
+		<title>
+			<ST>Smoking Assessment</ST>
+		</title>
+		<code>
+			<CD>
+				<code>smokingassessment</code>
+				<codeSystem>BUPA</codeSystem>
+				<codeSystemName>BUPA</codeSystemName>
+				<codeSystemVersion>1.0</codeSystemVersion>
+			</CD>
+		</code>
+		<effectiveTime>
+			<label>Date Performed</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<relationship name="smoker" direction="OUT" typeCode="PERT">
+			<act classCode="OBS" moodCode="EVN">
+				<title>
+					<ST>Smoker Status</ST>
+				</title>
+				<observation>
+					<value>
+						<label>Smoking Status</label>
+						<valueSet>smokingStatus</valueSet>
+						<CE></CE>
+					</value>
+				</observation>
+				<relationship typeCode="PERT" direction="OUT" name="duration">
+					<act moodCode="EVN" classCode="OBS">
+						<effectiveTime>
+							<IVL_TS>
+								<low>
+									<label>Date Commenced</label>
+									<TS>
+										<value>#{TS[now]}</value>
+									</TS>
+								</low>
+								<high>
+									<label>Date Ended</label>
+									<TS>
+										<value>#{TS[now]}</value>
+									</TS>
+								</high>
+							</IVL_TS>
+						</effectiveTime>
+					</act>
+				</relationship>
+				<relationship typeCode="PERT" direction="OUT" name="substance">
+					<act moodCode="EVN" classCode="OBS">
+						<observation>
+							<value>
+								<label>Substance</label>
+								<valueSet>Substance</valueSet>
+								<CE></CE>
+							</value>
+						</observation>
+					</act>
+				</relationship>
+				<relationship typeCode="PERT" direction="OUT" name="quantity">
+					<act moodCode="EVN" classCode="OBS">
+						<observation>
+							<value>
+								<label>Quantity</label>
+								<valueSet>smokingQuantity</valueSet>
+								<CE></CE>
+							</value>
+							<value>
+								<ST></ST>
+							</value>
+							<value>
+								<ST></ST>
+							</value>
+						</observation>
+					</act>
+				</relationship>
+				<relationship typeCode="PERT" direction="OUT" name="frequency">
+					<act moodCode="EVN" classCode="OBS">
+						<observation>
+							<value>
+								<label>Frequency</label>
+								<valueSet>smokingFrequency</valueSet>
+								<CE></CE>
+							</value>
+						</observation>
+					</act>
+				</relationship>
+				<relationship typeCode="PERT" direction="OUT" name="smokingProgram">
+					<act moodCode="EVN" classCode="OBS">
+						<observation>
+							<value>
+								<label>On Smoking Program</label>
+								<valueSet>BooleanStatus</valueSet>
+								<CE></CE>
+							</value>
+							<value>
+								<ST></ST>
+							</value>
+						</observation>
+					</act>
+				</relationship>
+				<relationship typeCode="PERT" direction="OUT" name="comments">
+					<act moodCode="EVN" classCode="OBS">
+						<title>
+							<ST>Comments</ST>
+						</title>
+						<text>
+							<ST></ST>
+						</text>
+					</act>
+				</relationship>
+			</act>
+		</relationship>
+
+		<relationship name="encounter" direction="IN" typeCode="COMP">
+			<act classCode="OBS" moodCode="EVN">
+				<bind application="echr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>echr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="ephr" phase="create">
+					<placeholder bindAction="exist" optional="true">
+						<path>ephr:patient:encounter</path>
+					</placeholder>
+				</bind>
+				<bind application="echr" phase="request">
+					<list cardinality="single">
+						<path>echr:patient:encounters:active</path>
+					</list>
+				</bind>
+				<id />
+				<title>
+					<ST>Encounter</ST>
+				</title>
+			</act>
+		</relationship>
+		<!-- <relationship typeCode="COMP" direction="OUT" name="encounterAssociations"> <act classCode="OBS" moodCode="EVN"> <observation> <value> <label>Associate 
+			with Encounter</label> <valueSet>encounter</valueSet> </value> </observation> </act> </relationship> -->
+		<!-- temp removal to test dropping dependancy on analysis plugin <compute> <type>org.tolven.process.SmkAnalysisOrderCompute</type> <property name="enabled"> 
+			<value xsi:type="xs:boolean">true</value> </property> <property name="action"> <value xsi:type="xs:string">smokingAssmt</value> </property> </compute> -->
+	</act>
+	<valueSet name="smokingStatus">
+		<CE>
+			<displayName>Unknown if ever smoked</displayName>
+			<code>0</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Current every day smoker</displayName>
+			<code>1</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Current some day smoker</displayName>
+			<code>2</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Former smoker</displayName>
+			<code>3</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Never smoker</displayName>
+			<code>4</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Smoker, current status unknown</displayName>
+			<code>5</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="smokingSubstance">
+		<CE>
+			<displayName>N/A</displayName>
+			<code>C0</code>
+			<codeSystem>Tolven-Local</codeSystem>
+			<codeSystemVersion>1</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Chewing tobacco</displayName>
+			<code>C0580804</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Snuff tobacco</displayName>
+			<code>C0580805</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Cigarette smoking tobacco</displayName>
+			<code>C0580806</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Cigar smoking tobacco</displayName>
+			<code>C0580807</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Pipe smoking tobacco</displayName>
+			<code>C0580808</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Tobacco and nicotine</displayName>
+			<code>C0580809</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="smokingQuantity">
+		<CE>
+			<displayName>N/A</displayName>
+			<code>C0</code>
+			<codeSystem>Tolven-Local</codeSystem>
+			<codeSystemVersion>1</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Gram</displayName>
+			<code>C0580900</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Kilogram</displayName>
+			<code>C0580901</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Milligram</displayName>
+			<code>C0580902</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Ounce</displayName>
+			<code>C0580903</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Pound</displayName>
+			<code>C0580904</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="smokingFrequency">
+		<CE>
+			<displayName>N/A</displayName>
+			<code>C0</code>
+			<codeSystem>Tolven-Local</codeSystem>
+			<codeSystemVersion>1</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Daily</displayName>
+			<code>C0580905</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Weekly</displayName>
+			<code>C0580906</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Monthly</displayName>
+			<code>C0580907</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Annual</displayName>
+			<code>C0580908</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>Semi-annual</displayName>
+			<code>C0580909</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<valueSet name="BooleanStatus">
+		<CE>
+			<displayName>Yes</displayName>
+			<code>C0580910</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+		<CE>
+			<displayName>No</displayName>
+			<code>C0580911</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<!-- TEMPLATE VALUESET START -->
+	<valueSet name="encounterTemplate">
+		<CE>
+			<displayName></displayName>
+			<code>C0389100</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+		</CE>
+	</valueSet>
+	<!--TEMPLATE VALUESET END -->
+	<valueSet name="encounter"></valueSet>
+</trim>

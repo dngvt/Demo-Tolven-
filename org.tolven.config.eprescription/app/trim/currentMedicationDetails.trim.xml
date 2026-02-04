@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<extends>patientDet</extends>	
+	<name>obs/evn/currentMedicationHistory</name>
+	<description>Medication History Details</description>
+	<page></page>
+	<drilldown></drilldown>
+ 	<tolvenId application="#{knownType}" accountId="#{account.id}"/>
+ 	<tolvenEventId application="#{knownType}" path="#{patient.path}" id="#{patient.id}" accountId="#{account.id}"/>
+	<application name="echr" signatureRequired="true">
+		<instance>echr:patient:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="REG" moodCode="EVN">
+		<label>Medication History Details</label>
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+    			<path>echr:patient:medication</path>
+			</placeholder>
+    	</bind>
+    	<id>
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{medication.path}</extension>
+			</II>
+		</id>
+		<code>
+			<CD>
+				<code>C0017594</code>
+				<codeSystemName>tolven</codeSystemName>
+				<codeSystemVersion>4.0</codeSystemVersion>
+			</CD>
+		</code>
+		<relationship typeCode="NAME" direction="IN" name="CurrentMedication">
+        	<act classCode="OBS" moodCode="EVN">
+	        	<observation>
+	                 <value>
+	                    <label>Medication</label>
+	                    <ST></ST>
+	                </value>
+	                 <value>
+	                    <label>Start Date</label>
+	                   <TS></TS>
+	                </value>
+	                 <value>
+	                    <label>End Date</label>
+	                    <TS></TS>
+	                </value>
+	                 <value>
+	                    <label>Route</label>
+	                    <ST></ST>
+	                </value>
+	                 <value>
+	                    <label>Status</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+	                    <label>Patient Id</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+	                    <label>Frequency</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+	                    <label>Instructions</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+	                    <label>Comments</label>
+	                    <ST></ST>
+	                </value>
+	                <value>
+	                    <label>Prescribed By</label>
+	                    <ST></ST>
+	                </value>
+	             </observation>
+        	</act>
+    	</relationship>
+	</act>
+</trim>

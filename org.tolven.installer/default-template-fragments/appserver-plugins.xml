@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+	
+	<property name="include">
+		<property name="dbSchemas" value="true" />
+		<property name="installAppserver" value="true" />
+		<property name="startAppserver" value="true" />
+		<property name="configAppserver" value="true" />
+		<property name="appserverUpload" value="true" />
+		<property name="appserverProperties" value="true" />
+		<property name="authorizationURLs" value="true" />
+		<property name="gatekeeperearDeploy" value="true" />
+		<property name="usStatesUpload" value="true" />
+		<property name="tolvenearDeploy" value="true" />
+		<property name="dbIndexes" value="true" />
+		<property name="systemQueueUsers" value="true" />
+		<property name="configPhase3" value="true" />
+	</property>
+	
+</plugins>

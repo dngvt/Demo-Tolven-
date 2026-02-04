@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+	
+	<plugin id="org.tolven.ccr">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.prototype.applications">
+		<root />
+	</plugin>
+	<plugin id="org.tolven.prototype.application.trim">
+		<root />
+	</plugin>
+
+</plugins>

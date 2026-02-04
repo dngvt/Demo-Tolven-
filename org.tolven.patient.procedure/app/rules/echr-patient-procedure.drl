@@ -1,0 +1,66 @@
+package base_echr_patient_procedure
+
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+
+rule "Place completed Procedure on pxList list"
+	when
+		$msList: MenuStructure( path == "echr:patient:procedures:pxList" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:px" )
+		$md: MenuData( menuStructure == $ms , string02 =='COMPLETED')
+	then
+		app.createReferenceMD( $md, $msList );
+end
+
+rule "Place active Procedure on pxList list"
+	when
+		$msList: MenuStructure( path == "echr:patient:procedures:pxList" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:px" )
+		$md: MenuData( menuStructure == $ms , string02 =='ACTIVE')
+	then
+		app.createReferenceMD( $md, $msList );
+end
+
+
+rule "Place nullified Procedure on echr:patient:procedures:nullified list"
+	when
+		$msList: MenuStructure( path == "echr:patient:procedures:nullified" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:px")
+		$md: MenuData( menuStructure == $ms , string02 =='NULLIFIED')
+	then
+		app.createReferenceMD( $md, $msList );
+end
+
+rule "Add Px to summaries"
+	when
+		$msList: MenuStructure( path == "echr:patient:summary:procsum" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:px" )
+		$md: MenuData( menuStructure == $ms, string02 =='COMPLETED' )		
+	then
+		MenuData md = app.createReferenceMD( $md, $msList );
+end
+
+
+rule "Add active Px to summaries"
+	when
+		$msList: MenuStructure( path == "echr:patient:summary:procsum" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:px" )
+		$md: MenuData( menuStructure == $ms, string02 =='ACTIVE' )		
+	then
+		MenuData md = app.createReferenceMD( $md, $msList );
+end

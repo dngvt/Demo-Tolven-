@@ -1,0 +1,104 @@
+package echr_diagnosis
+
+
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//V0 version of daignoses will have status active
+// the below rules will cover for the diagnoses migrated from V0
+rule "Place V0 Diagnosis on diagnosis list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:diagnoses:current" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, string03=="ACTIVE" )
+	then
+		app.info( "Place Diagnosis on dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+		mdDXList.addPhrase( $mdDiagnosis.getString01(), "dx", "en_US" );
+end
+
+rule "Place V0 Diagnosis on diagnosis associations list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:diagnoses:currentAssociations" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, string03=="ACTIVE" )
+	then
+		app.info( "Place Diagnosis on dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+		mdDXList.addPhrase( $mdDiagnosis.getString01(), "dx", "en_US" );
+end
+
+rule "Place V0 Diagnosis on dx summary list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:dxsum" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis,string03=="ACTIVE")
+	then
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+end
+
+//END rules for V0 version of diagnoses
+
+rule "Place Diagnosis on diagnosis list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:diagnoses:current" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, actStatus=="completed" )
+	then
+		app.info( "Place Diagnosis on dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+		mdDXList.addPhrase( $mdDiagnosis.getString01(), "dx", "en_US" );
+end
+
+rule "Place Diagnosis on diagnosis associations list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:diagnoses:currentAssociations" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, actStatus=="completed" )
+	then
+		app.info( "Place Diagnosis on dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+		mdDXList.addPhrase( $mdDiagnosis.getString01(), "dx", "en_US" );
+end
+
+rule "Place Diagnosis on dx summary list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:dxsum" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, actStatus=="completed" )
+	then
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );
+end
+
+rule "Add Diagnosis to patient list word index"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, actStatus!="nullified", $dxName: string01, $mdPat : parent01 )
+	then
+		List<MenuData> patListMDs = app.findReferencingMDs( $mdPat, "echr:patients:all" );
+		for( MenuData md : patListMDs) {
+			md.addPhrase( $dxName, "dx", "en_US" );
+		}
+end
+
+rule "Place Diagnosis on nullified diagnosis list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "echr:patient:diagnosis" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:diagnoses:nullified" )		
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, actStatus=="nullified" )
+	then
+		app.info( "Place Diagnosis on nullified dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, $msList );		
+end

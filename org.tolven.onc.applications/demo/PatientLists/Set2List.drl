@@ -1,0 +1,44 @@
+package InfluenzaAge3
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+//Demographics:        patient age >65 years old
+//Medication:          has not received InfluenzaAge3 vaccine in past 12 months
+ 
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "InfluenzaAge3 list determination"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $msImmuList: MenuStructure( path == "echr:patient:immu:current" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    org.tolven.model.Patient( placeholder == $mdPatient, ageInYears > 65 )
+    eval( app.onList($mdPatient, $msImmuList, "lower(string01) like '%influenza%' and date01 not between :date1 and :date2", "date1","#{dateCalc(now,-12,'month')}", "date2","#{now}") )
+  then
+    insert (new PatientFact( $mdPatient, "InfluenzaAge3Fact"));
+    app.info( "*** FIRING InfluenzaAge3 PROCESS ***" );
+    
+end
+
+rule "InfluenzaAge3 list generation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    PatientFact( name=="InfluenzaAge3Fact", patient==$mdPatient ) 
+    $msList: MenuStructure( role == "list", path == "echr:patients:InfluenzaAge3" )
+  then
+    app.createReferenceMD( $mdPatient, $msList);
+    app.info( "*** FIRING InfluenzaAge3 LIST ***" );
+end
+

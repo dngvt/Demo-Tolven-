@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="install" name="install">
+
+	<target name="pluginsxml-props">
+		<property name="guide.file" value="${basedir}/install.log" />
+		<property name="pluginsxml.template" value="${basedir}/../template-default-plugins.xml" />
+		<property name="pluginsxml" value="${basedir}/../../../tolven-config/plugins.xml" />
+		<property name="kitDir" value="${basedir}/../tolven-V2.1" />
+		<condition property="tpf" value="${kitDir}/bin/tpf.bat" else="${kitDir}/bin/tpf.sh">
+			<os family="windows" />
+		</condition>
+		<condition property="tpfenv" value="${kitDir}/bin/tpfenv.bat" else="${kitDir}/bin/tpfenv.sh">
+			<os family="windows" />
+		</condition>
+		<fail message="${kitDir} does not exist">
+			<condition>
+				<not>
+					<available file="${kitDir}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="${pluginsxml.template} does not exist">
+			<condition>
+				<not>
+					<available file="${pluginsxml.template}" />
+				</not>
+			</condition>
+		</fail>
+		<ant antfile="build-v2-kit.xml" target="props" />
+		<condition property="pluginsxml.exists">
+			<available file="${pluginsxml}" />
+		</condition>
+		<antcall target="use-pluginsxml-template" />
+		<delete dir="${basedir}/../../../tolven-config/default-template-fragments/" />
+		<copy todir="${basedir}/../../../tolven-config">
+			<fileset dir=".">
+				<include name="default-template-fragments/**" />
+			</fileset>
+		</copy>
+		<property name="pluginsxml-properties-file" value="${basedir}/pluginsxml.properties" />
+		<tpf args="-propsFile ${pluginsxml-properties-file} -pluginsxml ${pluginsxml}" />
+		<loadproperties srcfile="${pluginsxml-properties-file}" />
+		<echo message="rootDir=${rootDir}" />
+		<echo message="kitDir=${kitDir}" />
+		<echo message="tpfenv=${tpfenv}" />
+		<echo message="tolvenConfigDir=${tolvenConfigDir}" />
+		<echo message="plugins.xml=${pluginsxml}" />
+		<fail message="${basedir}/../tolven-config Property rootDir must be defined" unless="rootDir" />
+	</target>
+	
+	<target name="use-pluginsxml-template" unless="pluginsxml.exists">
+		<copy file="${pluginsxml.template}" tofile="${pluginsxml}" />
+	</target>
+
+	<target name="generate-properties" depends="pluginsxml-props" description="generate-properties" />
+
+	<target name="props" depends="pluginsxml-props">
+		<setappserverbuildfile code="${appserver.code}" />
+	</target>
+
+	<target name="requirements-guide">
+		<guide-echo args="Installation Guide Creation" />
+		<guide-echo args="" />
+
+		<guide-echo args="Install Prerequisite Software" />
+		<guide-echo args="" />
+
+		<guide-echo args="Install Ant" />
+		<guide-echo args="Set environment variable ANT_HOME e.g: ANT_HOME=${ant.home}" />
+		<guide-echo args="Add ANT_HOME bin directory to the system path" />
+		<guide-echo args="Execute in command window to ensure path is correct" />
+		<guide-echo args="ant -version" />
+		<condition property="ant" value="${ant.home}/bin/ant.bat" else="${ant.home}/bin/ant">
+			<os family="windows" />
+		</condition>
+		<exec executable="${ant}" outputproperty="ant.home.version.output" failonerror="true">
+			<arg line="-version" />
+		</exec>
+		<guide-echo args="${ant.home.version.output}" />
+		<guide-echo args="" />
+
+		<guide-echo args="Install Java JDK" />
+		<guide-echo args="Set environment variable JAVA_HOME e.g: JAVA_HOME=${java.home}" />
+		<guide-echo args="Add JAVA_HOME bin directory to the system path" />
+		<guide-echo args="Execute in command window to ensure path is correct" />
+		<guide-echo args="java -version" />
+		<exec executable="${java.home}/bin/java" outputproperty="java.home.version.output" failonerror="true">
+			<arg line="-version" />
+		</exec>
+		<guide-echo args="${java.home.version.output}" />
+		<guide-echo args="" />
+
+		<guide-echo args="Initial Tolven Components Directory" />
+		<guide-echo args="Use this directory to gather all of the components required for the installation." />
+		<guide-echo args="Create the directory ${initialComponentsDir}" />
+		<guide-echo args="" />
+
+		<ant antfile="build-v2-kit.xml" target="requirements-guide" />
+
+		<basename property="initialComponents.jdbcDriver.full-basename" file="${initialComponents.jdbcDriver}" />
+		<guide-echo args="Download JDBC Driver: ${initialComponents.jdbcDriver.full-basename} from database site" />
+		<dirname property="initialComponents.jdbcDriver.dirname" file="${initialComponents.jdbcDriver}" />
+		<guide-echo args="Place ${initialComponents.jdbcDriver.full-basename} in: ${initialComponents.jdbcDriver.dirname}" />
+		<guide-echo args="" />
+
+		<ant antfile="build-v2-opends.xml" target="requirements-guide" />
+		<ant antfile="${appserver.build.file}" target="requirements-guide" />
+
+		<guide-echo args="Set Up Your Security Environment" />
+		<guide-echo args="" />
+		<guide-echo args="Set Up Server Name" />
+		<guide-echo args="If you don't have a domain name registered on the internet, you can add an entry to the hosts file for each node containing the IP address and the domain name - each name with at least two dots" />
+		<guide-echo args="192.168.1.101 ${tolvenDomain}" />
+		<guide-echo args="" />
+
+	</target>
+
+	<target name="install-requirements" depends="requirements-guide">
+		<fail message="tolvenConfigDir must be set" unless="tolvenConfigDir" />
+		<fail message="adminUser must be set" unless="adminUser" />
+		<fail message="password.admin must be set" unless="password.admin" />
+		<fail message="tolvenDomain must be set" unless="tolvenDomain" />
+		<fail message="password.kitKeystore must be set" unless="password.kitKeystore" />
+		<fail message="password.kitTruststore must be set" unless="password.kitTruststore" />
+		<fail message="commonKeystore must be set" unless="commonKeystore" />
+		<fail message="commonTruststore must be set" unless="commonTruststore" />
+		<ant antfile="build-v2-kit.xml" target="install-requirements" />
+		<ant antfile="build-v2-opends.xml" target="install-requirements" />
+		<ant antfile="${appserver.build.file}" target="install-requirements" />
+	</target>
+
+	<target name="config-requirements">
+		<ant antfile="build-v2-kit.xml" target="config-requirements" />
+		<ant antfile="build-v2-opends.xml" target="config-requirements" />
+		<ant antfile="${appserver.build.file}" target="config-requirements" />
+	</target>
+
+	<target name="install-config-tolven" depends="props" description="install-config-tolven">
+		<antcall target="install" />
+		<antcall target="config-tolven" />
+	</target>
+
+	<target name="generate-keystores" depends="props" description="generate-credentials">
+		<condition property="createCommonKeystoreSrc" else="false">
+			<not>
+				<available file="${initialComponents.commonKeystoreSrc}" />
+			</not>
+		</condition>
+		<antcall target="create-common-keystore-src" />
+		<condition property="createCommonKeystorePPKCS12Src" else="false">
+			<not>
+				<available file="${initialComponentsDir}/keystore.p12" />
+			</not>
+		</condition>
+		<antcall target="create-common-keystore-pkcs12-src" />
+		<condition property="createCommonTruststoreSrc" else="false">
+			<not>
+				<available file="${initialComponents.commonTruststoreSrc}" />
+			</not>
+		</condition>
+		<antcall target="create-common-truststore-src" />
+		<condition property="createMDBUserKeystoreSrc" else="false">
+			<not>
+				<available file="${initialComponents.mdbuserKeystoreSrc}" />
+			</not>
+		</condition>
+		<antcall target="create-mdbuser-keystore-src" />
+	</target>
+
+	<target name="create-common-keystore-src" if="${createCommonKeystoreSrc}">
+		<keytool args="-genkey -alias tolven -dname &quot;cn=${tolvenDomain}, ou=services, o=${keystoreOrg}, c=US&quot; -keystore ${initialComponents.commonKeystoreSrc} -storepass ${password.commonKeystore} -keypass ${password.commonKeystore} -validity 7300" />
+	</target>
+
+	<target name="create-common-keystore-pkcs12-src" if="${createCommonKeystorePPKCS12Src}">
+		<keytool args="-importkeystore -srckeystore ${initialComponents.commonKeystoreSrc} -destkeystore ${initialComponentsDir}/keystore.p12 -srcstoretype JKS -deststoretype PKCS12 -srcstorepass ${password.commonKeystore} -deststorepass ${password.commonKeystore} -noprompt" />
+	</target>
+
+	<target name="create-common-truststore-src" if="${createCommonTruststoreSrc}">
+		<keytool args="-export -alias tolven -file cert.cer -rfc -keystore keystore.jks -storepass ${password.commonKeystore}" />
+		<copy file="${initialComponentsDir}/cacerts" tofile="${initialComponents.commonTruststoreSrc}" />
+		<keytool args="-storepasswd -storepass changeit -new ${password.commonTruststore} -noprompt -keystore ${initialComponents.commonTruststoreSrc}" />
+		<keytool args="-import -alias ${tolvenDomain} -file cert.cer -noprompt -keystore ${initialComponents.commonTruststoreSrc} -trustcacerts -storepass ${password.commonTruststore}" />
+	</target>
+
+	<target name="install" depends="props" description="install">
+		<antcall target="install-requirements" />
+		<condition property="createMDBUserKeystoreSrc" else="false">
+			<not>
+				<available file="${initialComponents.mdbuserKeystoreSrc}" />
+			</not>
+		</condition>
+		<antcall target="create-mdbuser-keystore-src" />
+		<antcall target="config-kit" />
+		<ant antfile="build-v2-opends.xml" target="install" />
+		<ant antfile="${appserver.build.file}" target="install" />
+	</target>
+
+	<target name="create-mdbuser-keystore-src" if="${createMDBUserKeystoreSrc}">
+		<keytool args="-genkeypair -alias ${mdbuser.uid} -keyalg RSA -dname &quot;cn=${mdbuser.cn}, ou=services, o=${keystoreOrg}, c=US&quot; -keystore tolvendev-mdbuser.p12 -storetype pkcs12 -storepass ${password.mdbuser} -keypass ${password.mdbuser} -validity 7300" />
+	</target>
+
+	<target name="config-kit" description="config-kit">
+		<copy todir="${tolvenConfigDir}" overwrite="false">
+			<fileset file="${kitDir}/bin/boot.properties" />
+		</copy>
+		<replaceregexp byline="true">
+			<regexp pattern="TOLVEN_USER=[^$]*" />
+			<substitution expression="TOLVEN_USER=${adminUser}" />
+			<fileset dir="${kitDir}/bin" includes="tpfenv.*" />
+		</replaceregexp>
+		<replaceregexp byline="true">
+			<regexp pattern="TOLVEN_REALM=[^$]*" />
+			<substitution expression="TOLVEN_REALM=${tolvenRealm}" />
+			<fileset dir="${kitDir}/bin" includes="tpfenv.*" />
+		</replaceregexp>
+		<replaceregexp byline="true">
+			<regexp pattern="TOLVEN_PASSWORD=[^$]*" />
+			<substitution expression="TOLVEN_PASSWORD=${password.admin}" />
+			<fileset dir="${kitDir}/bin" includes="tpfenv.*" />
+		</replaceregexp>
+		<replaceregexp byline="true">
+			<regexp pattern="TOLVEN_CONFIG_DIR=[^$]*" />
+			<substitution expression="TOLVEN_CONFIG_DIR=${tolvenConfigDir}" />
+			<fileset dir="${kitDir}/bin" includes="tpfenv.*" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="javax.net.ssl.keyStore=[^ ]*" />
+			<substitution expression="javax.net.ssl.keyStore=${tolvenConfigDir}/credentials/${tolvenDomain}/keystore.jks" />
+			<fileset dir="${kitDir}/bin" includes="tpf.*" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="javax.net.ssl.keyStorePassword=[^ ]*" />
+			<substitution expression="javax.net.ssl.keyStorePassword=${password.kitKeystore}" />
+			<fileset dir="${kitDir}/bin" includes="tpf.*" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="javax.net.ssl.trustStore=[^ ]*" />
+			<substitution expression="javax.net.ssl.trustStore=${tolvenConfigDir}/credentials/${tolvenDomain}/cacerts.jks" />
+			<fileset dir="${kitDir}/bin" includes="tpf.*" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="javax.net.ssl.trustStorePassword=[^ ]*" />
+			<substitution expression="javax.net.ssl.trustStorePassword=${password.kitTruststore}" />
+			<fileset dir="${kitDir}/bin" includes="tpf.*" />
+		</replaceregexp>
+		<guide-echo args="Copy SSL keystore from ${initialComponents.commonKeystoreSrc} to ${commonKeystore}" />
+		<copy file="${initialComponents.commonKeystoreSrc}" tofile="${commonKeystore}" overwrite="true" verbose="true" />
+		<guide-echo args="Copy SSL truststore from ${initialComponents.commonTruststoreSrc} to ${commonTruststore}" />
+		<copy file="${initialComponents.commonTruststoreSrc}" tofile="${commonTruststore}" overwrite="true" verbose="true" />
+		<guide-echo args="Copy mdbuser keystore from ${initialComponents.mdbuserKeystoreSrc} to ${mdbuser.keystore}" />
+		<copy file="${initialComponents.mdbuserKeystoreSrc}" tofile="${mdbuser.keystore}" overwrite="true" verbose="true" />
+		<guide-echo args="" />
+		<guide-echo args="For linux ensure *.sh files in ${kitDir}/bin are executable" />
+		<chmod dir="${kitDir}/bin" perm="u+x" includes="**/*.sh" />
+		<guide-echo args="" />
+	</target>
+
+	<target name="config-tolven" depends="props" description="config-tolven">
+		<antcall target="config-requirements" />
+		<antcall target="config-kit" />
+		<ant antfile="build-v2-kit.xml" target="config-tolven" />
+		<ant antfile="build-v2-opends.xml" target="config-tolven" />
+		<ant antfile="${appserver.build.file}" target="config-tolven" />
+		<ant antfile="build-v2-kit.xml" target="config-application" />
+	</target>
+
+	<macrodef name="guide-echo">
+		<attribute name="args" />
+		<sequential>
+			<local name="timestamp" />
+			<tstamp>
+				<format property="timestamp" pattern="MM/dd/yyyy HH:mm:ss,S" />
+			</tstamp>
+			<echo message="${timestamp} @{args}${line.separator}" file="${guide.file}" append="true" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setappserverbuildfile">
+		<attribute name="code" />
+		<sequential>
+			<property name="appserver.build.file" value="build-v2-@{code}.xml" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="tpf">
+		<attribute name="args" />
+		<attribute name="fail" default="true" />
+		<sequential>
+			<guide-echo args="cd ${kitDir}/bin" />
+			<basename property="tpf.basename" file="${tpf}" />
+			<guide-echo args="${tpf.basename} @{args}" />
+			<echo message="${tpf} @{args}" />
+			<exec executable="${tpf}" dir="${kitDir}/bin" failonerror="@{fail}">
+				<arg line="@{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+			<guide-echo args="" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="keytool">
+		<attribute name="args" />
+		<sequential>
+			<guide-echo args="cd ${initialComponentsDir}" />
+			<guide-echo args="keytool @{args}" />
+			<echo message="keytool @{args}" />
+			<exec executable="keytool" dir="${initialComponentsDir}" failonerror="true">
+				<arg line="@{args}" />
+			</exec>
+			<echo message="Done" />
+			<echo message="" />
+			<guide-echo args="" />
+		</sequential>
+	</macrodef>
+
+</project>

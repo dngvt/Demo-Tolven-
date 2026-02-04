@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+  <title>Laboratory Order - Drilldown</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+	    <wiz:body>
+		<c:choose>
+	    	<!-- Display the information from the trim document if the wizard is not submitted -->
+		    <c:when test="#{menu.menuDataItem.statusName=='NEW'}">
+				<ui:include src="labOrderDocmentDD.xhtml"/>					
+			</c:when>
+			<c:otherwise>
+				<!-- find out the placeholder in the trim document to display the data. 
+					This is needed to support backward compatibility				
+				 -->
+				 <c:set var="labOrderRelation" value="null"/>
+				 <c:forEach var="relation" items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}">
+				 		<c:if test="#{relation.act.id.for[top.accountUser.account].extension == menu.drilldownItem.path}">
+							<c:set var="labOrderRelation" value="#{relation}"/>
+						</c:if>
+				 </c:forEach>
+				<!-- Display the information from the placeholder if the wizard is submitted -->
+				<ui:include src="labOrderPlaceholderDD.xhtml">
+					<ui:param name="labOrder" value="#{menu.drilldownItem}"/>
+					<ui:param name="labOrderRelation" value="#{labOrderRelation}"/>					
+				</ui:include>
+			</c:otherwise>
+		</c:choose>	
+	    </wiz:body>
+	</ui:composition>
+</body>
+</html>

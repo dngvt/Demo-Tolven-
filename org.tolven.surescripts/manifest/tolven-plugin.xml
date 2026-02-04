@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd"
+	class="org.tolven.surescripts.postgresqlmgr.SurescriptsPostgresqlMgrPlugin"
+	id="org.tolven.surescripts" version="2.1.10" vendor="Tolven" >
+	
+	<attributes>
+		<attribute id="guiComponentParentId" value="#{pluginProperty['guiComponentParentId']}" />
+		<attribute id="updateSchemasSQL" value="sql/surescripts-schemas.sql" />
+	</attributes>
+	<requires>
+		    <import plugin-id="org.tolven.component.tolvenejb" />
+		    <import plugin-id="org.tolven.component.tolvenweb" />
+			<import plugin-id="org.tolven.component.application" />
+			<import plugin-id="org.tolven.component.war" />
+			<import plugin-id="org.tolven.component.tolvenlocale_en" />
+			<import plugin-id="org.tolven.component.faces" />	
+			<import plugin-id="org.tolven.component.tolvenear" />
+			<import plugin-id="org.tolven.component.tolvenweb.taglibs.trim" />
+			<import plugin-id="org.tolven.assembler.ejbmodule" />
+			<import plugin-id="org.tolven.component.composite" />
+			<import plugin-id="org.tolven.component.ejb" />
+	<!--		<import plugin-id="org.tolven.onc.applications" />   Why would anyone do this???  -->
+			<import plugin-id="org.tolven.fdb" />			
+			<import plugin-id="org.tolven.config.eprescription" />								
+			
+	</requires>
+	
+	<runtime>
+		<library type="code" path="tpf/classes/" id="tpfclasses" />
+	</runtime>
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+
+	<!-- For the creation of surscripts schemea during configPhase2 -->
+	<!-- 
+	<extension-point id="tpfgui" extension-multiplicity="none" parent-point-id="runtimeLib" parent-plugin-id="org.tolven.library.pluginframework.gui">
+		<parameter-def multiplicity="none-or-one" id="tpfgui" />
+	</extension-point>
+	<extension-point id="jdbcDriver" parent-plugin-id="org.tolven.library.jdbcdriver" parent-point-id="runtimeLib" extension-multiplicity="none">
+		<parameter-def id="jdbcDriver" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="jdbcDriverClass" parent-plugin-id="org.tolven.library.jdbcdriver" parent-point-id="lib" extension-multiplicity="none">
+		<parameter-def id="jdbcDriverClass" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="swing-layout" extension-multiplicity="none" parent-point-id="runtimeLib" parent-plugin-id="org.tolven.library.swinglayout">
+		<parameter-def multiplicity="none-or-one" id="swingLayout" />
+	</extension-point>
+	<extension-point id="dataSource" parent-plugin-id="org.tolven.config.database" parent-point-id="dataSource" extension-multiplicity="none" />
+	<extension id="executeUpdateSchemas" plugin-id="org.tolven.component.database.init" point-id="execute">
+		<parameter id="args" value="-updateSchemas" />
+	</extension>
+	<extension id="executeUpdateIndexes" plugin-id="org.tolven.component.application.database.indexes" point-id="execute">
+		<parameter id="args" value="-updateIndexes" />
+	</extension>
+	-->
+	
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="surescripts-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="org.tolven.surescripts.web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+	
+	<extension id="applications" plugin-id="org.tolven.component.application" point-id="applications">
+		<parameter id="dir" value="app" />
+	</extension>
+	<extension id="surescripts-web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.surescripts" />
+		<parameter id="extension-point" value="surescripts-web" />
+	</extension>
+	
+	<extension id="ajaxDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="ajaxDirectory">
+	     <parameter id="sourceDirectory" value="web/ajax" />
+	</extension>
+	<extension id="drilldownDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="drilldownDirectory">
+	     <parameter id="sourceDirectory" value="web/drilldown" />
+	</extension>
+	<extension id="fiveDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="fiveDirectory">
+	     <parameter id="sourceDirectory" value="web/five" />
+	</extension>
+	<extension id="imagesDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="imagesDirectory">
+	     <parameter id="sourceDirectory" value="web/images" />
+	</extension>
+	<extension id="invitationDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="invitationDirectory">
+	     <parameter id="sourceDirectory" value="web/invitation" />
+	</extension>
+	<extension id="manageDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="manageDirectory">
+	     <parameter id="sourceDirectory" value="web/manage" />
+	</extension>
+	<extension id="privateDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="privateDirectory">
+	     <parameter id="sourceDirectory" value="web/private" />
+	</extension>
+	<extension id="publicDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="publicDirectory">
+	     <parameter id="sourceDirectory" value="web/public" />
+	</extension>
+	<extension id="scriptsDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="scriptsDirectory">
+	     <parameter id="sourceDirectory" value="web/scripts" />
+	</extension>
+	<extension id="stylesDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="stylesDirectory">
+	     <parameter id="sourceDirectory" value="web/styles" />
+	</extension>
+	<extension id="templatesDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="templatesDirectory">
+	     <parameter id="sourceDirectory" value="web/templates" />
+	</extension>
+	<extension id="wizardDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="wizardDirectory">
+	     <parameter id="sourceDirectory" value="web/wizard" />
+	</extension>
+
+	<extension id="ejbclasses" plugin-id="org.tolven.component.tolvenejb" point-id="classes">
+	     <parameter id="dir" value="ejb/classes" />
+	</extension>
+
+	<extension id="legacypostgresql-SURESCRIPTS_SEQ_GEN-table-generator" plugin-id="org.tolven.component.tolvenejb" point-id="table-generator">
+               <parameter id="ormId" value="legacypostgresql" />
+               <parameter id="name" value="SURESCRIPTS_SEQ_GEN" />
+               <parameter id="table" value="SEQUENCE_GENERATOR" />
+               <parameter id="schema" value="surescripts" />
+               <parameter id="pk-column-name" value="SEQ_NAME" />
+               <parameter id="value-column-name" value="NEXT_VAL" />
+               <parameter id="pk-column-value" value="SURESCRIPTS" />
+               <parameter id="initial-value" value="1" />
+               <parameter id="allocation-size" value="2" />
+               <parameter id="unique-constraint">
+                       <parameter id="column-name" value="SEQ_NAME" />
+               </parameter>
+               <parameter id="target-plugin-id" value="org.tolven.component.tolvenejb" />
+    </extension>
+
+	<extension id="surescripts-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for Surescripts activities" />
+		<parameter id="managed-bean-name" value="sureAct" />
+		<parameter id="managed-bean-class" value="org.tolven.web.SurescriptsAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.component.tolvenweb" />
+	</extension>
+		<extension id="surescripts-message-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for Surescripts Messaging Display" />
+		<parameter id="managed-bean-name" value="sureMsgAct" />
+		<parameter id="managed-bean-class" value="org.tolven.web.SurescriptsMessageAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.component.tolvenweb" />
+	</extension>
+ 	
+</plugin>

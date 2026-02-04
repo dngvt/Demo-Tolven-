@@ -1,0 +1,41 @@
+package base_echr_admin_staff
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+/**
+ * Staff Registration act
+ */
+rule "Add staff to staff list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:assigned" )
+		$msList: MenuStructure( role == "list", path == "echr:admin:staff:all" )
+		$md: MenuData( menuStructure == $ms )
+//		For Ep
+//		$trim:TrimEx(name = "reg/evn/assigned/md")
+	then
+		MenuData mdStaffList = app.createReferenceMD( $md, $msList );
+		mdStaffList.addPhrase( $md.getString01(), "family", "en_US" );
+		mdStaffList.addPhrase( $md.getString02(), "given", "en_US" );
+		mdStaffList.addPhrase( $md.getString03(), "given", "en_US" );
+		mdStaffList.addPhrase( $md.getString04(), "gender", "en_US" );
+end
+

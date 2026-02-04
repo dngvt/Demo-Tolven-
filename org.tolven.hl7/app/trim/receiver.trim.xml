@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/receiver</name>
+	<description>Receiver</description>
+	<page>receiver.xhtml</page>
+	<drilldown>receiverDD.xhtml</drilldown>
+	<menu>global:receiverMenu</menu> 	
+	<application name="echr">
+		<instance>echr:admin:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions>
+		<transition name="create" to="completed">
+			<label language="en">Completed</label>
+		</transition>
+		<transition name="eieCompleted" from="completed" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>
+		<transition name="cancelActive" from="active" to="cancelled">
+			<label language="en">Cancel</label>
+		</transition>
+		<transition name="reviseCompleted" from="completed" to="completed">
+			<label language="en">Revise</label>
+		</transition>
+	</transitions>
+	<act classCode="REG" moodCode="EVN"> 
+		<bind application="echr" phase="create">
+      		<placeholder bindAction="merge">
+        		<path>echr:receiver</path>
+      		</placeholder>
+   		</bind>
+		<title>
+			<ST>Create New Receiver</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective Time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>		
+		<relationship typeCode="NAME" direction="IN" name="facility">
+			<act moodCode="EVN" classCode="ENTRY">								
+				<observation>					
+					<value>
+						<label>Receiving Facility</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Receiving Facility OID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Receiving Facility OID Type</label>
+						<valueSet>FacilityType</valueSet>
+					</value>
+				</observation>
+				
+			</act>
+		</relationship>
+		
+		<relationship typeCode="NAME" direction="IN" name="application">
+			<act moodCode="EVN" classCode="ENTRY">								
+				<observation>					
+					<value>
+						<label>Receiving Application</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Receiving Application OID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Receiving Application OID Type</label>
+						<valueSet>FacilityType</valueSet>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+	</act>
+	<valueSet name="FacilityType">
+		<CE>
+			<displayName>DNS</displayName>
+			<code>DNS</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>GUID</displayName>
+			<code>GUID</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>HCD</displayName>
+			<code>HCD</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>HL7</displayName>
+			<code>HL7</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>ISO</displayName>
+			<code>ISO</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>L</displayName>
+			<code>L</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>M</displayName>
+			<code>M</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>N</displayName>
+			<code>N</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>Random</displayName>
+			<code>Random</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>UUID</displayName>
+			<code>UUID</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>x400</displayName>
+			<code>x400</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+		<CE>
+			<displayName>x500</displayName>
+			<code>x500</code>
+			<codeSystem>HL70301</codeSystem>
+		</CE>
+	</valueSet>
+</trim>

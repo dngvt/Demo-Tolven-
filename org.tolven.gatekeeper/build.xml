@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.gatekeeper">
+
+	<import file="../plugin/buildImport.xml" />
+
+	<property name="buildFolder" value="build" />
+	<property name="includeSourceInDevLib" value="true" />
+
+	<target name="createBuildFolders">
+		<mkdir dir="${buildFolder}/legacypostgresql" />
+		<mkdir dir="${buildFolder}/oracle" />
+	</target>
+
+	<target name="build-plugin" depends="init, createBuildFolders" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest" />
+		</zip>
+		<!-- Each section adds itself to the zip file-->
+		<antcall target="buildSection">
+			<param name="section" value="common-lib" />
+			<param name="lib" value="lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="common-ejb-impl" />
+			<param name="lib" value="${buildFolder}/common-lib/classes:lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="gatekeeper-lib" />
+			<param name="lib" value="lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="gatekeeper-client-lib" />
+			<param name="lib" value="lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="client-ejb-impl" />
+			<param name="lib" value="${buildFolder}/common-lib/classes:${buildFolder}/gatekeeper-client-lib/classes:lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="ejb-impl" />
+			<param name="lib" value="${buildFolder}/common-lib/classes:${buildFolder}/gatekeeper-lib/classes:${buildFolder}/security/classes:lib/shiro-core-1.1.0.jar" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="security" />
+			<param name="lib" value="${buildFolder}/gatekeeper-client-lib/classes:lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar" />
+			<param name="sectionZipExcludes" value="**/" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="rs" />
+			<param name="lib" value="${buildFolder}/common-lib/classes:${buildFolder}/gatekeeper-lib/classes:lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar" />
+			<param name="sectionZipIncludes" value="**/WEB-INF/**" />
+		</antcall>
+		<antcall target="buildSection">
+			<param name="section" value="web" />
+			<param name="lib" value="${buildFolder}/common-lib/classes:${buildFolder}/gatekeeper-lib/classes:lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar" />
+		</antcall>
+		<jar destfile="${buildFolder}/gatekeeper-common-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/common-lib/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-common-ejb.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/common-ejb-impl/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/legacypostgresql/gatekeeper-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/gatekeeper-lib/classes" />
+			<zipfileset dir="gatekeeper-lib/META-INF-legacypostgresql" prefix="META-INF" />
+		</jar>
+		<jar destfile="${buildFolder}/oracle/gatekeeper-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/gatekeeper-lib/classes" />
+			<zipfileset dir="gatekeeper-lib/META-INF-oracle" prefix="META-INF" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-client-lib.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/gatekeeper-client-lib/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-ejb.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/ejb-impl/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-client-ejb.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/client-ejb-impl/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-web-security.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/security/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-rs.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/rs/classes" />
+		</jar>
+		<jar destfile="${buildFolder}/gatekeeper-web.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="${buildFolder}/web/classes" />
+		</jar>
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar" />
+				<include name="legacypostgresql/**" />
+				<include name="oracle/**" />
+				<include name="gatekeeper-common-lib.jar" />
+				<include name="gatekeeper-common-ejb.jar" />
+				<include name="gatekeeper-ejb.jar" />
+				<include name="gatekeeper-client-lib.jar" />
+				<include name="gatekeeper-web-security.jar" />
+				<include name="gatekeeper-client-ejb.jar" />
+				<include name="gatekeeper-rs.jar" />
+				<include name="gatekeeper-web.jar" />
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven Gatekeeper"
+			packagenames="*"
+			classpathref="project.classpath" 
+			source="1.6" sourcepath="client-ejb-impl/source:ejb-impl/source:gatekeeper-client-lib/source:gatekeeper-lib/source:rs/source:security/source:web/source" splitindex="true" use="true" version="true"
+		    encoding="UTF-8"  docencoding="UTF-8"/>
+	</target>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<handler-chain>
+		<handler>
+			<handler-class>org.tolven.ws.common.TolvenRequestHandler</handler-class>
+		</handler>
+		<handler>
+			<handler-class>org.tolven.gatekeeper.ws.client.AuthenticationHandler</handler-class>
+		</handler>
+		<handler>
+			<handler-class>org.tolven.gatekeeper.ws.client.UsernameTokenPlainHandler</handler-class>
+		</handler>
+	</handler-chain>
+</handler-chains>

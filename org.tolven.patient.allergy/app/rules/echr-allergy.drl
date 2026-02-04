@@ -1,0 +1,95 @@
+package echr_allergy
+
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+rule "Update Allergies count on patient placeholder"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, $mdPat: parent01 )
+	then
+		$mdPat.setLong01( ($mdPat.getLong01()==null)?1:$mdPat.getLong01()+ 1 );
+end
+
+rule "Place Allergies on Allergies summary list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:summary:allergysum" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus == "active" )
+	then
+		MenuData mdAllergyList = app.createReferenceMD( $mdAllergy, $msList );
+end
+
+/*
+rule "Place active Allergies on allergy list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:current" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus == "active"  )
+	then
+		app.info( "Place Allergies on current allergy list");
+		MenuData mdDXList = app.createReferenceMD( $mdAllergy, $msList );
+end
+*/
+
+rule "Place active Allergies on active allergy list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:active" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus == "active"  )
+	then
+		app.info( "Place Allergies on current allergy list");
+		MenuData mdDXList = app.createReferenceMD( $mdAllergy, $msList );
+end
+
+rule "Place obsolete Allegies on Inactive list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:inactive" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus=="obsolete"   )
+	then
+		app.info( "Place Allegies on Inactive list"); 
+		app.createReferenceMD( $mdAllergy, $msList );
+end
+
+rule "Place completed Allegies on Inactive list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:inactive" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus=="completed"   )
+	then
+		app.info( "Place completed Allegies on Inactive list"); 
+		app.createReferenceMD( $mdAllergy, $msList );
+end
+
+rule "Place nullified Allegies on Nullified list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:nullified" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus=="nullified"  )
+	then
+		app.info( "Place nullified Allegies on Nullified list"); 
+		app.createReferenceMD( $mdAllergy, $msList );
+end
+
+rule "Place Allegies on All list"
+	when
+		$msAllergy: MenuStructure( role == "placeholder", path == "echr:patient:allergy" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:allergies:all" )
+		$mdAllergy: MenuData( menuStructure == $msAllergy, actStatus!="nullified" )
+	then
+		app.info( "Place Allegies on All list"); 
+		app.createReferenceMD( $mdAllergy, $msList );
+end

@@ -1,0 +1,53 @@
+package echrhypertension
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+//@use echr placeholders
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+// THIS IS THE OLD RULE.  I LEFT IT AROUND FOR HISTORICAL PURPOSES BUT IT IS REPLACED BY THE TWO
+// RULES BELOW 
+//rule "Add patient with Hypertension problem to Hypertension patient list"
+//	when
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:problem" )
+//		$md: MenuData( menuStructure == $ms, actStatus!="nullified", 
+//			$dxName: string01 matches "(?i).*hypertension.*", $mdPat : parent01)
+//		$msList: MenuStructure( path == "echr:patients:htn" )
+//		eval( !isVIP($mdPat.getField( "vip")) )
+//	then
+//		app.createReferenceMD( $mdPat, $msList );
+//end
+
+
+
+rule "Determine if patient has a hypertension problem"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $msProblemList: MenuStructure( path == "echr:patient:problems:active" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    eval( app.onList($mdPatient, $msProblemList, "lower(string01) like '%hypertension%'") )
+  then
+    insert (new PatientFact( $mdPatient, "hypertensionProblem"));
+end
+
+rule "Put patient on hypertension list if patient has a hypertension problem"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    PatientFact( name=="hypertensionProblem", patient==$mdPatient ) 
+    $msList: MenuStructure( role == "list", path == "echr:patients:htn" )
+  then
+    app.createReferenceMD( $mdPatient, $msList);
+end
+

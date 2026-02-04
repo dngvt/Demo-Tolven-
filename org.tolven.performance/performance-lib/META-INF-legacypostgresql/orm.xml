@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_2_0.xsd" version="2.0">
+	<table-generator name="CORE_SEQ_GEN" table="SEQUENCE_GENERATOR" schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL" pk-column-value="CORE" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<entity class="org.tolven.performance.entity.PerformanceData">
+		<table name="PERFORMANCE_DATA" schema="core"></table>
+		<attributes>
+			<basic name="eventTime">
+				<column name="EVENT_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="sessionID">
+				<column name="SESSION_ID"></column>
+			</basic>
+			<basic name="remoteUserName">
+				<column name="REMOTE_USERNAME"></column>
+			</basic>
+			<basic name="accountUserID">
+				<column name="ACCOUNTUSER_ID"></column>
+			</basic>
+			<basic name="remoteIP">
+				<column name="REMOTE_IP"></column>
+			</basic>
+			<basic name="localIP">
+				<column name="LOCAL_IP"></column>
+			</basic>
+			<basic name="requestURI">
+				<column name="REQUEST_URI"></column>
+			</basic>
+			<basic name="queryParams">
+				<column name="QUERY_PARAMS" length="1000000"></column>
+			</basic>
+			<basic name="method">
+				<column name="METHOD"></column>
+			</basic>
+			<basic name="elapsed">
+				<column name="ELAPSED_TIME"></column>
+			</basic>
+			<basic name="exceptions">
+				<column name="EXCEPTIONS"></column>
+				<lob />
+			</basic>
+		</attributes>
+	</entity>
+</entity-mappings>

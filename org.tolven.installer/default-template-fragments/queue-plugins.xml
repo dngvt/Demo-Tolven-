@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+
+	<property name="mdbuser">
+		<property name="uid" value="mdbuser" />
+		<property name="cn" value="mdbuser" />
+		<property name="sn" value="mdbuser" />
+		<property name="realm" value="#{tolvenRealm}" />
+		<property name="roles" value="#{tolvenPersonRole}" />
+		<property name="mdbuserDefaultAlias" value="mdbuser" />
+		<property name="keystore" value="#{credentialsDir}/mdbuser/tolvendev-mdbuser.p12" />
+		<property name="keystoreType" value="pkcs12" />
+	</property>
+
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		
+		<!-- Only change password for mdbuser, since the rule and touch passwords are synchronized to it -->
+		<property name="mdbuser" value="#{_tolvenPasswordDefault}" />
+		
+		<property name="adminApp" value="#{_tolvenPasswordDefault}" />
+		<property name="generator" value="#{_tolvenPasswordDefault}" />
+		<property name="mdv" value="#{password['mdbuser']}" />
+		<property name="migration" value="#{password['mdbuser']}" />
+		<property name="rule" value="#{password['mdbuser']}" />
+		<property name="touch" value="#{password['mdbuser']}" />
+	</property>
+
+	<property name="tolvenContext">
+
+		<property name="queueIds" value="adminApp,generator,mdv,migration,rule,touch" />
+
+		<property name="adminApp">
+			<property name="user" value="tolvenAdminApp" />
+			<property name="realm" value="#{tolvenRealm}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+		<property name="generator">
+			<property name="user" value="tolvenGen" />
+			<property name="realm" value="#{tolvenRealm}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+		<property name="mdv">
+			<property name="user" value="#{mdbuser['uid']}" />
+			<property name="realm" value="#{mdbuser['realm']}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+		<property name="migration">
+			<property name="user" value="#{mdbuser['uid']}" />
+			<property name="realm" value="#{mdbuser['realm']}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+		<property name="rule">
+			<property name="user" value="#{mdbuser['uid']}" />
+			<property name="realm" value="#{mdbuser['realm']}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+		<property name="touch">
+			<property name="user" value="#{mdbuser['uid']}" />
+			<property name="realm" value="#{mdbuser['realm']}" />
+			<property name="roles" value="#{tolvenPersonRole}" />
+		</property>
+
+	</property>
+
+</plugins>

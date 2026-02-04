@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<name>share/labresultfororder</name>
+	<description>Share A Lab Result</description>
+	<reference></reference>
+	<act classCode="ACT" moodCode="EVN">
+		<bind application="echr" phase="receive">
+			<placeholder bindAction="merge">
+				<path>echr:patient:labresult</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="receive">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:labresult</path>
+			</placeholder>
+		</bind>
+		<id>
+			<II>
+				<root>OrderNumber</root>
+				<extension>#{labresult.path}</extension>
+			</II>
+		</id>
+		<statusCode>completed</statusCode>
+		<title>
+			<ST>#{labresult.title}</ST>
+		</title>
+		<text>
+			<ST>#{labresult.title}</ST>			
+		</text>		
+		<effectiveTime>
+			<label>Time of Result</label>
+				<TS>
+					<value>#{TS(labresult.effectiveTime)}</value>
+				</TS>
+	    </effectiveTime>		
+		<observation>
+			<value>
+				<label>Status</label>
+				<ST>completed</ST>
+			</value>
+			<value>
+				<label>author</label>
+				<ST>#{labresult.enteredBy}-#{account.title}</ST>
+			</value>			
+			<value>
+			<CD>
+				<code>#{labresult.code.code}</code>
+				<codeSystemName>#{labresult.code.codeSystem}</codeSystemName>
+				<codeSystemVersion>#{labresult.code.codeSystemVersion}</codeSystemVersion>
+			</CD>
+			</value>
+			<value>
+				<PQ>
+	                <label>resultValue</label>				
+                    <value>#{labresult.value}</value>
+                    <unit>#{labresult.units}</unit>
+                </PQ>
+			</value>
+			<value>
+				<label>units</label>
+				<ST>#{labresult.units}</ST>
+			</value>
+			<value>
+			<CD>
+				<code>#{labresult.interpretationCode.code}</code>
+				<codeSystemName>#{labresult.interpretationCode.codeSystem}</codeSystemName>
+				<codeSystemVersion>#{labresult.interpretationCode.codeSystemVersion}</codeSystemVersion>
+			</CD>
+			</value>
+			<value>
+				<label>administrationComment</label>
+				<ST>#{labresult.administrationComment}</ST>
+			</value>
+			<value>
+				<label>lowvalue</label>
+				<PQ>
+	                <label>resultLowValue</label>				
+                    <value>#{labresult.lowvalue}</value>
+                    <unit>#{labresult.lowunits}</unit>
+                </PQ>
+			</value>
+			<value>
+				<label>lowunits</label>
+				<ST>#{labresult.lowunits}</ST>
+			</value>
+			<value>
+				<label>highvalue</label>
+				<PQ>
+	                <label>resultLowValue</label>				
+                    <value>#{labresult.highvalue}</value>
+                    <unit>#{labresult.highunits}</unit>
+                </PQ>				
+			</value>
+			<value>
+				<label>highunits</label>				
+				<ST>#{labresult.highunits}</ST>
+			</value>
+			<value>
+				<label>placerOrderNumber</label>				
+				<ST>#{labresult.order.placerOrderNumber}</ST>
+			</value>
+			<value>
+				<label>address</label>				
+				<ST>#{getAccountAddress(account)}</ST>
+			</value>									
+		</observation>
+		<participation name="laborder" typeCode="ENT">
+			<role classCode="ROL">
+				<id>
+					<II>
+						<root>#{labresult.order.placerOrderAccount}</root>
+						<extension>#{labresult.order.placerOrderNumber}</extension>
+					</II>
+				</id>
+			</role>
+		</participation>
+	</act>
+</trim>

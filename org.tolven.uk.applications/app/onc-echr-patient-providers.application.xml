@@ -1,0 +1,16 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+
+	<!-- Patient's providers -->
+	<extends path="echr:patient">
+		<placeholder name="patprovider" title="Provider" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="patient" internal="parent01">
+				<from>#{patient}</from>
+			</field>
+			<field name="provider" internal="parent02">
+				<from>#{internalId( account, act.participation['responsibleParty'].role.id)}</from>
+			</field>
+		</placeholder>
+	</extends>
+
+</application>

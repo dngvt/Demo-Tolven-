@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Patient Encounter - Drilldown</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:body>
+	 		
+	 		<c:if test="#{menu.xmlNS == 'urn:tolven-org:trim:4.0'}">		
+				<h2><h:outputText value="#{act.title.ST.value}"/></h2>
+		   			
+				<h:panelGrid columns="2" rendered="#{menu.menuDataItem.status=='NEW'}" >
+<!--				An empty encounter extension DD is included to allow localization overide in a customers plugin -->				
+					<ui:include src="encounterExtnDD.xhtml"/>
+					<c:if test="#{act.effectiveTime.IVLTS!=null}">
+						<h:outputText value="#{act.effectiveTime.IVLTS.low.label.value}: "/>
+						<trim:TS value="#{act.effectiveTime.IVLTS.low.TS}" dateStyle="short" timeStyle="short" readonly="true"/>
+						<h:outputText value="#{act.effectiveTime.IVLTS.high.label.value}: "/>
+						<trim:TS value="#{act.effectiveTime.IVLTS.high.TS}" dateStyle="short" timeStyle="short" readonly="true"/>
+					</c:if>
+					<c:if test="#{act.effectiveTime.IVLTS==null}">
+						<h:outputText value="#{act.effectiveTime.label.value}: "/>
+						<trim:TS value="#{act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+					</c:if>
+		            <c:if test="#{act.participation['admitter']!=null}">				
+						<h:outputText value="Admitting physician: "/>
+		            	<wiz:selectWithOther id="admitDD"  role="#{act.participation['admitter'].role}" readonly="true" />
+			    	</c:if>
+				
+				    <c:if test="#{act.participation['attender']!=null}">
+				    	<h:outputText value="Attending physician: "/>
+		            	<wiz:selectWithOther id="attendDD"  role="#{act.participation['attender'].role}" readonly="true" />
+			    	</c:if>
+		            <c:if test="#{act.participation['location']!=null}">
+		            	<h:outputText value="Location: "/>
+		            	<wiz:selectWithOther id="locDD"  role="#{act.participation['location'].role}" readonly="true" />
+		    		</c:if>
+	
+<!--					<h:outputText value="Source: "/>
+					<h:outputText value="#{menu.menuDataItem.enteredBy}"/>
+					<h:outputText value="#{msg.dischargedFrom}: "/>
+					<h:outputText value="#{menu.menuDataItem.dischargedFrom}"/>
+					<h:outputText value="#{msg.transferredFrom}: "/>
+					<h:outputText value="#{menu.menuDataItem.transferredFrom}"/> -->						
+				</h:panelGrid>
+				<h:panelGrid columns="2" rendered="#{menu.menuDataItem.status!='NEW'}" >
+				
+				<c:if test="#{act.effectiveTime.IVLTS!=null}">
+					<h:outputText value="#{msg.AdmitDate}: "/>
+		          	<trim:TS id="effectiveTimeLow" value="#{act.effectiveTime.IVLTS.low.TS}" dateStyle="short" timeStyle="short" readonly="true"/>
+					<h:outputText value="#{msg.DischargeDate}: "/>
+		          <trim:TS value="#{act.effectiveTime.IVLTS.high.TS}" dateStyle="short" timeStyle="short" readonly="true"/>
+		         </c:if>
+				
+				<c:if test="#{act.effectiveTime.IVLTS==null}">
+					<h:outputText value="#{act.effectiveTime.label.value}: "/>
+					<trim:TS id="effectiveTime" value="#{act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+				</c:if>
+	
+				<c:if test="#{act.participation['admitter']!=null}">				
+					<h:outputText value="#{msg.AdmittingPhysician}: "/>
+					<wiz:selectWithOther id="admitt"  role="#{act.participation['admitter'].role}" readonly="true" />		
+				</c:if>
+				
+				<c:if test="#{act.participation['attender']!=null}">				
+					<h:outputText value="#{msg.AttendingPhysician}: "/>
+					<wiz:selectWithOther id="attend"  role="#{act.participation['attender'].role}" readonly="true" />										         	
+				</c:if>
+		        <c:if test="#{act.participation['location']!=null}">
+		          	<h:outputText value="#{msg.Location}: "/>
+		           	<wiz:selectWithOther id="loc"  role="#{act.participation['location'].role}" readonly="true" />	            	
+		        </c:if>
+<!--				<h:outputText value="#{msg.dischargedFrom}: "/>
+				<h:outputText value="#{act.relationship['patientFrom'].act.observation.values[0].ST.value}"/>
+				<h:outputText value="#{msg.transferredFrom}: "/>
+				<h:outputText value="#{act.relationship['patientFrom'].act.observation.values[1].ST.value}"/>	
+		        
+				<h:outputText value="#{msg.Source}: "/>
+				<h:outputText value="#{menu.menuDataItem.enteredBy}"/> -->
+				
+				<c:if test="#{menu.drilldownItem.status!=null}">
+					<trim:action label="#{msg.DischargeDocument}" status="active" trim="act/evn/enc-discharge" />
+					<br/><br/>									
+					<h:panelGrid columns="5">
+						<wiz:transition label="#{msg.End}" status="completed" />
+						<wiz:transition label="#{msg.Discharge}" status="completed" />
+						<wiz:transition label="#{msg.Transfer}" status="completed" />
+						<wiz:transition label="#{msg.Revise}" status="active" />
+						<wiz:transition label="#{msg.Nullify}" status="nullified" />
+					</h:panelGrid>
+				</c:if>
+												
+				</h:panelGrid>
+			</c:if>
+		</wiz:body>
+	</ui:composition>
+</body>
+</html>

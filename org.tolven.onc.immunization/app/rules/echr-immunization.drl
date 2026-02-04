@@ -1,0 +1,47 @@
+package echr_immunization
+
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+rule "Place Immunization on Immunization list"
+	when
+		$msImmunization: MenuStructure( role == "placeholder", path == "echr:patient:immunization" )
+		$msImmuList: MenuStructure( role == "list", path == "echr:patient:immu:current")
+		$mdImmunization: MenuData( menuStructure == $msImmunization, actStatus == "completed" )
+	then
+		MenuData mdList = app.createReferenceMD( $mdImmunization, $msImmuList );
+		mdList.addPhrase( $mdImmunization.getString01(), "term", "en_US" );
+end
+
+rule "Place Immunization on Nullified Immunization list"
+	when
+		$msImmunization: MenuStructure( role == "placeholder", path == "echr:patient:immunization" )
+		$msImmuList: MenuStructure( role == "list", path == "echr:patient:immu:nullified")
+		$mdImmunization: MenuData( menuStructure == $msImmunization, actStatus == "nullified" )
+	then
+		MenuData mdList = app.createReferenceMD( $mdImmunization, $msImmuList );
+		mdList.addPhrase( $mdImmunization.getString01(), "term", "en_US" );
+end
+
+rule "Place immunization on immusum summary list"
+	when
+		$msImmunization: MenuStructure( role == "placeholder", path == "echr:patient:immunization" )
+		$msList: MenuStructure( path == "echr:patient:summary:immusum" )
+		$mdImmunization: MenuData( menuStructure == $msImmunization, actStatus == "completed" )
+	then
+		MenuData mdPXList = app.createReferenceMD( $mdImmunization, $msList );
+end
+
+

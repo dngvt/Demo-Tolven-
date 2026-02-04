@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0 http://www.tolven.org/xsd/trim4">
+	<name>path/diagnosisDetailTemplate</name>
+	<description>Diagnosis Detail Template</description>
+	<author>Tolven</author>
+	<act classCode="OBS" moodCode="EVN">
+		<label>Active Diagnosis</label>
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:labOrder:associatedDiagnosis</path>
+			</placeholder>
+		</bind>
+		<id />
+		<participation name="diagnosis" typeCode="AUT">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:patient:diagnoses:current</path>
+					</list>
+				</bind>
+				<id />
+			</role>
+		</participation>				
+	</act>
+</trim>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.performance" version="2.1.5" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenear" />
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.faces" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+	</requires>
+
+	<!-- DEV EXTENSION POINTS -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<!-- DEV EXTENSION POINTS End -->
+	
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="performance-lib-legacypostgresql" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="legacypostgresql/performance-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="performance-lib-oracle" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="oracle/performance-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="performance-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="performance-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="performance-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="performance-web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+	<!-- TOLVEN LIB Extensions -->
+	<extension id="performance-lib-legacypostgresql-libProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.performance" />
+		<parameter id="extension-point" value="performance-lib-legacypostgresql" />
+		<parameter id="database-code" value="legacypostgresql" />
+		<parameter id="contains-entities" />
+	</extension>
+	<extension id="performance-lib-oracle-libProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.performance" />
+		<parameter id="extension-point" value="performance-lib-oracle" />
+		<parameter id="database-code" value="oracle" />
+		<parameter id="contains-entities" />
+	</extension>
+	<!-- TOLVEN LIB Extensions End -->
+	
+	<!-- EJB Extensions -->
+	<extension id="performance-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.component.tolvenear" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.performance" />
+		<parameter id="extension-point" value="performance-ejb" />
+	</extension>
+	<!-- EJB EXTENSIONS End -->
+	
+	<!-- WAR EXTENSIONS -->
+	<extension id="performance.web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.performance" />
+		<parameter id="extension-point" value="performance-web" />
+	</extension>
+	<!-- WAR EXTENSIONS End -->
+
+	<extension id="applications" plugin-id="org.tolven.component.application" point-id="applications">
+		<parameter id="dir" value="app" />
+	</extension>
+	<extension id="fiveDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="fiveDirectory">
+		<parameter id="sourceDirectory" value="web/five" />
+	</extension>
+	<extension id="scriptsDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="scriptsDirectory">
+		<parameter id="sourceDirectory" value="web/scripts" />
+	</extension>
+	<extension id="myJavaScript" plugin-id="org.tolven.component.tolvenweb" point-id="portalScriptInclude">
+		<parameter id="includeFile" value="web/scriptInclude/performanceScripts.txt" />
+	</extension>
+	<extension id="performance-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Performance Measure related Actions" />
+		<parameter id="managed-bean-name" value="performance" />
+		<parameter id="managed-bean-class" value="org.tolven.performance.web.PerformanceAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.component.tolvenweb" />
+	</extension>
+
+	<extension id="password-property" plugin-id="org.tolven.component.tolvenweb" point-id="property">
+		<parameter id="class" value="org.tolven.web.PerformanceFilter" />
+		<parameter id="name" value="exclude-request-param" />
+		<parameter id="value" value=".*(?i:password).*" />
+	</extension>
+	<extension id="auditLogPersister" plugin-id="org.tolven.component.tolvenejb" point-id="property">
+		<parameter id="class" value="org.tolven.app.bean.MenuBean" />
+		<parameter id="name" value="persisterJNDI" />
+		<parameter id="value" value="java:app/performance-ejb/PerformanceAuditPersister!org.tolven.app.PersisterLocal" />
+	</extension>
+
+</plugin>

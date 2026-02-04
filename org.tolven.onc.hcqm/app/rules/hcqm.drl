@@ -1,0 +1,69 @@
+package hcqm
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+//@use echr placeholders
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "Place Encounters on the account-wide encounter list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+		$list: MenuStructure( path == "echr:admin:hcqmencounters:all" )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $list );
+end
+
+rule "Place Results on the account-wide CQM Measures list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter:hcqmeasure" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+		$list: MenuStructure( path == "echr:admin:hcqmresults:all" )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $list );
+end
+
+rule "Place Form on the Nursing Actions list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:observation:hcqmform" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+		$list: MenuStructure( path == "echr:patient:encounter:details:documentList" )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $list );
+end
+
+rule "Place Form on the Document document on list"
+	when
+		$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter:discharge" )
+		$mdEncounter: MenuData( menuStructure == $msEncounter )
+		$list: MenuStructure( path == "echr:patient:encounter:details:documentList" )
+	then
+		MenuData mdEncList = app.createReferenceMD( $mdEncounter, $list );
+end
+
+rule "Place HCQM Form on the HCQM Summary list"
+when
+	$msEncounter: MenuStructure( role == "placeholder", path == "echr:patient:encounter:hcqmform" )
+	$mdEncounter: MenuData( menuStructure == $msEncounter )
+	$list: MenuStructure( path == "echr:patient:encounter:details:documentList" )
+then
+		// Add act to patient's HCQM summary (list)
+	app.createReferenceMD( $mdEncounter, $list );
+end

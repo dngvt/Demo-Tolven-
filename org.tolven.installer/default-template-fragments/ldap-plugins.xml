@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+	
+	<property name="include">
+		<property name="installLdap" value="true" />
+		<property name="configLdap" value="true" />
+		<property name="startLdap" value="true" />
+		<property name="systemRoles" value="true" />
+	</property>
+	
+	<property name="opends">
+		<property name="parentDir" value="#{rootDir}" />
+		<property name="dir" value="#{opends['parentDir']}/tolvenOpenDS" />
+		<property name="rootdn" value="cn=Directory Manager" />
+		<property name="domain" value="#{tolvenDomain}" />
+		<property name="ldapPort" value="1636" />
+		<property name="providerUrl" value="ldaps://#{opends['domain']}:#{opends['ldapPort']}" />
+		<property name="adminPort" value="5555" />
+		<property name="baseDN" value="dc=tolven,dc=com" />
+		<property name="realmJndi" value="tolvenLDAPRealm" />
+		<property name="basePeopleName" value="ou=people,#{opends['baseDN']}" />
+		<property name="baseRolesName" value="ou=groups,#{opends['baseDN']}" />
+		<property name="tolvenPersonRole" value="#{tolvenPersonRole}" />
+		<property name="principalDNPrefix" value="uid" />
+		<property name="roleDNPrefix" value="cn" />
+		<property name="userSubstitutionToken" value="{0}" />
+		<property name="userDnTemplate" value="#{opends['principalDNPrefix']}=#{opends['userSubstitutionToken']},#{opends['basePeopleName']}" />
+		<property name="sessionAttributes" value="uid,cn,sn,givenName,o,ou,st,mail,userCertificate,userPassword,userPKCS12" />
+		<property name="configPlugin" value="org.tolven.opends.config" />
+		<property name="keystore" value="#{commonKeystore}" />
+		<property name="keystorePinFile" value="#{opends['dir']}/config/tolvendev-keystore.pin" />
+		<property name="truststore" value="#{commonTruststore}" />
+		<property name="truststorePinFile" value="#{opends['keystorePinFile']}" />
+		<property name="adminCN" value="#{_adminUserDefault}" />
+		<property name="adminSN" value="#{_adminUserDefault}" />
+		<property name="adminORG" value="tolven" />
+		<property name="adminOU" value="tolven" />
+		<property name="adminST" value="CA" />
+	</property>
+
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+		<property name="adminSSHA" value="#{_adminSshaPasswordDefault}" />
+
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		<property name="opendsKeystore" value="#{_tolvenPasswordDefault}" />
+		<property name="opendsTruststore" value="#{_tolvenPasswordDefault}" />
+		<property name="opendsRootdn" value="password" />
+	</property>
+	
+	<property name="tolvenContext">
+		<property name="realmIds" value="tolven" />
+		
+		<property name="tolven">
+			<property name="realm">
+				<property name="ldap">
+					<property name="env">
+						<property name="java">
+							<property name="naming">
+								<property name="factory">
+									<property name="initial" value="com.sun.jndi.ldap.LdapCtxFactory" />
+								</property>
+								<property name="provider">
+									<property name="url" value="#{opends['providerUrl']}" />
+								</property>
+								<property name="ldap">
+									<property name="attributes">
+										<property name="binary" value="userPKCS12" />
+									</property>
+								</property>
+							</property>
+						</property>
+					</property>
+					<property name="providerUrl" value="#{opends['providerUrl']}" />
+					<property name="baseDN" value="#{opends['baseDN']}" />
+					<property name="basePeopleName" value="#{opends['basePeopleName']}" />
+					<property name="baseRolesName" value="#{opends['baseRolesName']}" />
+					<property name="tolvenPersonRole" value="#{tolvenPersonRole}" />
+					<property name="userSubstitutionToken" value="#{opends['userSubstitutionToken']}" />
+					<property name="userDnTemplate" value="#{opends['userDnTemplate']}" />
+					<property name="principalDNPrefix" value="#{opends['principalDNPrefix']}" />
+					<property name="roleDNPrefix" value="#{opends['roleDNPrefix']}" />
+					<property name="sessionAttributes" value="#{opends['sessionAttributes']}" />
+				</property>
+			</property>
+		</property>
+	
+	</property>
+	
+</plugins>

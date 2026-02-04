@@ -1,0 +1,136 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<!-- Patient reminders -->
+	<extends path="echr:patient">
+		<placeholder name="reminder" title="Reminder" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/reminderLink.xhtml">
+			<field name="title" internal="string01">
+				<from>#{trim.field['title']}</from>
+			</field>
+			<field name="effectiveTime" internal="date01">
+			</field>
+			<field name="text" internal="string02">
+			</field>
+			<field name="patient" internal="parent01">
+			</field>
+			<field name="enteredBy" internal="string03">
+			</field>
+			<field name="reviewed" internal="string04">
+				<from>#{trim.field['reviewed']}</from>
+			</field>
+			<field name="sent" internal="string05">
+				<from>#{trim.field['sent']}</from>
+			</field>
+			<!-- 
+			<field name="deliveryType" internal="string06">
+				<from>#{trim.field['deliveryType']}</from>
+			</field>
+			-->
+		</placeholder>
+	</extends>
+	<extends path="echr:patients">
+		<list name="reminderList" title="Reminders" page="/five/list.xhtml" visible="true" drilldown="echr:patients" sequence="9000">
+			<column name="Name" reference="true" internal="string01" width="20.0">
+				<from>#{reminder.patient.lastName}, #{reminder.patient.firstName}</from>
+				<output><a href="javascript:showPane('#{patient.path}',false,'echr:patients:reminderList')">#{Name}</a></output>
+			</column>
+			<column name="DOB" internal="ts01" format="d MMM yyyy" visible="false"
+				width="7.0">
+				<from>#{reminder.patient.dob}</from>
+			</column>
+			<column name="Age" internal="ts01" format="age" width="4.5" />
+			<column name="Sex" internal="string02" width="6.0">
+				<from>#{reminder.patient.sex}</from>
+				<from>#{reminder.patient.gender}</from>
+				<output>
+					<span style="color:#{ Sex=='Female'?'HotPink':'Blue'}" title="#{ageInYears(date01) lt 21?'child':'adult'}">#{Sex}</span>
+				</output>
+			</column>
+			<column name="Phone" width="10.0" internal="string03" visible="true">
+				<from>#{reminder.patient.homeTelecom}</from>
+				<output>
+					<a
+						href="javascript:alert('Primary: #{reminder.patient.primary.firstName} #{reminder.patient.primary.lastName} #{reminder.patient.primary.workTelecom}');">#{Phone}</a>
+				</output>
+			</column>
+			<column name="Title" internal="string04" width="15.0">
+				<from>#{reminder.title}</from>
+				<output><a href="#" onclick="instantiate('act/evn/patientReminder','#{reminder}','#{reminder.path}')">#{reminder.title}</a></output>
+			</column>
+			<column name="Reviewed" internal="string05" width="15.0">
+				<from>#{reminder.reviewed}</from>
+			</column>
+			<!-- 
+			<column name="Sent" internal="string07" width="15.0">
+				<from>#{reminder.sent}</from>
+			</column>
+			-->
+			<column name="DeliveryType" internal="string06" width="15.0">
+				<from>#{reminder.patient.deliveryType}</from>
+			</column>
+		</list>
+	</extends>	
+	<extends path="echr:patient:summary">
+		<list name="remindersum" visible="never">
+				<column name="Date" internal="date01" format="MM/dd/yyyy" width="10.0">
+					<from>#{reminder.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="15.0">
+					<from>#{reminder.title}</from>
+				</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="remindersum" portalColumn="2" sequence="3" title="Reminders" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:remindersum" visible="true" drilldown=":reminders">
+		</portlet>
+	</extends>
+	<extends path="echr:patient:summary:calendar">
+		<entry name="reminder" sequence="4" title="Reminder" query="echr:patient:summary:remindersum" visible="true" drilldown=":reminders" />
+	</extends>
+	<extends path="echr:patient">
+		<menu name="reminders" sequence="13" title="Reminders" page="/five/bar2.xhtml" visible="true">
+			<list name="current" title="Current" page="/five/list.xhtml" visible="true" drilldown=":patient">
+				<column name="Name" reference="true" internal="string07" visible="false">
+					<from>#{reminder.patient.lastName}, #{reminder.patient.firstName}</from>
+				</column>
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{reminder.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="15.0">
+					<from>#{reminder.title}</from>
+					<output><a href="#" onclick="instantiate('act/evn/patientReminder','#{reminder}','#{reminder.path}')">#{reminder.title}</a></output>
+				</column>
+				<column name="Reviewed" internal="string04" width="15.0">
+					<from>#{reminder.reviewed}</from>
+				</column>
+				<column name="Sent" internal="string05" width="15.0">
+					<from>#{reminder.sent}</from>
+				</column>
+				<column name="DeliveryType" internal="string06" width="15.0">
+					<from>#{reminder.patient.deliveryType}</from>
+				</column>
+			</list>
+			<list name="completed" title="Completed" page="/five/list.xhtml" visible="true" drilldown=":patient">
+				<column name="Name" reference="true" internal="string07" visible="false">
+					<from>#{reminder.patient.lastName}, #{reminder.patient.firstName}</from>
+				</column>
+				<column name="Date" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{reminder.effectiveTime}</from>
+				</column>
+				<column name="Title" internal="string01" width="15.0">
+					<from>#{reminder.title}</from>
+					<output><a href="#" onclick="instantiate('act/evn/patientReminder','#{reminder}','#{reminder.path}')">#{reminder.title}</a></output>
+				</column>
+				<column name="Reviewed" internal="string04" width="15.0">
+					<from>#{reminder.reviewed}</from>
+				</column>
+				<column name="Sent" internal="string05" width="15.0">
+					<from>#{reminder.sent}</from>
+				</column>
+				<column name="DeliveryType" internal="string06" width="15.0">
+					<from>#{reminder.patient.deliveryType}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>
+	</application>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/administration</name>
+    <description>Medication Administration</description>
+    <page>administration.xhtml</page>
+	<drilldown>administrationDD.xhtml</drilldown>
+	<menu>global:administrationMenu</menu>
+ 	<tolvenId application="#{knownType}" accountId="#{account.id}"/>
+	<application name="echr" signatureRequired="true">
+		<instance>echr:patient:currentMedication:administerMedication</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<application name="ephr">
+		<instance>ephr:patient:currentMedication:administerMedication</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="active">
+			<label language="en">Active</label>
+		</transition>
+		<transition name="complete" from="active" to="completed">
+			<label language="en">Completed</label>
+		</transition>
+		<transition name="reviseActive" from="active" to="active">
+			<label language="en">Revise</label>
+		</transition>
+		<transition name="eie" from="active" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>
+		<transition name="reviseCompleted" from="completed" to="completed">
+			<label language="en">Revise</label>
+		</transition>
+	</transitions>
+	<act classCode="REG" moodCode="EVN">
+		<label>Medication Administration</label>
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+    			<path>echr:patient:currentMedication:administerMedication</path>
+			</placeholder>
+    	</bind>
+    	<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+    			<path>ephr:patient:currentMedication:administerMedication</path>
+			</placeholder>
+    	</bind>
+		<code>
+			<CD>
+				<code>C0017594</code>
+				<codeSystemName>UMLS</codeSystemName>
+				<codeSystemVersion>2007AA</codeSystemVersion>
+			</CD>
+		</code>
+		<title>
+			<ST>Administration</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>
+		<relationship typeCode="NAME" direction="IN" name="administration">
+        	<act classCode="OBS" moodCode="EVN">
+        		<title>
+    				<ST>Administration</ST>
+    			</title>
+	        	<observation>
+	                <value>
+	                	<label>Medication</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                	<label>Strength</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                	<label>Frequency</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                	<label>Route</label>
+	                	<ST></ST>
+	                </value>                
+	                <value>
+	                    <label>Start Date</label>
+	                   	<ST></ST>
+	                </value>
+	                <value>
+	                    <label>End Date</label>
+	                   	<ST></ST>
+	                </value>
+	               <value>
+	                	<label>Lot Number</label>
+	                	<INT><value>0</value></INT>
+	                </value>
+	                <value>
+	                	<label>Status</label>
+	                	<valueSet>status</valueSet>
+	                		<CE>
+					 			<displayName>Administered</displayName>
+					 			<code>C0024661</code>
+								<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+								<codeSystemVersion>2007AA</codeSystemVersion>
+					 		</CE>
+	                </value>
+	                <value>
+	                	<label>Comments</label>
+	                	<ST></ST>
+	                </value>
+	                <value>
+	                	<label>MessageID</label>
+	                	<ST></ST>
+	                </value>
+	                 <value>
+	                	<label>Administration Date</label>
+	                	<TS>
+	                	<value>#{TS(now)}</value>
+	                	</TS>
+	                </value>
+	            </observation>
+	        </act>
+	    </relationship>
+	</act>
+	<valueSet name="status"> 
+ 		<CE>
+ 			<displayName>Administered</displayName>
+ 			<code>C0024661</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>Omitted</displayName>
+ 			<code>C0024662</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>Patient Refused</displayName>
+ 			<code>C0024663</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>Missed</displayName>
+ 			<code>C0024664</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet> 
+</trim>

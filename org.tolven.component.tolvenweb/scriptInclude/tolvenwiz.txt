@@ -1,0 +1,6 @@
+<script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/tolvenwiz.js">
+</script>
+<script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/draggable.js">
+</script>

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<body>
+  	<ui:composition>
+		<!-- This page can be used when a new/existing medication order is edited or a medication in a medication document is edited -->
+
+		<c:if test="#{trim.trim.act.moodCodeValue == 'RQO'}">
+			<wiz:step title="Medication Order" >
+				<wiz:body>
+					<wiz:group title="Effective">
+						<trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" />
+					</wiz:group>
+					<wiz:group title="Product">
+						<trim:CE id="product" layout="pageDirection" valueSet="material" value="#{trim.trim.act.participation['consumable'].role.player.code}" required="true"/>
+					</wiz:group>
+					<wiz:group title="Quantity">
+					Units:	<trim:PQ id="quantity" value="#{trim.trim.act.participation['consumable'].role.player.quantity}"/>   &#160;&#160;&#160; Number Of Times :<trim:ST id="refills" value="#{trim.trim.act.relationship['numberOfTimes'].act.observation.value}" size="10"/>
+					</wiz:group>
+					<wiz:group title="Route">
+	 					<trim:valueSetMenu  id="route" slot="#{trim.trim.act.substanceAdministration.routeCode}" required="true"/>
+	 				</wiz:group>
+	 				<wiz:group title="Frequency">
+	 					<trim:valueSetMenu id="frequency"  slot="#{trim.trim.act.relationship['frequency'].act.observation.value}" required="true"/>
+	 				</wiz:group>
+	 				<wiz:group title="Timing">
+	 					<trim:ST id="timing"  value="#{trim.trim.act.relationship['timing'].act.observation.value}"/>
+	 				</wiz:group>
+	 				<wiz:group title="Comments">
+	 					<trim:ED id="dose" value="#{trim.trim.act.text}" readonly="false" />
+	 				</wiz:group>
+	 			</wiz:body>
+			</wiz:step>
+		</c:if>
+		<c:if test="#{trim.trim.act.moodCodeValue == 'EVN'}">
+			<wiz:step title="Medication" >
+				<wiz:body>
+					<wiz:group title="Effective">
+						<trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" />
+					</wiz:group>
+					<wiz:group title="Product">
+						<trim:CE id="product" layout="pageDirection" valueSet="material" value="#{trim.trim.act.participation['consumable'].role.player.code}" required="true"/>
+					</wiz:group>
+					<wiz:group title="Quantity">
+					Units:	<trim:PQ id="quantity" value="#{trim.trim.act.participation['consumable'].role.player.quantity}"/>   &#160;&#160;&#160; Number Of Times :<trim:ST id="refills" value="#{trim.trim.act.relationship['numberOfTimes'].act.observation.value}" size="10"/>
+					</wiz:group>
+					<wiz:group title="Route">
+	 					<trim:valueSetMenu  id="route" slot="#{trim.trim.act.substanceAdministration.routeCode}" required="true"/>
+	 				</wiz:group>
+	 				<wiz:group title="Frequency">
+	 					<trim:valueSetMenu id="frequency"  slot="#{trim.trim.act.relationship['frequency'].act.observation.value}" required="true"/>
+	 				</wiz:group>
+	 				<wiz:group title="Timing">
+	 					<trim:ST id="timing"  value="#{trim.trim.act.relationship['timing'].act.observation.value}"/>
+	 				</wiz:group>
+	 				<wiz:group title="Comments">
+	 					<trim:ED id="dose" value="#{trim.trim.act.text}" readonly="false" />
+	 				</wiz:group>
+	 			</wiz:body>
+			</wiz:step>
+		</c:if>
+		
+		
+		
+    </ui:composition>
+</body>
+</html>

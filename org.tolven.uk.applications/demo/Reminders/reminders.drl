@@ -1,0 +1,233 @@
+package PatientReminders
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.model.Patient;
+import org.tolven.app.bean.PatientFact;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+// Rule 1
+rule "PatientReminders Breast cancer screening placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	eval( !app.onList($mdPatient, $msReminder, "string01 = 'Breast cancer screening'") )   
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient,  sex=="Female", ageInYears > 49, ageInYears < 75, reminderCheckBox == "true")
+
+	// Check for a mammogram in procedures or image orders within the last 2 years
+    $msProcedureList: MenuStructure( path == "echr:patient:procedures:pxList" )
+    $msOrderList: MenuStructure( path == "echr:patient:orders:active" )
+    eval( !app.onList($mdPatient, $msProcedureList, "lower(string01) like '%other mammography%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-24,'month')}", "date2","#{now}") &&
+          !app.onList($mdPatient, $msOrderList, "lower(string01) like '%mammogram, screening%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-24,'month')}", "date2","#{now}") )
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "Breast cancer screening");
+	mdReminder.setField("text", "The USPSTF recommends biennial screening mammography for women aged 50 to 74 years.");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+
+// Rule 2
+rule "PatientReminders Colon cancer screening placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient,  ageInYears > 49, ageInYears < 76, reminderCheckBox == "true")
+
+	//  Check for occult blood in stool from lab orders within the last 2 years
+    $msOrderList: MenuStructure( path == "echr:patient:orders:active" )
+    eval( !app.onList($mdPatient, $msOrderList, "lower(string01) like '%occult bld%' and date01 between :date1 and :date2", "date1","#{dateCalc(now,-24,'month')}", "date2","#{now}") &&
+	      !app.onList($mdPatient, $msReminder, "string01 = 'Colon cancer screening'") )   
+
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "Colon cancer screening");
+	mdReminder.setField("text", "The USPSTF recommends screening for colorectal cancer (CRC) using fecal occult blood testing, sigmoidoscopy, or colonoscopy, in adults, beginning at age 50 years and continuing until age 75 years.");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+
+// Rule 3
+rule "PatientReminders Hypertension screening placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient,  ageInYears > 17, reminderCheckBox == "true")
+
+	//  Check for blood pressure within the last year
+    $msObservationList: MenuStructure( path == "echr:patient:observations:active" )
+    eval( !app.onList($mdPatient, $msObservationList, "lower(string01) like '%blood pressure%'  and date01 between :date1 and :date2", "date1","#{dateCalc(now,-12,'month')}", "date2","#{now}") &&
+          !app.onList($mdPatient, $msReminder, "string01 = 'Hypertension screening'") )   
+
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "Hypertension screening");
+	mdReminder.setField("text", "The U.S. Preventive Services Task Force (USPSTF) recommends screening for high blood pressure in adults aged 18 and older.");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+
+// Rule 4
+rule "PatientReminders Cholesterol screening placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	 
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient, ageInYears > 34, sex == "Male", reminderCheckBox == "true")
+
+	//  Check for total cholesterol for a patient
+    $msLabResultList: MenuStructure( path == "echr:patient:labresults:completed" )
+    eval( !app.onList($mdPatient, $msLabResultList, "lower(string02) like '%total cholesterol%'") &&
+    	  !app.onList($mdPatient, $msReminder, "string01 = 'Cholesterol screening'") )
+
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "Cholesterol screening");
+	mdReminder.setField("text", "The U.S. Preventive Services Task Force (USPSTF) strongly recommends screening men aged 35 and older for lipid disorders.");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+
+// Rule 5
+rule "PatientReminders Pneumovax placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	eval( !app.onList($mdPatient, $msReminder, "string01 = 'Pneumovax'") )   
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient,  ageInYears > 64, reminderCheckBox == "true")
+
+	//  Check for pneumococcal polysaccharide in immunizations
+    $msImmuList: MenuStructure( path == "echr:patient:immu:current" )
+    eval( !app.onList($mdPatient, $msImmuList, "lower(string01) like '%pneumococcal polysaccharide%'") )
+
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "Pneumovax");
+	mdReminder.setField("text", "Pneumococcal vaccines: PPSV is recommended for all persons aged greater than or equal to 65 years");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+
+/*
+// TODO: Create one of these rules for each sample set that Tom provided
+rule "PatientReminders reminder placeholder creation"
+  when
+    $msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+    $mdPatient: MenuData( menuStructure == $msPatient)
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+	eval( !app.onList($mdPatient, $msReminder, "string01 = 'PatientReminders'") )   
+	 
+    //  Rule: Check general criteria to get on this list including reminderCheckBox = true
+    org.tolven.model.Patient( placeholder == $mdPatient, reminderCheckBox == "true")
+    $msMedicationList: MenuStructure( path == "echr:patient:medications:active" )
+    eval( app.onList($mdPatient, $msMedicationList, "lower(string01) like '%advair%'") )
+  then
+    app.info( "*** FIRING PatientReminders PROCESS ***" );
+    //insert (new PatientFact( $mdPatient, "PatientRemindersFact"));
+
+	MenuData mdReminder = app.createPlaceholder( $msReminder, "patient", $mdPatient );
+	mdReminder.setField("title", "PatientReminders");
+	mdReminder.setField("text", "Descriptive text here.");
+	mdReminder.setField("effectiveTime", now);
+	mdReminder.setField("patient", $mdPatient);
+	mdReminder.setField("reviewed", "false");
+	mdReminder.setField("sent", "false");
+    app.assertPlaceholder( mdReminder );
+end
+*/
+
+rule "PatientReminders Account list generation"
+  when
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+    $mdReminder: MenuData( menuStructure == $msReminder, string05 == "false")
+    $msReminderList: MenuStructure( role == "list", path == "echr:patients:reminderList" )
+  then
+    app.info( "*** FIRING PatientReminders Account LIST ***" );
+    app.createReferenceMD( $mdReminder, $msReminderList);
+end
+
+rule "PatientReminders Patient list generation"
+  when
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+    $mdReminder: MenuData( menuStructure == $msReminder, string05 == "false")
+    $msReminderList: MenuStructure( role == "list", path == "echr:patient:reminders:current" )
+  then
+    app.info( "*** FIRING PatientReminders Patient LIST ***" );
+    app.createReferenceMD( $mdReminder, $msReminderList);
+end
+
+rule "PatientReminders Patient Completed list generation"
+  when
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+    $mdReminder: MenuData( menuStructure == $msReminder, string05 == "true")
+    $msReminderList: MenuStructure( role == "list", path == "echr:patient:reminders:completed" )
+  then
+    app.info( "*** FIRING PatientReminders Patient LIST ***" );
+    app.createReferenceMD( $mdReminder, $msReminderList);
+end
+
+rule "PatientReminders Portal list generation"
+  when
+    $msReminder: MenuStructure( role == "placeholder", path == "echr:patient:reminder" )
+    $mdReminder: MenuData( menuStructure == $msReminder, string05 == "false")
+    $msReminderList: MenuStructure( role == "list", path == "echr:patient:summary:remindersum" )
+  then
+    app.info( "*** FIRING PatientReminders Portal LIST ***" );
+    app.createReferenceMD( $mdReminder, $msReminderList);
+end
+
+

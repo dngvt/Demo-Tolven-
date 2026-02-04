@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+<title>#{trim.trim.act.title.ST}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="tolven6.js" />
+</head>
+<body>
+
+<ui:composition>
+		<h:inputHidden id="#{menu.elementLabel}openMeFirst" value="#{top.accountUser.openMeFirst}" />
+		<div id="#{menu.elementLabel}:overWriteText" style="display: none;" class="prescriberWarningDialog">
+			<trim:ED id="#{menu.elementLabel}:comment" value="#{trim.trim.act.relationship['comment'].act.observation.value}"/>
+			<input type='button' value='Close' onclick='saveOverWriteText("#{menu.elementLabel}")'/>
+		</div>
+		<div id="#{menu.elementLabel}:warningDialog" style="display: none;" class="prescriberWarningDialog"/>
+		<wiz:body>
+			<wiz:group title="" prefix="#{trim.trim.description}">
+			<table width="100%" cellpadding="5">
+					
+					<tr>
+						<td width="15%" class="tableLabel">
+							#{trim.trim.act.effectiveTime.label.value}
+						</td>
+						<td width="60%">
+							<trim:TS value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" readonly="true" />
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+							Medication *
+						</td>
+						
+						<td>
+							<h:outputText  style="font-weight: bold;border: 0px;width: 500px;" 
+							value="#{trim.trim.act.participation['consumableProduct'].role.player.code.CE.displayName}"
+							maxlength="105" />
+						</td>
+					</tr>
+					
+					<tr >
+						<td width="15%" class="tableLabel">
+							<h:outputText value="AHFS Classifications " />
+						</td>
+						<td>
+							#{trim.trim.act.relationship['AHFSClassification'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<tr >
+						<td width="15%" class="tableLabel">
+							<h:outputText value="CT Action Group Classifications " />
+						</td>
+						<td >
+							#{trim.trim.act.relationship['ctactiongroupClassficationFromFdb'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+							<h:outputText value="CTETC Classifications " />
+						</td>
+						<td >
+						#{trim.trim.act.relationship['CTETCClassification'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<tr >
+						<td width="15%" class="tableLabel">
+							<h:outputText value="CTFDB Classifications " />
+						</td>
+						<td >
+						#{trim.trim.act.relationship['CTFDBClassification'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<c:if test="${fn:length(trim.trim.act.relationship['drugDrugInteraction'].act.observation.value.ST.value) > 0}">
+					<c:set var="interactions" value="#{interactions} Drug Drug Interaction:"/>
+						<tr >
+							<td width="15%" class="tableLabel">
+								Drug Drug Interaction
+							</td>
+							<td >
+							#{trim.trim.act.relationship['drugDrugInteraction'].act.observation.value.ST.value}
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="${fn:length(trim.trim.act.relationship['drugFoodResponse'].act.observation.value.ST.value) > 0}">
+						<tr >
+							<td width="15%" class="tableLabel">
+								Drug Food Interaction
+							</td>
+							<td >
+							#{trim.trim.act.relationship['drugFoodResponse'].act.observation.value.ST.value}
+							</td>
+						</tr>
+					</c:if>
+					
+					<c:if test="${fn:length(trim.trim.act.relationship['duplicateTherapyResponse'].act.observation.value.ST.value) > 0}">
+						<tr >
+							<td width="15%" class="tableLabel">
+								Duplicate Therapy
+							</td>
+							<td >
+							#{trim.trim.act.relationship['duplicateTherapyResponse'].act.observation.value.ST.value}
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="#{fn:length(trim.trim.act.relationship['drugAllergyResponse'].act.observation.value.ST.value) >0}">
+						<tr >
+							<td width="15%" class="tableLabel">
+								Drug Allergy Response
+							</td>
+							<td >
+							#{trim.trim.act.relationship['drugAllergyResponse'].act.observation.value.ST}
+							</td>
+						</tr>
+					</c:if>
+					<tr >
+						<td width="15%" class="tableLabel">
+							Instructions To Patient
+						</td>
+						<td >
+						#{trim.trim.act.relationship['patientInstructions'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<tr >
+						<td width="15%" class="tableLabel">
+							Instructions to Prescriber
+						</td>
+						<td >
+						#{trim.trim.act.relationship['prescriberInstructions'].act.observation.value.ST.value}
+						</td>
+					</tr>
+					<tr >
+						<td width="15%" class="tableLabel">
+							Is Controlled
+						</td>
+						<td >
+						#{trim.trim.act.relationship['isControlled'].enabled}
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+							<h:outputText value="Drug in Formulary? " />
+						</td>
+						<td >
+							<h:outputText  style="border:0px; width: 800px; color:red;"	value="#{trim.trim.act.relationship['isInDrugFromulary'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<c:if test="${fn:length(trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.originalText) > 0}">
+					<tr>
+						<td width="15%" class="tableLabel">
+						Strength
+						</td>
+						<td >
+							#{trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.originalText}
+							#{trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.unit}
+						</td>
+						
+					</tr>
+					</c:if>
+					
+					<tr>
+						<td width="15%" class="tableLabel">
+							#{msg.Route}
+						</td>
+						<td >							
+							#{act.substanceAdministration.routeCode}
+						</td>						
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+							Dispense Amount *
+						</td>
+						<td >							
+							<h:outputText value="#{trim.trim.act.participation['consumableProduct'].role.player.quantity.PQ.value}"/>
+						</td>						
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+						DaysSupply *
+						</td>
+						<td >
+							<h:outputText value="#{trim.trim.act.relationship['daysSupply'].act.observation.value.ST.value}" />				
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+						Start *
+						</td>
+						<td >
+							<trim:TSNew 
+								value="#{trim.trim.act.participation['consumableProduct'].role.effectiveTime.IVLTS.low.TS}"
+								dateStyle="short" onchange="startEndDate('#{menu.elementLabel}','#{menu.element}');" readonly="true"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+						End *
+						</td>
+						<td >
+						<trim:TSNew 
+								value="#{trim.trim.act.participation['consumableProduct'].role.effectiveTime.IVLTS.high.TS}"
+								dateStyle="short" readonly="true"/>
+						</td>
+						
+					</tr>
+					<c:if test="${fn:length(trim.trim.act.participation['consumableProduct'].role.participation['maxDose'].act.observation.value.ST.value) > 0}">
+				
+					 <tr>
+						<td width="15%" class="tableLabel">Maximum Dose</td>
+						<td >
+							<h:outputText value="#{trim.trim.act.participation['consumableProduct'].role.participation['maxDose'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					</c:if>
+					<tr>
+						<td width="15%" class="tableLabel">
+							Sig Codes*
+						</td>
+						<td >
+							<trim:ED  value="#{trim.trim.act.relationship['sigCodes'].act.observation.value}" readonly="true"/>
+						</td>
+					</tr>
+					<c:if test="${trim.trim.act.relationship['refill'].act.observation.value.CE.displayName == 'R'}">				
+					<tr>
+						<td width="15%" class="tableLabel">
+							Refill 
+						</td>
+						<td >
+							#{trim.trim.act.relationship['refill'].act.text.ST.value}
+						</td>
+					</tr>
+					</c:if>
+					<tr>
+						<td width="15%" class="tableLabel">
+							Substitution Allowed
+						</td>
+						<td >
+							#{trim.trim.act.relationship['subAllowed'].act.observation.value.CE.displayName}
+						</td>
+					</tr>
+					<tr>
+						<td width="15%" class="tableLabel">
+							Dispense from Office
+						</td>
+						<td >
+							#{trim.trim.act.relationship['dispenseFromOffice'].act.observation.value.CE.displayName}
+						</td>						
+					</tr>					
+					 <tr>
+						<td width="15%" class="tableLabel">
+							Comments
+						</td>
+						<td >
+							<trim:ED id="comment" value="#{trim.trim.act.relationship['comment'].act.observation.value}" readonly="true"/>
+						</td>
+					</tr>
+					<c:if test="${trim.trim.act.relationship['overrideWarning'].enabled}">
+					 <tr>
+						<td width="15%" class="tableLabel">
+							Override Comments
+						</td>
+						<td >
+							<trim:ED id="overrideWarning" value="#{trim.trim.act.relationship['overrideWarning'].act.observation.value}" readonly="true"/>
+						</td>
+					</tr>
+					</c:if>
+				</table>
+			</wiz:group>
+			<wiz:group title="Pharmacy">
+				<table width="100%" cellpadding="5">
+					<tr>
+						<td class="tableLabel">
+							Pharmacy Name
+						</td>
+						<td>
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].storeName}				
+						</td>						
+					</tr>
+					<tr>
+						<td class="tableLabel">
+							NCPDPID
+						</td>
+						<td>
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].NCPDPID}				
+						</td>						
+					</tr>
+					<tr>
+						<td class="tableLabel">
+							Address
+						</td>
+						<td >								
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].addressLine1}
+						</td>						
+					</tr>
+					<tr>
+						<td class="tableLabel">
+							City
+						</td>
+						<td>
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].city}
+						</td>						
+					</tr>
+					<tr>
+						<td class="tableLabel">
+							State
+						</td>
+						<td >								
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].state}										
+						</td>						
+					</tr>
+					<tr>
+						<td class="tableLabel">
+							ZIP
+						</td>
+						<td>	
+							#{menu.item[trim.trim.act.participation['pharmacy'].role.id.for[top.accountUser.account].extension].zip}	
+						</td>						
+					</tr>
+				</table>
+			</wiz:group>
+		</wiz:body>
+		
+		<!-- show the warning alert only if it exists and override is not enabled-->
+		<c:if test="${fn:length(trim.trim.act.relationship['interactions'].act.observation.value.ST.value) > 0 and (trim.trim.act.relationship['overrideWarning'].enabled == false)}">
+			<script type="text/javascript">
+		    // <![CDATA[ 
+				var overwriteButton = '<input type=\'button\' value=\'Override\' onclick=\'overwriteInteractionText(\"#{menu.elementLabel}\")\'/>';
+				//overwriteButton += '<input type=\'button\' value=\'Cancel\' onclick=\'hideInteractionText(\"#{menu.elementLabel}\")\'/>';
+				$('#{menu.elementLabel}:warningDialog').update('#{trim.trim.act.relationship['interactions'].act.observation.value.ST.value}'+overwriteButton);
+				$('#{menu.elementLabel}:warningDialog').show();
+			// ]]> 
+			</script>	
+		</c:if>					
+		<script type="text/javascript">
+		    // <![CDATA[ 			
+			if($("drilldown:#{menu.elementLabel}openMeFirst").value == null || $("drilldown:#{menu.elementLabel}openMeFirst").value == ""){
+				showPrescriberWarningDialog("#{menu.elementLabel}","#{menu.element}");	
+			}		
+					
+			//disableSelections("#{menu.elementLabel}");
+			//loadRefillsIfNull("#{menu.elementLabel}");
+			// ]]> 
+			</script>
+	
+</ui:composition>
+</body>
+</html> 

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<head>
+<title>Add Drug to Formulary List</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<ui:composition>
+	<wiz:step title="Drug Formulary">
+			<h:inputHidden id="computeEnable"  value="#{trim.trim.act.computes[0].property['enabled']}" converter="javax.faces.Boolean"/>			
+			<h:inputHidden id="fdbDrugCode" value="#{trim.trim.act.computes[0].property['fdbDrugCode']}" />
+		<wiz:body>
+			<div id="popupGrids">
+				<div id="#{menu.elementLabel}:global:fdbMedications" class="popupgrid"/>          
+			</div>
+			<wiz:group prefix="Drug Formulary" title="">
+				<table width="100%" cellpadding="5">
+					<tr width="100%">
+						<td class="drugFormLabel">Drug Name:</td>
+						<td class="drugFormValue">
+							<h:outputText value="#{trim.trim.act.relationship['drugDetails'].act.observation.value.CE.displayName}"/>
+						</td>
+					</tr>
+					<tr width="100%">
+						<td class="drugFormLabel">NDC:</td>
+						<td class="drugFormValue">
+							<h:outputText id="ndc" value="#{trim.trim.act.relationship['drugDetails'].act.observation.value.CE.translations[0].code}"/>
+						</td>
+					</tr>
+					<tr width="100%">
+						<td class="drugFormLabel">Strength:</td>
+						<td class="drugFormValue">
+							<h:outputText id="strength" value="#{trim.trim.act.relationship['strength'].act.observation.value.ST.value}"/>
+						</td>
+					</tr>
+					<tr width="100%">
+						<td class="drugFormLabel">
+							<c:if test="#{trim.trim.act.relationship['drugDetails'].act.observation.value.CE.displayName == ''}">
+								<h:commandButton id="medicationPopup" value="Add Drug" onclick="openListPopup('global:fdbMedications','#{menu.elementLabel}:global:fdbMedications', '', '#{menu.elementLabel}', 0,'drugFormulary');"/>
+							</c:if>
+							<c:if test="#{trim.trim.act.relationship['drugDetails'].act.observation.value.CE.displayName != ''}">
+								<h:commandButton id="medicationPopup" value="Edit Drug" onclick="openListPopup('global:fdbMedications','#{menu.elementLabel}:global:fdbMedications', '', '#{menu.elementLabel}', 0,'drugFormulary');"/>
+							</c:if>
+						</td>
+					</tr>
+				</table>
+			</wiz:group>
+		</wiz:body>
+		<wiz:help>
+			<p>The drug to be added to formulary list.</p>
+		</wiz:help>
+	</wiz:step>
+</ui:composition>
+</body>
+</html>
+

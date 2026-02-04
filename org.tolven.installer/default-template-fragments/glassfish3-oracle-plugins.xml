@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+	
+	<plugin id="org.tolven.assembler.glassfish3.legacypostgresql">
+		<root />
+	</plugin>
+	
+	<property name="appserver">
+		<!-- Only one code and home should be defined -->
+
+		<property name="code" value="glassfish3" />
+		
+		<property name="home" value="#{rootDir}/tolven-#{appserver['code']}" />
+	</property>
+	
+	<property name="glassfish3">
+		<property name="keystore" value="#{commonKeystore}" />
+		<property name="truststore" value="#{commonTruststore}" />
+		<property name="imquser" value="admin" />
+		<property name="adminPort" value="4848" />
+		<!-- only started in debug mode immediately after installation or upgrade -->
+		<property name="debugMode" value="false" />
+	</property>
+
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+		<property name="glassfish3Imquser" value="#{_adminPasswordDefault}" />
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		<property name="glassfish3Keystore" value="#{_tolvenPasswordDefault}" />
+		<property name="glassfish3Truststore" value="#{_tolvenPasswordDefault}" />
+	</property>
+	
+	<!-- oracle database -->
+	
+	<!-- These properties is not normally edited. Variables will be substituted during installation -->
+	<property name="dbAsadminCommand" value="create-jdbc-connection-pool --datasourceclassname oracle.jdbc.xa.client.OracleXADataSource --restype javax.sql.XADataSource --description &quot;TolvenDataSource&quot; --property url=&quot;jdbc\\:oracle\\:thin\\:@(DESCRIPTION\\=(ADDRESS\\=(PROTOCOL\\=#{db['protocol']})(HOST\\=#{db['host']})(PORT\\=#{db['port']}))(CONNECT_DATA\\=(SERVER\\=DEDICATED)(SERVICE_NAME\\=#{db['name']})))&quot;:user=#{db['user']}:password=#{password['dbUser']} TolvenDataSource" />
+
+	<property name="imqBrokerid" value="imqbroker" />
+	<property name="imqPersistStore" value="jdbc" />
+	<property name="imqPersistJdbcDbVendor" value="oracle" />
+	<property name="imqPersistJdbcOracleUser" value="#{db['user']}" />
+	<property name="imqPersistJdbcOraclePassword" value="#{password['dbUser']}" />
+	<property name="imqPersistJdbcOracleNeedpassword" value="true" />
+	<property name="imqPersistJdbcOraclePropertyUrl" value="#{db['url']}" />
+
+	<!-- end oracle database -->
+
+	<includes>
+		<include pluginsRef="appserver-plugins.xml" includeType="default" />
+		<include pluginsRef="db-oracle-plugins.xml" includeType="default" />
+	</includes>
+	
+</plugins>

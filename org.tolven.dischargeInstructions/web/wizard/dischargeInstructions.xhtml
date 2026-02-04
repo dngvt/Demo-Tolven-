@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Discharge Instructions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:step title="#{msg.GettingStarted}" >
+			<wiz:body>
+				<p>Click Next to begin</p>
+			</wiz:body>
+			<wiz:help>
+				<h1>getting Started</h1>
+				<p>Help provides additional information about each page</p>
+				<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity 
+				so that you can continue at any time later.
+				If you want to completely cancel these discharge instructions prior to submission, removing all traces of it from the system, click the Cancel button.
+				Once submitted, you will not be able to Cancel the form.</p>
+			</wiz:help>
+		</wiz:step>
+		<wiz:step title="#{trim.trim.act.label.value}" >
+			<wiz:body>
+				<wiz:group title="Encounter Details">
+					<c:if test="#{top.accountType=='echr' and trim.trim.act.relationship['encounter']!=null}">	
+						<h:panelGrid columns="2" >			
+	    					<p>Select an #{trim.trim.act.relationship['encounter'].act.title.ST}:</p>
+	                		<h:selectOneMenu id="enc" value="#{trim.trim.act.relationship['encounter'].act.id.for[top.accountUser.account].extension}" onchange="encounterItems(this.value,'#{menu.elementLabel}','false');" >
+	                   			<f:selectItem itemValue="#{null}" itemLabel="None"/>
+	                			<f:selectItems value="#{trim.list['echr:patient:encounters:active~Date Location Attending']}"/>
+	                		</h:selectOneMenu>
+	            		</h:panelGrid>				
+						<script language="javascript" type="text/javascript">
+							encounterItems('#{trim.trim.act.relationship['encounter'].act.id.IIS[0].extension }','#{menu.elementLabel}','false');
+						</script>				
+						<h:panelGrid columns="2" >
+							<h:outputText value="EncounterType :" />
+							<h:outputText id="encType" value=" "/>
+							<h:outputText value="Admit Date :" >
+							</h:outputText>
+							<h:outputText id="admitDate" value=" "/>
+							<h:outputText value="Discharge Date :" />
+							<h:outputText id="dischargeDate" value=" "/>
+							<h:outputText value="Location :" />
+							<h:outputText id="loc" value=" "/>
+						</h:panelGrid>				
+						<wiz:help>
+								<h1>#{trim.trim.act.relationship['encounter'].act.title.ST}</h1>
+						</wiz:help>			
+					</c:if>	
+				</wiz:group>
+				<wiz:group title="#{trim.trim.act.observation.value.label.value}">
+					<trim:ED id="dischargeInstruction" value="#{trim.trim.act.observation.value}" readonly="false"/>
+				</wiz:group>
+				<c:if test="#{top.accountType=='echr'}">
+						<ui:include src="author.xhtml"/>
+				</c:if>	
+			</wiz:body>
+			<wiz:help>
+				<h1>Discharge Instructions</h1>
+				<p></p>
+			</wiz:help>
+		</wiz:step>
+	</ui:composition>
+</body>
+</html>

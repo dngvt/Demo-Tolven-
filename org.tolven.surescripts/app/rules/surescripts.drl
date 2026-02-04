@@ -1,0 +1,427 @@
+package surescripts
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.logging.TolvenLogger;
+import org.tolven.surescripts.SureScriptsCommunicator;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+
+/**
+ * Creating addprescriber message to be submitted to surescripts 
+ */
+ 
+//rule "Create addPrescriber message"
+//	when
+//		$trim:TrimEx(name=="reg/evn/assigned/md")
+//	then
+//		SureScriptsCommunicator.addPrescriber($trim);		
+//end
+
+/* SUERESCRIPT COMMUNICATION RULE */
+rule "Add Prescriber to staff list"
+when
+	$ms: MenuStructure( role == "placeholder", path == "echr:assigned" )
+	$msList: MenuStructure( role == "list", path == "echr:admin:staff:all" ) 
+	$md: MenuData( menuStructure == $ms, string08=="Pending")
+	$trim:TrimEx(name=="reg/evn/assigned/md")
+then		
+	new SureScriptsCommunicator().addPrescriber($trim,null);
+end
+
+
+
+
+/* SUERESCRIPT COMMUNICATION RULE */
+rule "Place Prescription Form on eRx Activity list"
+when
+	$msList: MenuStructure( path == "echr:activity:eRxAll" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms, string08=='Pending' && pqStringVal01==null && actStatus!="nullified")
+	$trim:TrimEx(name=="obs/evn/patientPrescription") 
+then
+	app.info("SureScripts Communication Started.");
+	new SureScriptsCommunicator().communicateWithSureScripts($trim);
+end
+
+//TODO
+//change the placeholder
+rule "Place Surescript response on response list"
+	when
+		$msList: MenuStructure( path == "echr:admin:surescriptResponse:responseList" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:responses" )
+		$md: MenuData( menuStructure == $ms)
+		$trim:TrimEx(name == "obs/evn/RxChangeRequest" ) 
+	then
+		app.info("Place Surescript response on response list");
+		throw new IllegalStateException("Fix rule in org.tolven.config.eprescription:ep.drl line:232 ");
+		//SureScriptsCommunicator.communicateWithSureScripts($trim);
+		//app.info("SureScripts Communication Completed.");
+		//MenuData md = app.createReferenceMD( $md, $msList );
+end
+rule "Place RefillResponse on response list"
+when
+	$msList: MenuStructure( path == "echr:admin:surescriptResponse:responseList" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:assigned:responses" )
+	$md: MenuData( menuStructure == $ms)
+	$trim:TrimEx(name == "obs/evn/refillRequest") 
+then
+	throw new IllegalStateException("Fix rule in org.tolven.config.eprescription:ep.drl line:246 ");
+	//SureScriptsCommunicator.communicateWithSureScripts($trim);
+	//app.info("Place RefilResponse on response list");
+end
+
+rule "Place RefillResponse on Patient Medication All Activity List"
+when
+	$msList: MenuStructure( path == "echr:patient:medications:all" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms)
+	$trim:TrimEx(name == "obs/evn/currentMedicationDetailsForRefillRequest") 
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("***************************Place RefillResponse/Shared Medication Details on Patient Medication All Activity List***************************");
+end 
+
+rule "Place Shared Medication on Active Medication List"
+when
+	$msList: MenuStructure( path == "echr:patient:medications:active" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms , string06=="Active")
+	$trim:TrimEx(name == "obs/evn/currentMedicationDetailsForRefillRequest") 
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	MenuData mdnew = app.createReferenceMD( $md, "echr:patient:summary:medsum" );
+	app.info("Place Shared Medication on Active Medication List");
+end 
+
+rule "Place Shared Medication on Inactive Medication List"
+when
+	$msList: MenuStructure( path == "echr:patient:medications:inactive" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms , string06=="Discontinued")
+	$trim:TrimEx(name == "obs/evn/currentMedicationDetailsForRefillRequest") 
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("Place Shared Medication on Inactive Medication List");
+end 
+
+/*
+ * Rules for the discontinue option
+ */
+//rule "Place Discontinued Prescription Form on eRx Activity list"
+//	when
+//		$msList: MenuStructure( path == "echr:activity:eRxAll" )
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//		$md: MenuData( menuStructure == $ms , string06=="Discontinued" && string08=="Verified" )
+//		$trim:TrimEx(name=="obs/evn/patientPrescription")
+//	then
+//		$md.setString08("Pending CancelRXResponse");
+//		SureScriptsCommunicator.sendRXCancelMessage($trim);
+//		app.info("CancelRx Message Sent/Genereted");
+//		MenuData md = app.createReferenceMD( $md, $msList );
+//		app.info("Place Discontinued Prescription Form on Admin Activity list"); 
+//end//
+//rule "Place Discontinued Prescription on Prescriber's Activity list"
+//	when
+//		$list: MenuStructure( path == "echr:assigned:activity:all" )
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//		$md: MenuData( menuStructure == $ms, actStatus=='active', $attender: parent04 != null, string06=="Discontinued" && string08=="Verified")
+//		$trim:TrimEx(name=="obs/evn/patientPrescription") 
+//	then
+//		$md.setString08("Pending CancelRXResponse");
+//		MenuData md = app.createReferenceMD( $md, $list, $attender);
+//		app.info("Place Discontinued Prescription on Prescriber's Activity list"); 
+//end//
+//rule "Place Discontinued Prescription on Patient Activity list"
+//	when
+//		$msList: MenuStructure( path == "echr:patient:patientActivity:all" )
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//		$md: MenuData( menuStructure == $ms,  string06=="Discontinued" && string08=="Verified")
+//		$trim:TrimEx(name=="obs/evn/patientPrescription")
+//	then
+//		$md.setString08("Pending CancelRXResponse");
+//		MenuData md = app.createReferenceMD( $md, $msList );
+//		app.info("Place Discontinued Prescription on Patient Activity list"); 
+//end
+
+//rule "Place Awaiting CancelRxResponse Prescription on eRx Activity list"
+//when
+//	$msList: MenuStructure( path == "echr:activity:eRxAll" )
+//	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//	$md: MenuData( menuStructure == $ms , string06=="Discontinued" && string08=="Awaiting CancelRxResponse" )
+//	$trim:TrimEx(name=="obs/evn/patientPrescription")
+//then
+//	MenuData md = app.createReferenceMD( $md, $msList );
+//	app.info("Place Awaiting CancelRxResponse Prescription on Admin Activity list"); 
+//end
+//rule "Place Awaiting CancelRxResponse Prescription on Prescriber's Activity list"
+//when
+//	$list: MenuStructure( path == "echr:assigned:activity:all" )
+//	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//	$md: MenuData( menuStructure == $ms, actStatus=='active', $attender: parent04 != null, string06=="Discontinued" && string08=="Awaiting CancelRxResponse")
+//	$trim:TrimEx(name=="obs/evn/patientPrescription") 
+//then
+//	MenuData md = app.createReferenceMD( $md, $list, $attender);
+//	app.info("Place Awaiting CancelRxResponse Prescription on Prescriber's Activity list"); 
+//end//
+//rule "Place Awaiting CancelRxResponse Prescription on Patient Activity list"
+//	when
+//		$msList: MenuStructure( path == "echr:patient:patientActivity:all" )
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//		$md: MenuData( menuStructure == $ms,  string06=="Discontinued" && string08=="Awaiting CancelRxResponse")
+//		$trim:TrimEx(name=="obs/evn/patientPrescription")
+//	then
+//		MenuData md = app.createReferenceMD( $md, $msList );
+//		app.info("Place Awaiting CancelRxResponse Prescription on Patient Activity list"); 
+//end
+
+rule "Place Discontinued Prescription Form on Inactive Medication list"
+	when
+		$msList: MenuStructure( path == "echr:patient:medications:inactive" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+		$md: MenuData( menuStructure == $ms , string06=="Discontinued")
+		$trim:TrimEx(name=="obs/evn/patientPrescription")
+	then
+		MenuData md = app.createReferenceMD( $md, $msList );
+		app.info("Place Discontinued Prescription Form on Inactive Medication list"); 
+end
+
+rule "Place Medication History on Inactive Medication list"
+when
+	$msList: MenuStructure( path == "echr:patient:medications:inactive" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms , string06=="Discontinued")
+	$trim:TrimEx(name=="obs/evn/medicationHistory")
+then
+	MenuData md = app.createReferenceMD( $md, $msList );
+	app.info("Place Medication History on Inactive Medication list"); 
+end
+//rule "Place Discontinued Prescription Form on Patient Activity  list"
+//	when
+//		$msList: MenuStructure( path == "echr:patient:patientActivity:all" )
+//		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+//		$md: MenuData( menuStructure == $ms,  string06=="Discontinued" && string08=="CancelRXResponse Received")
+//		$trim:TrimEx(name=="obs/evn/patientPrescription")
+//	then
+//		MenuData md = app.createReferenceMD( $md, $msList );
+//		app.info( "Place Discontinued Prescription Form on Patient Activity  list"); 
+//end
+
+rule "Place Changed Prescription with changed medication"
+when
+	$msList: MenuStructure( path == "echr:patient:medications:active" )
+	$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$md: MenuData( menuStructure == $ms, pqStringVal01=="Changed" && string08==null)
+then
+	app.info("%%%%%%%%%%%%%%Place Changed Prescription with pqStringVal01==Changed%%%%%%%%%%%%%%%");
+	MenuData md = app.createReferenceMD( $md, $msList );
+end
+
+rule "Place Dispense Form on Patient Medication Dispense list"
+	when
+		$msList: MenuStructure( path == "echr:patient:currentMedication:dispense" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication:dispenseMedication" )
+		$md: MenuData( menuStructure == $ms)
+	then
+		MenuData md = app.createReferenceMD( $md, $msList );
+		app.info( "Place Dispense Form on Patient Medication Dispense list"); 
+end
+rule "Place Administration Wizard on Patient Medication Administration list"
+	when
+		$msList: MenuStructure( path == "echr:patient:currentMedication:administration" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication:administerMedication" )
+		$md: MenuData( menuStructure == $ms)
+	then
+		MenuData md = app.createReferenceMD( $md, $msList );
+		app.info( "Place Administration Wizard on Patient Medication Administration list"); 
+end
+rule "Medication on Medication summary list"
+when
+	$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$mdMedication: MenuData( menuStructure == $msMedication , (string08!='Pending' && string08!='Error' && string06!="Discontinued" && actStatus!="nullified"))
+	$trim:TrimEx(name=="obs/evn/patientPrescription")
+then
+	MenuData mdMedicationList = app.createReferenceMD( $mdMedication, "echr:patient:summary:medsum" );
+	app.info("Place medication reference for summary list");
+end
+
+rule "Medication History on Medication summary list"
+when
+	$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$mdMedication: MenuData( menuStructure == $msMedication , (string08!='Pending' && string08!='Error' && string06!="Discontinued" && actStatus!="nullified"))
+	$trim:TrimEx(name=="obs/evn/medicationHistory")
+then
+	MenuData mdMedicationList = app.createReferenceMD( $mdMedication, "echr:patient:summary:medsum" );
+	app.info("Place medication history on summary list");
+end
+
+rule "Changed Medication on Medication summary list"
+when
+	$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:currentMedication" )
+	$mdMedication: MenuData( menuStructure == $msMedication , pqStringVal01=="Changed" && string08==null)
+then
+	app.info("<<<<<<<<<<<<<<<<<<Changed Medication on Medication summary list>>>>>>>>>>>>>");
+	MenuData mdMedicationList = app.createReferenceMD( $mdMedication, "echr:patient:summary:medsum" );
+	app.info("<<<<<<<<<<<<<<<<<<created reference for summary list>>>>>>>>>>>>>");
+end
+rule "Add patient to patient list for popup"
+when
+	$msPatient: MenuStructure( role == "placeholder", path == "echr:patient" )
+	$msPatientAll: MenuStructure( path == "echr:patients:patPopupList" )
+	$mdPatient: MenuData( reference==null, menuStructure == $msPatient, actStatus!="terminated" )
+then
+	MenuData mdPatList = app.createReferenceMD( $mdPatient, $msPatientAll );
+	mdPatList.addPhrase( $mdPatient.getStringField("lastName"), "family", "en_US" );
+	mdPatList.addPhrase( $mdPatient.getStringField("firstName"), "given", "en_US" );
+	mdPatList.addPhrase( $mdPatient.getStringField("middleName"), "given", "en_US" );
+	insert( mdPatList );
+end
+rule "Add Drug to Drug Formulary List"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:drugFormulary" )
+		$msList: MenuStructure( role == "list", path == "echr:admin:drugFormulary:all" ) 
+		$md: MenuData( menuStructure == $ms, actStatus == "active")
+		$trim:TrimEx(name=="obs/evn/drugFormulary")
+	then		
+		MenuData mdDrugFormulary = app.createReferenceMD( $md, $msList );
+		mdDrugFormulary.addPhrase( $md.getString01(), "drugName", "en_US" );
+		mdDrugFormulary.addPhrase( $md.getString03(), "ndc", "en_US" );
+		app.info("Place Drug to Drug Formulary List");
+end
+
+/**
+ * Staff Registration act
+ */
+rule "Add approved staff to approved list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:assigned" )
+		$msList: MenuStructure( role == "list", path == "echr:admin:staff:approved" )
+		$md: MenuData( menuStructure == $ms, actStatus=='approved' )
+	then
+		MenuData mdStaffList = app.createReferenceMD( $md, $msList );
+		mdStaffList.addPhrase( $md.getString01(), "family", "en_US" );
+		mdStaffList.addPhrase( $md.getString02(), "given", "en_US" );
+		mdStaffList.addPhrase( $md.getString03(), "given", "en_US" );
+		mdStaffList.addPhrase( $md.getString04(), "gender", "en_US" );
+end
+
+
+rule "Place ePrescription on active officeMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:officeMedicationOrders:active" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='active')		
+		$trim:TrimEx(name=="obs/evn/patientPrescription") 
+	then
+		app.info("Place ePrescription on active medication list");
+		new SureScriptsCommunicator().communicateWithSureScripts($trim);
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place ePrescription on inactive officeMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:officeMedicationOrders:inactive" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='completed')		
+	then
+		app.info("Place ePrescription on active medication list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+rule "Place ePrescription on nullified officeMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:officeMedicationOrders:nullified" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='nullified')		
+	then
+		app.info("Place ePrescription on active medication list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place ePrescription on all Office Medication Orders  list"
+	when
+		$msList: MenuStructure( path == "echr:patient:officeMedicationOrders:all" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$md: MenuData( menuStructure == $ms)		
+	then
+		app.info("Place ePrescription on all Office Medication Orders list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place ePrescription on all Office Medication Orders portlet"
+	when
+		$msList: MenuStructure( path == "echr:patient:officeMedicationOrders:all" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$md: MenuData( menuStructure == $ms)		
+	then
+		app.info("Place ePrescription on all Office Medication Orders list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+rule "Place Medication on Office Medication Orders summary list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:officeMedicationOrder" )
+		$mdMedication: MenuData( menuStructure == $msMedication, string03 == 'active' )
+	then
+		// Add act to patient's Medication list
+		app.createReferenceMD( $mdMedication, "echr:patient:summary:omedsum" );
+end
+
+
+//Hospital Medication Orders
+
+rule "Place ePrescription on active hospitalMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:hospitalMedicationOrders:active" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:hospitalMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='active')		
+	then
+		app.info("Place ePrescription on hospitalMedicationOrder list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place ePrescription on inactive hospitalMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:hospitalMedicationOrders:inactive" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:hospitalMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='completed')		
+	then
+		app.info("Place ePrescription on active medication list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+rule "Place ePrescription on nullified hospitalMedicationOrders list"
+	when
+		$msList: MenuStructure( path == "echr:patient:hospitalMedicationOrders:nullified" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:hospitalMedicationOrder" )
+		$md: MenuData( menuStructure == $ms, actStatus=='nullified')		
+	then
+		app.info("Place ePrescription on active medication list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place ePrescription on all Hospital Medication Orders  list"
+	when
+		$msList: MenuStructure( path == "echr:patient:hospitalMedicationOrders:all" )
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:hospitalMedicationOrder" )
+		$md: MenuData( menuStructure == $ms)		
+	then
+		app.info("Place ePrescription on all Hospital Medication Orders list");
+		MenuData md = app.createReferenceMD( $md, $msList );		
+end
+
+rule "Place Medication on Hospital Medication Orders summary list"
+	when
+		$msMedication: MenuStructure( role == "placeholder", path == "echr:patient:hospitalMedicationOrder" )
+		$mdMedication: MenuData( menuStructure == $msMedication, string03 == 'active' )
+	then
+		// Add act to patient's Medication list
+		app.createReferenceMD( $mdMedication, "echr:patient:summary:hmedsum" );
+end

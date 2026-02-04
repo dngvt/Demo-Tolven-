@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>An Address</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body> 
+    <ui:composition>
+       <c:if test="#{required=='true'}">
+		<wiz:group title="#{value.label.value} - Required">
+	    	<h:dataTable value="#{value.parts}" var="adxp" id="address#{index}">
+				<h:column>
+					<!-- Required fields -->
+					<h:outputText value="#{adxp.label.value}*" rendered="#{required=='true' and adxp.label.value!='Address Line 2' and adxp.label.value!='Address Line 3' and adxp.label.value!='Country'}" readonly="true" style="width:125px;border:0px"/>
+					<!-- Non-Required fields -->
+					<h:outputText value="#{adxp.label.value}" rendered="#{required=='false' or adxp.label.value=='Address Line 2' or adxp.label.value=='Address Line 3' or adxp.label.value=='Country'}" readonly="true" style="width:125px;border:0px"/>
+				</h:column>
+				<h:column>
+					<!-- Required fields -->
+					<c:if test="#{readonly!='true'}">					
+						<h:inputText id="addressLine1#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Address Line 1'}" required="#{required}" requiredMessage=" Address line 1 is required"/>
+	    				<h:message for="addressLine1#{index}" errorClass="errorMsg" infoClass="infoMsg" warnClass="warnMsg" fatalClass="fatalMsg" />
+
+						<h:inputText id="city#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Locality'}" />
+						<h:inputText id="zipCode#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Post Code'}"  maxlength="9">	
+	  		  					<f:validator validatorId="ukPostCodeValidator" /> 
+	    				</h:inputText>
+	    				<h:message for="zipCode#{index}" errorClass="errorMsg" infoClass="infoMsg" warnClass="warnMsg" fatalClass="fatalMsg" />
+	    				<h:selectOneMenu id="lot" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Lot'}" required="#{required}" style="width:125px;">
+							<f:selectItems value="#{trim.valueSets['lot']}" />
+						</h:selectOneMenu>
+	    				
+	    				<!-- <h:inputText value="#{adxp.ST.value}" rendered="#{adxp.label.value!='Zip'and adxp.label.value!='State' and adxp.label.value !='Address Line 1' and adxp.label.value !='Address Line 2' and adxp.label.value !='City' and adxp.label.value !='Country'}" required="#{required}"/>
+							 -->					
+						<!-- Non-Required fields -->
+						<h:inputText value="#{adxp.ST.value}" rendered="#{adxp.label.value =='Address Line 2' or adxp.label.value =='Address Line 3' or adxp.label.value =='Country' or adxp.label.value =='Post Town'}" />						
+					</c:if>
+					<h:outputText value="#{adxp.ST.value}" rendered="#{readonly=='true'}"/>
+				</h:column>
+	    	</h:dataTable> 
+	    </wiz:group>
+	    </c:if>
+	    <c:if test="#{required=='false'}">
+		<wiz:group title="#{value.label.value}">
+	    	<h:dataTable value="#{value.parts}" var="adxp" id="address#{index}">
+				<h:column>
+					<h:outputText value="#{adxp.label.value}" readonly="true" style="width:125px;border:0px"/>
+				</h:column>
+				<h:column>
+					<!-- Required fields -->
+					<c:if test="#{readonly!='true'}">					
+						<h:inputText id="addressLine1#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Address Line 1'}" />
+						<h:inputText id="city#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Locality'}" />
+						<h:inputText id="zipCode#{index}" value="#{adxp.ST.value}" rendered="#{adxp.label.value=='Post Code'}"  maxlength="9" >
+	  		  					<f:validator validatorId="ukPostCodeValidator" /> 
+	    				</h:inputText>
+						<h:inputText value="#{adxp.ST.value}" rendered="#{adxp.label.value =='Address Line 2' or adxp.label.value =='Address Line 3' or  adxp.label.value =='Country' or  adxp.label.value =='Post Town'}" />						
+					</c:if>
+					<h:outputText value="#{adxp.ST.value}" rendered="#{readonly=='true'}"/>
+				</h:column>
+	    	</h:dataTable> 
+	    </wiz:group>
+	    </c:if>  
+	</ui:composition>
+</body>
+</html>

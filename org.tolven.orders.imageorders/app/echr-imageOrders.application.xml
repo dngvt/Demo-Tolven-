@@ -1,0 +1,60 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient">
+		<placeholder name="imageOrder" title="Image Order" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/treatmentLink.xhtml">
+			<field name="date" internal="date01">
+				<from>#{act.effectiveTime.TS.date}</from>
+			</field>				
+			<field name="serviceName" internal="string01">
+				<from>#{act.code.CD.displayName}</from>
+			</field>
+			<field name="status" internal="string02">
+				<from>#{trim.act.statusCode}</from>
+			</field>
+			<field name="longName" internal="string06">
+				<from>#{act.text.ST.value}</from>
+			</field>
+			<field name="reason" internal="_extended">
+				<from>#{act.relationship['reason'].act.observation.value.ST.value}</from>
+			</field>
+			<field name="priorityCE" internal="_extended">
+				<from>#{act.relationship['priority'].act.observation.value.CE}</from>
+			</field>
+			<field name="priority" internal="_extended">
+				<from>#{act.relationship['priority'].act.observation.value.CE.displayName}</from>
+			</field>
+			<field name="frequency" internal="_extended">
+				<from>#{act.relationship['frequency'].act.observation.value.CE.displayName}</from>
+			</field>
+			<field name="frequencyCE" internal="_extended">
+				<from>#{act.relationship['frequency'].act.observation.value.CE}</from>
+			</field>
+			<field name="timing" internal="_extended">
+				<from>#{act.relationship['timing'].act.observation.value.ST.value}</from>
+			</field>
+			<field name="startImmediately" internal="_extended">
+				<from>#{act.relationship['startImmediately'].act.observation.value.CE.displayName}</from>
+			</field>
+			<field name="startImmediatelyCE" internal="_extended">
+				<from>#{act.relationship['startImmediately'].act.observation.value.CE}</from>
+			</field>
+			<field internal="parent02" name="author">
+				<from>#{internalId( account, act.participation['author'].role.id)}</from>
+			</field>
+			<field internal="string03" name="enteredBy">
+                <from>#{internalId( account, act.participation['dataEnterer'].role.id)}</from>
+            </field>
+			<field internal="parent03" name="encounter">
+				<from>#{internalId( account, act.relationship['encounter'].act.id)}</from>
+			</field>   
+			<field name="gts" internal="gts01"/>
+		         
+		</placeholder>
+	</extends>
+	<extends path="echr">
+		<list name="imageOrderList" title="Image Orders List" page="/five/list.xhtml" visible="never" query="global:imageOrderMenu">
+			<column name="code" title="imageCode" instantiate="true" visible="true" internal="string03" width="10.0" />
+			<column name="order" title="imageOrder" instantiate="true" visible="true" internal="string01" width="30.0" />
+			<column name="heading" title="procName" visible="false" internal="string02" width="40.0" />
+		</list>
+	</extends>
+</application>

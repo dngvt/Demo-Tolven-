@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+   		<title>Mediction Wizard</title>
+   		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   		<script type="text/javascript" src="tolven6.js" />
+	</head>
+	<body>
+		<ui:composition>
+			<ui:include src="OTCDrugPopUp.xhtml"/>
+			<wiz:step title="#{msg.GettingStarted}">
+				<wiz:body>
+					<p>The Over the counter medication wizard allows the patient to record over the counter medications. 
+					(Submissions are routed to the selected provider's account.)</p>
+				</wiz:body>
+				<wiz:help>			
+					<p>Help provides additional information about each page</p>					
+				</wiz:help>
+			</wiz:step>
+			<wiz:step title="Over Counter Medication">
+			<h:panelGrid columns="2" cellpadding="5;">				
+				Medication Date
+				<trim:TS id="medicationDate" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[1].TS}" dateStyle="short" timeStyle="short" type="both"/>
+				Select Medication
+				<h:panelGroup>
+				<h:commandButton value="Medication Look Up" onclick="enablePopUP()" />
+				<h:inputText id="medicineSelected" style="font-weight: bold;border: 0px;width: 500px;margin-left:50px" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[0].ST.value}" size="20"/>
+				</h:panelGroup>				
+				Strength
+				<h:inputText id="strength" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[2].ST.value}" size="20" />
+				Frequency				
+				<h:inputText id="frequency" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[3].INT.value}" size="20" />
+				Route
+				<h:inputText id="route" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[4].ST.value}" size="20" />
+				Start Date
+				<trim:TS id="startDate" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[5].TS}" dateStyle="short" timeStyle="short" type="both"/>
+				End Date
+				<trim:TS id="endDate" value="#{trim.trim.act.relationship['overCounter'].act.observation.values[6].TS}" dateStyle="short" timeStyle="short" type="both"/>
+				Status
+				<wiz:radio id="status"
+						value="#{trim.trim.act.relationship['overCounter'].act.observation.values[7].CE}"
+						layout="lineDirection" required="true">
+						<f:selectItems value="#{trim.valueSets['status']}" />
+						<f:converter converterId="DataTypeConverter" />
+					</wiz:radio>				
+			</h:panelGrid>		
+			</wiz:step>
+			
+		</ui:composition>
+	</body>
+</html>

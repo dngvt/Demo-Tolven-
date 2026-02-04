@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+  <title>Laboratory Order - Drilldown</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+	    <wiz:body>
+			 <table width="100%">
+				<thead>
+					<tr>
+						<th style=" width:44%;"><b>Laboratory Order</b></th>
+						<th style=" width:8%;" nowrap="nowrap"><b>Date Of Order*</b></th>
+						<th style=" width:44%;"><b>Order Code</b></th>
+						<th style=" width:8%;"><b>Specimen Type</b></th>
+						<th style=" width:8%;"><b>Container</b></th>
+						<th style=" width:8%;"><b>Reason</b></th>
+						<th style=" width:8%;"><b>Priority</b></th>
+						<th style=" width:8%;"><b>Frequency</b></th>
+						<th style=" width:8%;"><b>Timing</b></th>
+					</tr>
+				</thead>
+				<tbody style="width:100%;">
+					<c:set var="i" value="1"/>
+					<c:if test="#{trim.trim.act.relationshipsList['laborder']!=null}">
+						<c:forEach var="labOrder" items="#{trim.trim.act.relationshipsList['laborder']}" varStatus="widgetIndex">
+							<c:if test="#{labOrder!=null}">
+								<c:set var="class" value="odd"/>
+								<c:set var="i" value="0"/>
+								<c:if test="#{(widgetIndex.index%2)==1}"><c:set var="class" value="even"/><c:set var="i" value="1"/></c:if>
+								<tr class="#{class}">
+									<!--td style=" width:40%;">#{labOrder.act.code.CD.displayName}</td-->
+									<td style=" width:44%;">#{labOrder.act.text.ST.value}</td>
+									<td style=" width:8%;"><trim:TS value="#{labOrder.act.observation.values[2].TS}" dateStyle="short" readonly="true"/></td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[11].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[5].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[6].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[7].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[8].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[9].ST.value}</td>
+									<td style=" width:8%;">#{labOrder.act.observation.values[10].ST.value}</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</tbody>			
+			</table>
+						<c:if test="#{menu.menuDataItem.actStatus =='active'}">
+			<table width="100%">
+							<tr>
+					<td colspan="2">
+						<b><h:outputText value="Associated Results : " /></b>
+					</td>
+				</tr>			
+				<tr>
+					<td colspan="2">
+						<div class="widget" style="width: 80%;" id="resultsDetails">
+							<table style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
+								<thead>
+									<tr>
+										<th style="width: 5%;" align="center">#</th>									
+										<th style="width: 30%;">Result Name</th>
+										<th style="width: 10%;">Value</th>
+										<th style="width: 10%;">Unit</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="#{trim.placeholderList['echr:patient:labOrder:results~ResultName,Value,Unit']}" var="result" varStatus="resultsDetailIndex">
+										<c:set var="resultRow" value="${fn:split(result.label, ',')}"/>
+										<c:set var="resultPath" value="#{result.value}"/>
+										<tr>
+											<td align="center">
+												#{resultsDetailIndex.index+1}
+											</td>										
+											<td>
+												<h:outputLink value="javascript:showPane('#{resultPath}',false,'#{menu.drilldownItem.path}')">
+					        						<h:outputText value="#{resultRow[0]}" />
+					        					</h:outputLink>
+											</td>
+											<td><h:outputText value="#{resultRow[1]}" /></td>
+											<td><h:outputText value="#{resultRow[2]}" /></td>
+										</tr>				
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+
+			</table>
+			</c:if>
+			<c:if test="#{menu.menuDataItem.actStatus =='active'}">
+			<br/>
+			<trim:action label="Enter Lab Result" status="active" trim="labResultDoc" />
+			</c:if>
+	    </wiz:body>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,107 @@
+Loader skips the first line.  Leave this here!!!
+FEV1|PQ|FEV1|liters||
+FVC|PQ|FVC|liters||
+pH|PQ|pH|||
+pHonAir|PQ|pH|||
+pHonO2|PQ|pH|||
+pHonO22|PQ|pH|||
+saO2AtRestOnAir|PQ|SaO2 at Rest (on air)|||
+saO2MinInTestOnAir|PQ|SaO2 Min during test (on air)|||
+saO2AtRestOnO2|PQ|SaO2 at Rest (on O2)|||
+saO2MinInTestOnO2|PQ|SaO2 Min during test (ON o2)|||
+saO2onAir|PQ|SaO2 on Air|||
+saO2onO2|PQ|SaO2 on O2|||
+saO2onO22|PQ|SaO2 on O2|||
+saO2|PQ|SaO2|||
+saO2Date|TS|SaO2|||
+LTOTAirDate|TS|LTOT Baseline Date|||
+LTOTO2Date|TS|LTOT First O2 Assessment Date|||
+LTOTO22Date|TS|LTOT Second O2 Assessment Date|||
+paO2|PQ|PaO2|||
+paCO2|PQ|PaCO2|||
+paO2onAir|PQ|PaO2|||
+paCO2onAir|PQ|PaCO2|||
+paO2onO2|PQ|PaO2|||
+paCO2onO2|PQ|PaCO2|||
+paO2onO22|PQ|PaO2|||
+paCO2onO22|PQ|PaCO2|||
+LTO2|PQ|O2|liters||
+LTO22|PQ|O2|liters||
+walkingDistAir|PQ|Walking Distance|meters||
+borgVasPreAir|PQ|Borg VAS Pre-test|Borg Rating||
+borgVASPostAir|PQ|Borg VAS Post-test|Borg Rating||
+ambO2GradeAir|PQ|Ambulatory O2 Grade|||
+walkingDistO2|PQ|Walking Distance|meters||
+borgVasPreO2|PQ|Borg VAS Pre-test|Borg Rating||
+borgVASPostO2|PQ|Borg VAS Post-test|Borg Rating||
+ambO2GradeO2|PQ|Ambulatory O2 Grade|||
+walkingDist|PQ|Walking Distance|meters||
+borgVasPre|PQ|Borg VAS Pre-test|Borg Rating||
+borgVASPost|PQ|Borg VAS Post-test|Borg Rating||
+ambO2Grade|PQ|Ambulatory O2 Grade|||
+O2|PQ|O2|liters||
+O2Device|ST|O2 Device|||
+O2Hours|PQ|Hours of O2/Day|||
+numDaysLeavingHome|PQ|Number of days/week leaving home|||
+existingCareProvider|ST|Existing Care Provider|||
+nebuliserMed1|ST|Nebulised Medication|||
+nebuliserMed2|ST|Nebulised Medication|||
+nebuliserMed3|ST|Nebulised Medication|||
+nebuliserSerialNum|ST|Nebuliser Serial #|||
+nebuliserRetDate|TS|Nebuliser Return Date|||
+nebuliserComments|ST|Comments|||
+nebuliserSupplier|ST|Nebuliser Supplier|||
+nebuliserReturnReason|ST|Reason Returned|||
+nebuliserMedicationOutcome|ST|Outcome|||
+O2proposedLTOTDose|PQ| No. of Liters|||
+O2proposedSBOTDose|PQ| No. of Liters|||
+O2proposedAMBDose|PQ| No. of Liters|||
+O2proposedLTOTHoursLow|PQ|Min Hrs/Day|||
+O2proposedLTOTHoursHigh|PQ|Max Hrs/Day|||
+O2proposedSBOTHoursLow|PQ|Min Hrs/Day|||
+O2proposedSBOTHoursHigh|PQ|Max Hrs/Day|||
+O2proposedAmbHoursLow|PQ|Min Hrs/Day|||
+O2proposedAmbHoursHigh|PQ|MaxHrs/Day|||
+SBOTReason|ST|Short Burst oxygen:  Reason:|||
+O2AssessmentAbortedReason|ST|Reason for not completing assessment|||
+O2StartDate|TS|O2 Start Date|||
+O2StopDate|TS|O2 Stop Date|||
+O2nextApptMonth|PQ|Next Appt in|||
+sputumComments|ST|Sputum Comments|||
+xRayResult|ST|XRay Results|||
+xRayDate|TS|Date of XRay|||
+hBResult|PQ|Hb Result|||
+hBResultDate|TS|Hb Result Date|||
+saO2Date|TS|SaO2 Date|||
+mmqAgeInt|PQ|What is your age?|||
+mmqTimeInt|PQ|What time of day is it?|||
+mmqAddressInt|PQ|Give patient an address to remember|||
+mmqYearInt|PQ|What year is it?|||
+mmqDOBInt|PQ|What is your DOB?|||
+mmqWW1Int|PQ|In which year did WW1 end?|||
+mmqPMInt|PQ|Can you name the current PM or Monarch?|||
+mmq2PeopleInt|PQ|Can you name 2 people in the room|||
+mmqCurrentAddressInt|PQ|What is your current address?|||
+mmqCountBackwardsInt|PQ|Count backwards from 10|||
+appetite|ST|Appetite|||
+breathingAtRest|ST|Breathing at rest|||
+sleepPattern|ST|Sleep Pattern|||
+subjectiveComments|ST|Comments|||
+sputumSampleDate|TS|Sample Date|||
+chestPainComments|ST|Chest Pain Comments|||
+dateOfLastJICMeds|TS|Date of last course|||
+respiratoryComment|ST|Respiratory Comments|||
+supportGroupComments|ST|Comments|||
+nebuliserServiceDate|TS|Last Service Date|||
+jicExtraReliever|ST|Extra Reliever|||
+jicOralSteroids|ST|Oral Steroid|||
+jicAntibiotics|ST|Antibiotics|||
+contactComment|ST|Comment|||
+saO2Referral|PQ|saO2|||
+mentalCapacityComments|ST|Mental Capacity Comments|||
+mentalCapacityReferral|ST|Mental Capacity Referral|||
+priorMentalCapacityAssessorName|ST|Prior Mental Capacity Assessor|||
+assessmentSummary|ST|Assessment Summary|||
+ambAirDate|TS|Ambultory Air Assessment|||
+ambO2Date|TS|Ambulatory O2 Assessment|||
+selfAdminStrategies|ST|Strategies which may assist the resident to self-administer|||

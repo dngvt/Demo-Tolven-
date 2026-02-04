@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:md="http://www.tolven.org/jsf/menuData">
+<head>
+<title>A generic list of pharmacies</title>
+</head>
+<body>
+<ui:composition>
+	<div id="#{menu.element}-ver" localVersion="1"></div>
+	<div id="#{menu.element}:menu" class="popupgrid"></div>
+	<div id="#{menu.element}-pane" class="paneBody" style="overflow:auto;">
+		<div id="#{menu.element}-grid" class="grid" totalRows="#{sureAct.totalPreferredPharmacies}" visibleRows="15" 
+						gridOffset="0" gridSortCol="NCPDPID" gridSortDir="ASC">
+			<table class="filter">
+				<tr>
+					<td class="menuActions" >
+						<button id='showDropDown' onclick="javascript:showActionOptions
+							('#{menu.element}:menu_dropdown_loc','#{menu.element}:menu_drpDwn')">
+							New
+						</button>
+						<element id='#{menu.element}:menu_dropdown_loc' style='position:relative;'/>
+						<div id='#{menu.element}:menu_drpDwn' class='drpDwn' style='display:none;'></div> 
+						Filter <input id="#{menu.element}-filter" name="#{menu.element}-filter" type="text"/>
+					</td>
+				</tr>
+			</table>
+
+			<table id="#{menu.element}-LG_header">
+				<thead>
+					<tr>
+						<th style="text-align:left;width:11.5em"></th>
+						<th style="text-align:left;width:5.5em">NCPDPID</th>
+						<th style="text-align:left;width:20.5em">Store Name</th>
+						<th style="text-align:left;width:20.5em">Address </th>
+						<th style="text-align:left;width:13.5em">City</th>
+						<th style="text-align:left;width:3.5em">State</th>
+						<th style="text-align:left;width:5.5em">Zip</th>
+					</tr>
+				</thead>
+			</table>
+
+			<table id="#{menu.element}-LG">
+				<tbody>
+					<c:forEach var="i" begin="1" end="16" step="1" varStatus ="status">
+						<c:set var="class" value="odd"/>
+						<c:if test="#{(status.index%2)==1}">
+							<c:set var="class" value="even"/>
+						</c:if>
+						<tr class="#{class}">
+							<td style="text-align:left;width:11.5em">--</td>
+							<td style="text-align:left;width:5.5em">--</td>
+							<td style="text-align:left;width:20.5em">--</td>
+							<td style="text-align:left;width:20.5em">--</td>
+							<td style="text-align:left;width:13.5em">--</td>
+							<td style="text-align:left;width:3.5em">--</td>
+							<td style="text-align:left;width:5.5em">--</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+
+			<div class="foot">#{sureAct.totalPreferredPharmacies} item<span id="#{menu.element}-foot"> </span></div>
+		</div>
+		<div style="float: right;width: 100%;">
+			<table width="70%" align="left" border="0" style="border-color: #ccc;margin-top: 6px;">
+				<tr>
+					<td style="width: 18px;"><label style="background:#4E9689;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>NewRx</td>
+					<td style="width: 18px;"><label style="background:#87D69B;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>RefReq/RefRes</td>
+					<td style="width: 18px;"><label style="background:#FDCDB9;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>RxChg/ChgRes</td>
+					<td style="width: 18px;"><label style="background:#EDB24C;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td style="width: 15%;">RxFill</td>
+					<td style="width: 18px;"><label style="background:#ED8A4C;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>CanRx/CanRxRes</td>
+				</tr>
+				<tr>
+					<td><label style="background:#FF9CA8;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>Medication History</td>
+					<td><label style="background:#FA7089;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>Eligibility</td>
+					<td><label style="background:#C12F70;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td>Inactive</td>
+					<td><label style="background:#731E45;float:left;height: 6px; width: 14px;margin:2px;"> </label></td>
+					<td colspan="3">Disabled</td>
+				</tr>
+			</table>
+		</div><br clear="all"/>
+		
+		<script language="JavaScript" type="text/javascript">
+			// <![CDATA[
+				createPharmacyGrid( '#{menu.element}','#{menu.element}','addTemplate','#{menu.elementLabel}|0', 'preferredPharmacyData.ajaxsure');
+				//createGrid( '#{menu.element}','#{menu.element}','','','' );
+			// ]]>
+		</script>
+	</div>
+</ui:composition>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.ws">
+
+	<import file="../plugin/buildImport.xml" />
+
+	<property name="buildFolder" value="build" />
+	<property name="includeSourceInDevLib" value="true" />
+
+	<target name="build-plugin" depends="init" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest" />
+		</zip>
+		<!-- Begin list of sections to build. Each section is added to the plugin zip file. -->
+		<antcall target="buildSection">
+			<param name="section" value="web"/>
+			<param name="lib" value="lib/shiro-core-1.1.0.jar:lib/shiro-web-1.1.0.jar:lib/webservices-api.jar:lib/webservices-extra-api.jar:lib/webservices-extra-jdk-packages.jar:lib/webservices-extra.jar:lib/webservices-rt.jar:lib/webservices-tools.jar" />
+			<param name="endorseddirs" value="${basedir}/lib" />
+		</antcall>
+		<!-- End of list of sections to build -->
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="devLib.jar" />
+			</zipfileset>
+			<zipfileset dir="conf" prefix="web/classes/org/tolven/ws">
+				<include name="ws-handler-chain.xml" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<path id="jaxws.classpath">
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="javadoc" description="Generate Javadoc for this plugin">
+		<javadoc access="public" author="true" destdir="${respositoryLocal.location}/javadoc/${plugin(id)}-${plugin(version)}" doctitle="Tolven Web Services"
+			packagenames="*"
+			classpathref="project.classpath" 
+			source="1.6" sourcepath="web/source" splitindex="true" use="true" version="true"
+			encoding="UTF-8" docencoding="UTF-8"/>
+	</target>
+	<target name="unit-test" depends="build-plugin">
+		<junit fork="yes" showoutput="true" printsummary="withOutAndErr" >
+			<formatter type="plain" usefile="false" />
+			<classpath refid="project.classpath"/>
+			<batchtest >
+				<fileset dir="web/source">
+					<include name="test/**/*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	<!-- Generate WebService java files. These are checked into CVS, so this is not required to be run during every build...only for changes -->
+	<target name="generate-webservices" depends="clean,build-plugin" description="Generate WebServices">
+		<delete>
+			<fileset dir="web/source/org/tolven/ws">
+				<include name="**/jaxws/*"/>
+			</fileset>
+		</delete>
+		<apt srcdir="web/source"
+			destdir="build"
+			classpathref="project.classpath"
+			debug="on"
+			compile="true"
+			preprocessdir="web/source">
+			<classpath>
+				<path>
+					<fileset dir="lib">
+						<include name="*.jar" />
+					</fileset>
+				</path>
+			</classpath>
+		</apt>
+	</target>
+</project>

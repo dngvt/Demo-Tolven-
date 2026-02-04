@@ -1,0 +1,112 @@
+/*
+ * Copyright (C) 2009 Tolven Inc
+
+ * This library is free software; you can redistribute it and/or modify it under the terms of 
+ * the GNU Lesser General Public License as published by the Free Software Foundation; either 
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;  
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU Lesser General Public License for more details.
+ *
+ * Contact: info@tolvenhealth.com 
+ *
+ * @author Joseph Isaac
+ */
+package org.tolven.user;
+
+import java.util.Properties;
+
+import javax.ws.rs.core.MultivaluedMap;
+
+import org.tolven.restful.client.RESTfulClient;
+
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+public class DefaultUserLoader extends RESTfulClient implements UserLoader {
+
+    public DefaultUserLoader(String userId, char[] password) {
+        init(userId, password);
+    }
+
+    @Override
+    public void addRole(String role, String uid, String realm) {
+        try {
+            MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+            formData.putSingle("role", role);
+            formData.putSingle("uid", uid);
+            formData.putSingle("realm", realm);
+            formData.putSingle("requestorPassword", new String(getPassword()));
+            WebResource webResource = getAuthWebResource().path("user/addRole");
+            ClientResponse response = webResource.cookie(getTokenCookie()).post(ClientResponse.class, formData);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Error: " + response.getStatus() + " POST " + getUserId() + " " + webResource.getURI() + " " + response.getEntity(String.class));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not add role: " + role + " to user: " + uid, ex);
+        } finally {
+            logout();
+        }
+    }
+
+    @Override
+    public void createRole(String role) {
+        try {
+            MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+            formData.putSingle("role", role);
+            formData.putSingle("requestorPassword", new String(getPassword()));
+            WebResource webResource = getAuthWebResource().path("user/createRole");
+            ClientResponse response = webResource.cookie(getTokenCookie()).post(ClientResponse.class, formData);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Error: " + response.getStatus() + " POST " + getUserId() + " " + webResource.getURI() + " " + response.getEntity(String.class));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not add role: " + role, ex);
+        } finally {
+            logout();
+        }
+    }
+
+    @Override
+    public void createUser(String uid, Properties properties) {
+        try {
+            MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+            for (String key : properties.stringPropertyNames()) {
+                formData.putSingle(key, properties.getProperty(key));
+                formData.putSingle("userIdPassword", new String(getPassword()));
+            }
+            WebResource webResource = getAuthWebResource().path("user/" + getUserId() + "/user/" + uid);
+            ClientResponse response = webResource.cookie(getTokenCookie()).post(ClientResponse.class, formData);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Error: " + response.getStatus() + " POST " + getUserId() + " " + webResource.getURI() + " " + response.getEntity(String.class));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not create user : " + uid, ex);
+        } finally {
+            logout();
+        }
+    }
+
+    @Override
+    public void removeRole(String role, String uid, String realm) {
+        try {
+            MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+            formData.putSingle("role", role);
+            formData.putSingle("uid", uid);
+            formData.putSingle("realm", realm);
+            formData.putSingle("requestorPassword", new String(getPassword()));
+            WebResource webResource = getAuthWebResource().path("user/removeRole");
+            ClientResponse response = webResource.cookie(getTokenCookie()).post(ClientResponse.class, formData);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Error: " + response.getStatus() + " POST " + getUserId() + " " + webResource.getURI() + " " + response.getEntity(String.class));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not remove role: " + role + " from user: " + uid, ex);
+        } finally {
+            logout();
+        }
+    }
+
+}

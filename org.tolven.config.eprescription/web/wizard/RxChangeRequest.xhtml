@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+   		<title>#{trim.trim.act.title.ST}</title>
+   		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   		<script type="text/javascript" src="tolven6.js" />
+	</head>
+<body>
+  	<ui:composition>
+  			<script type="text/javascript">
+				if(flag==0) {
+					setRequestedMedicineValueSet('#{menu.element}','#{menu.elementLabel}');		
+				}
+				flag=0;
+			</script>
+  					<h:inputText id="finalMedication" style="display: none;" value = "#{trim.trim.act.relationship['FinalMedication'].act.observation.values[0].ST.value}" />
+  					<h:inputText id="hiddenVariable" value="#{fdbstorage.hidden}" style="display:none"></h:inputText>
+					<h:inputHidden id="invokeStorage" value="#{fdbstorage.hidden}"></h:inputHidden>
+  					<h:inputText id="priorMedicines" style="display:none"/>  
+					<h:inputText id="hasDrugFoodInterraction" style="display:none"></h:inputText>
+					<h:inputText id="hasDuplicateTherapy" style="display:none"></h:inputText>
+		   		    <h:inputText id="hiddenDrugName" value="#{fdb.selectedDrug}" style="display:none"></h:inputText>
+  					<input type="text"  id="formIdValue" value="#{menu.elementLabel}"  style="display:none"/>
+  					<input type="text"  id="elementValue" value="#{menu.element}"  style="display:none" />
+  					<input type="text"  id="rowId" value="#{fdbstorage.rowId}"  style="display:none"/>
+			<img id="ajaxLoader"  alt="ajax" src="../images/ajax-loader23.gif" style="display:none; z-index: 50;position: absolute;margin-top: 40px;margin-left: 450px;"/>
+		    <div id="medicationFromFDBPopUP" class="popupgrid" style="display:none; top: 142.5px; left: 302.1px;">
+ 				<div class="popupgridheader">
+ 					<img onclick="closePopUp()" src="../images/x_black.gif" class="closetab"/>
+ 				</div>
+ 				<div class="paneBody">
+ 					<div class="grid" style="border: 1px solid rgb(153, 153, 153); width: 600px;">
+		 				 <table class="filter">
+		 				 	<tbody>
+		 				 		<tr>
+		 				 			<td class="menuActions"> Filter <h:inputText id="filterText" value="#{fdb.filterValue}" onkeyup="doRxChangeDrugSearch(event , '#{menu.elementLabel}' , '#{menu.element}');"></h:inputText>
+		 				 			<img src="../images/search.jpg" onclick="startFilteringReq('#{menu.elementLabel}' , '#{menu.element}')" style="vertical-align: middle"/>
+		 				 			</td>
+		 				 			<td style="text-align: right;">
+		 				 				<div>
+		 				 					<img alt="First"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickFirst()"/>
+		 				 					<img alt="Previous"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickPrevious()"/>
+		 				 					<img alt="Next"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickNext()"/>
+		 				 					<img alt="Last"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickLast()"/>
+		 				 				</div>
+		 				 			</td>
+		 				 		</tr>
+		 				 	</tbody>
+		 				 </table>
+		 				 <table>
+							<thead>
+								<tr>
+									<th style="text-align: left; width: 6.0em; cursor: pointer;" >Drug Id<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+									<th style="text-align: left; width: 44.50em; cursor: pointer;" >Drug Name<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+									<th style="text-align: left; width: 11em; cursor: pointer;" >Name Type<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+								</tr>
+							</thead>
+						</table>
+						<table style="max-height: 265.312px; width:100%">
+							<tr>
+								<td colspan="2">
+									<div style="height:265.312px;" id="mainDiv">
+										<h:dataTable  id="drugTable" width="100%" styleClass="gridBody" var="drug" value="#{fdb.drugList}"   rowClasses="odd,even" > 
+					 							<h:column>
+					 								<h:outputText value="#{drug.drugCode}"  style="cursor: pointer;text-decoration: underline;"  onclick="saveCodeReq(this , '#{menu.elementLabel}', '#{menu.element}')" />
+					 							</h:column>
+					 							<h:column>
+					 								<h:outputText value="#{drug.drugName}"  style="cursor: pointer;text-decoration: underline;"  onclick="saveDrugReq(this , '#{menu.elementLabel}'  , '#{menu.element}')" />
+					 							</h:column>
+					 							<h:column>
+					 								<h:outputText value="#{drug.nameType}"  />
+					 							</h:column>
+				 						</h:dataTable>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<div class="foot">
+								
+									<span id="startLimit" > </span> <f:verbatim> - </f:verbatim>
+									<span id="endLimit"  > </span> <f:verbatim> of  </f:verbatim>
+									<h:outputText id ="totalcount" value=" #{fdb.totalDrugCount} items" />
+									<h:outputText id="filteredcount"/>
+										
+									</div>
+								</td>
+							</tr>
+						</table>
+ 					</div>	 
+ 				</div>
+ 			</div>	
+  		<wiz:step title="#{msg.GettingStarted}" >
+				<wiz:body>
+					<p>This wizard contains the steps needed to select a medication from the available lists when a
+					     change request is sent from a pharmacy for the change of the medication prescribed.
+					</p>
+				</wiz:body>		
+				<wiz:help>
+					<h1>getting Started</h1>
+					<p>Help provides additional information about each page</p>
+					<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+						If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+						Once submitted, you will not be able to Cancel the form.
+					</p>
+				</wiz:help>
+			</wiz:step>
+	  	<wiz:step title="Change Prescription">
+	  		<wiz:body>
+	  			<wiz:group title="Request details">
+		  			<table width="80%" cellpadding="5">
+			  			<tr>
+							<td width="50%">
+								<h:outputText value="Medication prescribed by the prescriber : " />
+							</td>
+							<td width="50%">
+								<h:outputText value="#{trim.trim.act.relationship['MedicationPrescribed'].act.observation.values[0].ST.value}"  />
+							</td>
+						</tr>
+		  			</table>
+	  			</wiz:group>
+	  			 <wiz:group title="Response Type">
+	  				<table width="80%" cellpadding="5">
+		  				<tr>
+			  				<td width="10%">
+								#{trim.trim.act.relationship['responseType'].act.observation.values[0].label.value} 
+							</td>         
+			               	<td width="40%">
+								<wiz:radio id="response"   value="#{trim.trim.act.relationship['responseType'].act.observation.values[0].CE}" layout="lineDirection">
+								    <f:selectItems value="#{trim.valueSets['response']}"/>
+								    <f:converter converterId="DataTypeConverter"/>
+							    </wiz:radio>
+							</td>	
+						</tr>
+						 <tr tvisible = "$('#{menu.elementLabel}:responseField:0').checked == true" >
+							<td width="50%">
+								<h:outputText value="Medication requested by the pharmacy : " />
+							</td>
+							<td width="50%">
+								 <h:selectOneMenu onchange="javascript:retrieveInformation(this , '#{menu.elementLabel}'  , '#{menu.element}');" id="medicationList">
+								 	<f:selectItems value="#{trim.valueSets['requestedMedicines']}" />  
+								 	<f:converter converterId="DataTypeConverter"/>
+								 </h:selectOneMenu>
+							</td>
+						</tr>
+						<tr tvisible="$('#{menu.elementLabel}:medicationList').selectedIndex != 0">
+							<td width="10%" tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+								Dispense Amount
+							</td>
+							<td width="40%" tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+								<h:inputText id ="dispenseAmountRequested"  value="#{trim.trim.act.relationship['FinalMedication'].act.observation.values[1].INT.value}"  />
+							</td>
+						</tr>
+						 <tr tvisible="$('#{menu.elementLabel}:medicationList').selectedIndex != 0">
+							<td width="10%" tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+								Refill
+							</td>
+							<td width="40%" tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+								<h:inputText id ="refillRequested" value="#{trim.trim.act.relationship['FinalMedication'].act.observation.values[2].INT.value}"/>
+							</td>
+							<td width="40%" tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+								<h:inputText id ="refillQ" value="#{trim.trim.act.relationship['FinalMedication'].act.observation.values[3].ST.value}"/>
+							</td>
+						</tr>
+						<tr tvisible="$('#{menu.elementLabel}:responseField:0').checked == true">
+							<td width="10%">
+								Note
+							</td>
+							<td width="40%" >
+								<h:inputText id ="noteForApproved"  value="#{trim.trim.act.relationship['responseType'].act.observation.values[1].ST.value}"  />
+							</td>
+							
+	  					</tr>
+						 <tr>
+	  						<td colspan="2">
+	  							<span tvisible="$('#{menu.elementLabel}:responseField:1').checked == true">
+		  								<table>
+		  									<tr>
+		  										<td  style="vertical-align: middle;">
+		  												<h:commandButton value="Medication Look Up" onclick="enablePopUP()" />
+		               							</td>
+		               							<td   style="padding-left:100px;vertical-align:middle;">
+		               									<h:outputText id="medicineSelected" style="font-weight: bold;" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[0].ST.value}" />
+		               							</td>
+		  									</tr>
+		  									<tr>
+		  										<td width="10%">
+		  											Dispense Amount
+		  										</td>
+		  										<td width="40%">
+		  											<h:inputText id ="dispenseAmount"  value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[8].ST.value}" />
+		  										</td>
+	  										</tr>
+	  										<tr>
+												<td width="30%">
+													Refill
+												</td>          
+					               				<td colspan="2" width="40%">
+													<wiz:radio id="refillQualifier" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[10].CE}" layout="lineDirection" required="true">
+								                 		 <f:selectItems value="#{trim.valueSets['refillQualifier']}"/>
+								                 		 <f:converter converterId="DataTypeConverter"/>
+								                	</wiz:radio>
+												</td>	
+												
+											</tr>
+											<tr tvisible="$('#{menu.elementLabel}:refillQualifierField:0').checked==true">
+												<td width="30%">
+													Refill(Quantity)
+												</td>
+												<td colspan="2" width="40%">
+													<h:inputText id="refill" value="#{trim.trim.act.relationship['RequestedChange'].act.observation.values[9].INT.value}" maxlength="15" size="5" />
+												</td>
+											</tr>
+		  								</table>
+		  								
+		  						</span>	
+	  						</td>
+	               		</tr>	
+	               		<tr tvisible="$('#{menu.elementLabel}:responseField:1').checked == true">
+							<td width="10%">
+								Note
+							</td>
+							<td width="40%" >
+								<h:inputText id ="noteForApprovedWithChange"  value="#{trim.trim.act.relationship['responseType'].act.observation.values[4].ST.value}"  />
+							</td>
+	  					</tr>
+	               		<tr tvisible="$('#{menu.elementLabel}:responseField:2').checked == true">
+							<td>
+								#{trim.trim.act.relationship['responseType'].act.observation.values[2].label.value} 
+							</td>
+							<td  colspan="2" id="denied">
+								<trim:valueSetMenu id="denialReasonCode" slot="#{trim.trim.act.relationship['responseType'].act.observation.values[2]}" />
+							</td>
+						</tr>
+						<tr tvisible="$('#{menu.elementLabel}:denialReasonCodemenu').selectedIndex == 15" >
+							<td tvisible="$('#{menu.elementLabel}:responseField:2').checked == true">
+								#{trim.trim.act.relationship['responseType'].act.observation.values[3].label.value} 
+							</td>
+							<td tvisible="$('#{menu.elementLabel}:responseField:2').checked == true">
+									<h:inputText id="denialReasonCodeDetail" value="#{trim.trim.act.relationship['responseType'].act.observation.values[3].ST.value}" />
+							</td>
+						</tr>
+	  				</table>
+	  			</wiz:group> 
+	  		</wiz:body>
+	  	</wiz:step>
+    </ui:composition>
+</body>
+</html>

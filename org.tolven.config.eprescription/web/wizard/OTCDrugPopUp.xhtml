@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+		<body>
+			<ui:composition>	
+			<input type="text"  id="formIdValue" value="#{menu.elementLabel}"  style="display:none"/>
+  			<input type="text"  id="elementValue" value="#{menu.element}"  style="display:none" />
+  			<input type="text"  id="rowId" value="#{fdbstorage.rowId}"  style="display:none"/>
+  			<input id="accountType" type="hidden" value="#{top.accountType}"/>
+			<img id="ajaxLoader"  alt="ajax" src="../images/ajax-loader23.gif" style="display:none; z-index: 50;position: absolute;margin-top: 40px;margin-left: 450px;"/>
+			<h:inputText id="hiddenVariable" value="#{fdbstorage.hidden}" style="display:none"></h:inputText>
+			<h:inputText id="hiddenDrugName" value="#{fdb.selectedDrug}" style="display:none"></h:inputText>	
+			<div id="medicationFromFDBPopUP" class="popupgrid"
+				style="display: none; top: 142.5px; left: 302.1px;">
+				<div class="popupgridheader">
+					<img onclick="closePopUp()" src="../images/x_black.gif"
+						class="closetab" />
+				</div>
+				<div class="paneBody">
+					<div class="grid"
+						style="border: 1px solid rgb(153, 153, 153); width: 600px;">
+						<table class="filter">
+							<tbody>
+								<tr>
+									<td class="menuActions">
+										Filter
+										<h:inputText id="filterText" value="#{fdb.filterValue}" onkeyup="searchOTCDrugFilter(event , '#{menu.elementLabel}');"></h:inputText>
+										<img src="../images/search.jpg" onclick="startFiltering('#{menu.elementLabel}', '#{menu.element}')" style="vertical-align: middle"/>
+									</td>
+									<td style="text-align: right;">
+		 				 				<div>
+		 				 					<img alt="First"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickFirst()"/>
+		 				 					<img alt="Previous"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickPrevious()"/>
+		 				 					<img alt="Next"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickNext()"/>
+		 				 					<img alt="Last"  style="cursor: pointer;text-decoration: underline;margin-right: 5px;" onclick="clickLast()"/>
+		 				 				</div>
+		 				 			</td>
+								</tr>
+							</tbody>
+						</table>
+						<table>
+							<thead>
+								<tr>
+									<th style="text-align: left; width: 6.0em; cursor: pointer;" >Drug Id<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+									<th style="text-align: left; width: 44.50em; cursor: pointer;" >Drug Name<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+									<th style="text-align: left; width: 11em; cursor: pointer;" >Name Type<span>
+									  <img height="5" width="9" src="../images/sort_asc.gif"/></span>
+									</th>
+								</tr>
+							</thead>
+						</table>
+						<table style="max-height: 265.312px; width: 100%">
+							<tr>
+								<td colspan="2">
+									<div style="overflow: auto; height: 265.312px;" id="mainDiv">
+										<h:dataTable id="drugTable" width="100%" styleClass="gridBody"
+											var="drug" value="#{fdb.otcDrugList}" rowClasses="odd,even">
+											<h:column>
+											    <h:outputText value="#{drug.drugCode}"  style="cursor: pointer;text-decoration: underline;"  onclick="saveCode(this , '#{menu.elementLabel}', '#{menu.element}')" rendered ="#{top.accountType == 'echr'}" />
+												<h:outputText value="#{drug.drugCode}" style="text-decoration:underline ; cursor:pointer;" onclick="saveCode1(this , '#{menu.elementLabel}', '#{menu.element}')"  rendered ="#{top.accountType == 'ephr'}"/>
+											</h:column>
+											<h:column>
+											    <h:outputText value="#{drug.drugName}"  style="cursor: pointer;text-decoration: underline;"  onclick="saveDrug(this , '#{menu.elementLabel}'  , '#{menu.element}')" rendered ="#{top.accountType == 'echr'}" />
+												<h:outputText value="#{drug.drugName}" style="text-decoration:underline ;cursor:pointer;" onclick="saveDrug1(this , '#{menu.elementLabel}'  , '#{menu.element}')" rendered ="#{top.accountType == 'ephr'}" />
+											</h:column>
+											<h:column>
+												<h:outputText value="#{drug.nameType}" />
+											</h:column>
+										</h:dataTable>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<div class="foot">
+								
+									<span id="startLimit" > </span> <f:verbatim> - </f:verbatim>
+									<span id="endLimit"  > </span> <f:verbatim> of  </f:verbatim>
+									<h:outputText id ="totalcount" value=" #{fdb.otcCount} items" />
+									<h:outputText id="filteredcount"/>
+										
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			</ui:composition>
+		</body>
+</html>		

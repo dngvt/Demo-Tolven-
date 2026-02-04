@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>share/dischargeInstruction</name>
+	<description>Discharge Instructions</description>
+	<application name="echr">
+		<instance>echr:patient:dischargeInstructions</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act classCode="OBS" moodCode="EVN">
+		<label>Discharge Instructions</label>		
+		<bind application="echr" phase="receive">
+			<placeholder bindAction="merge">
+				<path>echr:patient:dischargeInstructions</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="receive">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:dischargeInstructions</path>
+			</placeholder>
+		</bind>
+		<id>
+			<II>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{dischargeInstructions.path}</extension>			
+			</II>
+		</id>
+		<statusCode>completed</statusCode>
+		<code>
+			<CE>
+				<displayName>Final instructions at discharge</displayName>
+				<code>83362003</code>
+				<codeSystem>2.16.840.1.113883.6.96</codeSystem>
+				<codeSystemName>SNOMED CT</codeSystemName>
+				<codeSystemVersion>2011_01_31</codeSystemVersion>
+			</CE>
+		</code>
+		<text>
+			<label>Instructions</label>
+			<ST>#{dischargeInstructions.instructionText}</ST>
+        </text>	
+		<effectiveTime>
+			<label>Date of Instructions</label>
+			<TS><value>#{TS(dischargeInstructions.reportDate)}</value></TS>
+		</effectiveTime>
+		<observation>
+			<value>
+				<label>Discharge Instructions Text</label>
+				<ST>#{dischargeInstructions.instructionText}</ST>
+			</value>
+			<value>
+				<label>AdmitDate</label>
+				<TS><value>#{TS(dischargeInstructions.admitDate)}</value></TS>
+			</value>
+			<value>
+				<label>dischargeDate</label>
+				<TS><value>#{TS(dischargeInstructions.dischargeDate)}</value></TS>
+			</value>			
+			<value>
+				<label>encounterType</label>
+				<ST>#{dischargeInstructions.encounter.purpose}</ST>
+			</value>			
+			<value>
+				<label>dataEnterer</label>
+				<ST>#{labOrder.dataEnterer}-#{account.title}</ST>		
+			</value>				
+		</observation>
+	</act>
+</trim>

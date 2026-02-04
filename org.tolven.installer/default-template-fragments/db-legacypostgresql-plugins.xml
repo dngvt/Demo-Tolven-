@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+
+	<property name="include">
+		<property name="legacypostgresql" value="true" />
+	</property>
+
+	<property name="db">
+		<property name="plugin" value="org.tolven.legacypostgresql.db" />
+		<property name="user" value="postgres" />
+		<property name="host" value="localhost" />
+		<property name="port" value="5432" />
+		<property name="name" value="postgres" />
+		<property name="url" value="jdbc:postgresql://#{db['host']}:#{db['port']}/#{db['name']}?ssl=true" />
+		<property name="driverClass" value="org.postgresql.Driver" />
+		<property name="minAppserverConnections" value="0" />
+		<property name="maxAppserverConnections" value="20" />
+	</property>
+
+	<property name="gatekeeper">
+		<property name="tablePrefix" value="core." />
+	</property>
+
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		<property name="dbUser" value="postgres" />
+	</property>
+
+</plugins>

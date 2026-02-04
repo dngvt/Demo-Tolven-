@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<extends>assignedAct</extends>
+	<name>obs/evn/prescriberlocation</name>
+	<description>Add Prescriber Location</description>
+	<page>prescriberlocation.xhtml</page>
+	<drilldown>prescriberlocationDD.xhtml</drilldown>
+	<menu>global:prescriberLocation</menu>
+ 	<tolvenId application="#{knownType}" accountId="#{account.id}"/>
+	<application name="echr" signatureRequired="true">
+		<instance>echr:admin:wip</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+<!--	<transitions path="trim.act.statusCodeValue">-->
+<!--	<transition name="create" to="active">-->
+<!--		<label language="en">Active</label>-->
+<!--	</transition>-->
+<!--	<transition name="complete" from="active" to="completed">-->
+<!--		<label language="en">Completed</label>-->
+<!--	</transition>-->
+<!--	<transition name="reviseActive" from="active" to="active">-->
+<!--		<label language="en">Revise</label>-->
+<!--	</transition>-->
+<!--	<transition name="eie" from="active" to="nullified">-->
+<!--		<label language="en">Entered in Error</label>-->
+<!--	</transition>-->
+<!--	<transition name="reviseCompleted" from="completed" to="completed">-->
+<!--		<label language="en">Revise</label>-->
+<!--	</transition>-->
+<!--	</transitions>-->
+	<act classCode="REG" moodCode="EVN">
+		<bind application="echr" phase="create">
+      		<placeholder bindAction="merge">
+        		<path>echr:assigned:prescriberLocation</path>
+      		</placeholder>
+   		</bind>
+   		<id>
+			<II>
+				<label>Internal ID (do not change)</label>
+				<root>#{computeIDRoot(account)}</root>
+				<extension>#{prescriberLocation.path}</extension>
+			</II>
+		</id>
+		<code>
+			<CD>
+				<code>C0017594</code>
+				<codeSystemName>tolven</codeSystemName>
+				<codeSystemVersion>4.0</codeSystemVersion>
+			</CD>
+		</code>
+		<statusCode>#{prescriberLocation.actStatus}</statusCode>
+		<title>
+			<ST>Add Prescriber Location</ST>
+		</title>
+		<effectiveTime>
+			<label>Effective time</label>
+			<new datatype="TS" function="now"/>
+		</effectiveTime>
+		<relationship typeCode="NAME" direction="OUT" name="location">
+			<act moodCode="EVN" classCode="ENTRY">
+				<observation>
+					<value>
+						<label>Location Name</label>
+						<ST>#{prescriberLocation.name}</ST>
+					</value>
+					<value>
+						<label>Address Line 1</label>
+						<ST>#{prescriberLocation.addressline1}</ST>
+					</value>
+					<value>
+						<label>Address Line 2</label>
+						<ST>#{from(source.addressline2,prescriberLocation.addressline2)}</ST>
+					</value>
+					<value>
+						<label>City</label>
+						<ST>#{from(source.city,prescriberLocation.city)}</ST>
+					</value>
+					<value>
+						<label>State</label>
+						<ST>#{from(source.state,prescriberLocation.state)}</ST>
+					</value>
+					<value>
+						<label>Zip</label>
+						<ST>#{from(source.zip,prescriberLocation.zip)}</ST>
+					</value>
+					<value>
+						<label>Phone</label>
+						<ST>#{prescriberLocation.phone}</ST>
+					</value>
+					<value>
+					<label>Fax</label>
+						<ST>#{from(source.fax,prescriberLocation.fax)}</ST>
+					</value>
+					<value>
+						<label>MessageId</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>SPI</label>
+						<ST>#{prescriberLocation.spi}</ST>
+					</value>
+					<value>
+						<label>Surescript Status</label>
+						<ST>#{prescriberLocation.surescriptStatus}</ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<compute>
+        	<type>org.tolven.process.MessageID</type>
+        	<property name="enabled">
+            	<value xsi:type="xs:boolean" >true</value>
+        	</property>
+        	<property name="action">
+		        <value xsi:type="xs:string">prescriberLocationRegistration</value>
+			</property>
+   		</compute>
+   		<compute>
+        	<type>org.tolven.process.ComputePrescriber</type>
+        	<property name="enabled">
+            	<value xsi:type="xs:boolean">true</value>
+        	</property>
+        	<property name="action">
+		        <value xsi:type="xs:string">prescriberLocationDetails</value>
+			</property>
+		</compute> 
+	</act>
+ </trim>

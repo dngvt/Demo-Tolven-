@@ -1,0 +1,60 @@
+package dischargeInstructions
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+//@use echr placeholders
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.model.Patient;
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+
+
+rule "Add dischargeInstructions to complete list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:dischargeInstructions" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:dischargeInstructionsList:completed" )
+		$md: MenuData( menuStructure == $ms,actStatus=="completed" )
+	then
+		MenuData mdLocList = app.createReferenceMD( $md, $msList );
+end
+
+rule "Add dischargeInstructions to Nullified list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:dischargeInstructions" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:dischargeInstructionsList:nullified" )
+		$md: MenuData( menuStructure == $ms,actStatus == "nullified" )		
+	then
+		MenuData mdLocList = app.createReferenceMD( $md, $msList );
+end
+
+rule "Add dischargeInstructions to Inactive list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patient:dischargeInstructions" )
+		$msList: MenuStructure( role == "list", path == "echr:patient:dischargeInstructionsList:obsolete" )
+		$md: MenuData( menuStructure == $ms, actStatus == "obsolete")		
+	then
+		MenuData mdLocList = app.createReferenceMD( $md, $msList );
+end
+
+rule "Add dischargeInstructions to complete list for ephr"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "ephr:patient:dischargeInstructions" )
+		$msList: MenuStructure( role == "list", path == "ephr:patient:dischargeInstructionsList:completed" )
+		$md: MenuData( menuStructure == $ms,actStatus=="completed" )
+	then
+		MenuData mdLocList = app.createReferenceMD( $md, $msList );
+end
+
+
+

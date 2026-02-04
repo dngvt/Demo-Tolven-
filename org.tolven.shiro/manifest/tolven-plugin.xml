@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.shiro" version="2.1.17" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+
+	<!-- DEV EXTENSION POINTS -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+		<parameter-def id="shiro-core" default-value="shiro-core-1.1.0.jar" multiplicity="none-or-one" />
+		<parameter-def id="shiro-web" default-value="shiro-web-1.1.0.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- DEV EXTENSION POINTS End -->
+
+
+
+
+
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="shiro-lib-legacypostgresql" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="legacypostgresql/shiro-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiro-lib-oracle" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="oracle/shiro-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiro-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="shiro-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiro-core" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="shiro-core-1.1.0.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiro-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="shiro-web-1.1.0.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiro-lib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="shiro-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="shiroWEB" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="shiroWEB.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+</plugin>

@@ -1,0 +1,55 @@
+dn: dc=tolven,dc=com
+objectClass: domain
+objectClass: top
+dc: tolven
+
+dn: ou=people,dc=tolven,dc=com
+objectClass: organizationalunit
+ou: people
+
+dn: ou=groups,dc=tolven,dc=com
+objectClass: organizationalunit
+ou: groups
+
+dn: cn=Administrator,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=tolven,dc=com
+cn: Administrator
+
+dn: uid=admin,ou=people,dc=tolven,dc=com
+objectClass: person
+objectClass: inetorgperson
+objectClass: organizationalperson
+uid: admin
+userPassword: {SSHA}itMxgS8Bxm66xF58p+u02i9+byJlcYYM
+cn: adminCN
+sn: adminSN
+o: adminORG
+ou: adminOU
+st: adminST
+ds-privilege-name: password-reset
+
+dn: cn=tolvenPerson_ROLE,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=tolven,dc=com
+cn: tolvenPerson_ROLE
+
+dn: cn=tolvenAdmin_ROLE,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=tolven,dc=com
+cn: tolvenAdmin_ROLE
+
+dn: cn=tolvenAdmin,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=tolven,dc=com
+cn: tolvenAdmin
+
+dn: cn=tolven_REALM,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=tolven,dc=com
+cn: tolven_REALM
+
+dn: cn=queue_REALM,ou=groups,dc=tolven,dc=com
+objectClass: groupOfUniqueNames
+cn: queue_REALM
+

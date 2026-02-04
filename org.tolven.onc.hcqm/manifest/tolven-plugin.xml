@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd"
+	id="org.tolven.onc.hcqm" version="2.1.6" vendor="Tolven">
+<!-- 
+	Some plugins include code that actually runs in the TPF (client) environment. For example, the assemblers and loaders contribute code that runs
+	in TPF. HelloWorld, is a small example of such code.
+	Other plugins are passive in TPF, supplying components to be used in, for example, building the Tolven application server.
+	To create an active TPF function, include the full name of a class (see HelloWorld) in the plugin element above. 
+	For a passive plugin, completely remove the class attribute from the plugin element above, remove the runtime element and its contents below, 
+	and remove the HelloWorld.java from tpf/source folder. 
+-->
+<!-- 
+	Any plugin mentioned in extensions below will need declaration in the requires element. 
+	The most common plugins are already included. Add additional plugins as needed. 
+-->
+<requires>
+     <import plugin-id="org.tolven.component.tolvenejb" />
+     <import plugin-id="org.tolven.component.tolvenweb" />
+	 <import plugin-id="org.tolven.component.application" />
+     <import plugin-id="org.tolven.component.tolvenlocale" /> 
+     <import plugin-id="org.tolven.component.tolvenlocale_en" />
+     <import plugin-id="org.tolven.onc.encounter" />
+</requires>
+<!-- 
+	In most case, you plugin will be included in the development library which will allow
+	others to compile and debug against your code.
+-->
+<extension-point id="devLib" extension-multiplicity="none">
+	<parameter-def id="jar" default-value="devLib.jar" />
+</extension-point>
+<extension id="applications" plugin-id="org.tolven.component.application" point-id="applications">
+	<parameter id="dir" value="app" />
+</extension>
+<extension id="trims" plugin-id="org.tolven.component.application" point-id="trims">
+	<parameter id="dir" value="app/trim" />
+</extension>
+<extension id="ejbclasses" plugin-id="org.tolven.component.tolvenejb" point-id="classes">
+     <parameter id="dir" value="ejb/classes" />
+</extension>
+<extension id="scriptsDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="scriptsDirectory">
+     <parameter id="sourceDirectory" value="web/scripts" />
+</extension>
+<extension id="drilldownDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="drilldownDirectory">
+     <parameter id="sourceDirectory" value="web/drilldown" />
+</extension>
+<extension id="wizardDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="wizardDirectory">
+     <parameter id="sourceDirectory" value="web/wizard" />
+</extension>
+<extension id="locale-en-application-locale" plugin-id="org.tolven.component.tolvenlocale" point-id="application-locale">
+	<parameter id="application-name" value="echr" />
+	<parameter id="properties-file" value="locale/AppBundle_en.properties" />
+</extension>
+<extension id="myJavaScript" plugin-id="org.tolven.component.tolvenweb" point-id="portalScriptInclude">
+ <parameter id="includeFile" value="web/scriptInclude/myScripts.txt"/>
+ </extension>
+ <extension id="fiveDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="fiveDirectory">
+     <parameter id="sourceDirectory" value="web/five" />
+</extension>
+
+</plugin>

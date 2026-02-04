@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Select Account using RESTful API</title>
+    </head>
+    <body>
+   		<p>Select an Account (User must be logged in)</p>
+   		<form action="/api/vestibule/accountList" method="get" target="results">
+ 			<input type="submit" value="Show Account List" />
+		</form>
+		<div style="clear:both"/>
+		<hr/>
+   		<form action="/api/vestibule/createAccount" method="post" target="results">
+			  Account Type: <input type="text" name="type" size="10" /><br />
+			  Account Title: <input type="text" name="title" size="50"/><br />
+			  Account Timezone: <input type="text" name="timezone" size="10"/><br />
+ 			<input type="submit" value="Create Account" />
+		</form>
+		<div style="clear:both"/>
+		<hr/>
+		<form action="/api/vestibule/selectAccount" method="post" target="results">
+			  AccountId: <input type="text" name="accountId" value="" size="10"/><br />
+ 					<input type="submit" value="Select Account" />
+		</form>
+    </body>
+</html>
+				

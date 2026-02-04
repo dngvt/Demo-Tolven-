@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" id="org.tolven.login.notice" version="2.1.0">
+	<!-- Some plugins include code that actually runs in the TPF (client) environment. For example, the assemblers and loaders contribute code that runs in TPF. HelloWorld, is a small example of such code. Other plugins are passive in TPF, supplying components to be used in, for example, building the Tolven application server. To create an active TPF function, include the full name of a class (see HelloWorld) in the plugin element above. For a passive plugin, completely remove the class attribute from the plugin element above, remove the runtime element and its contents below, and remove the HelloWorld.java from tpf/source folder. -->
+	<!-- Any plugin mentioned in extensions below will need declaration in the requires element. The most common plugins are already included. Add additional plugins as needed. -->
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+		<import plugin-id="org.tolven.component.faces" />
+		<import plugin-id="org.tolven.gatekeeper" />
+		
+	</requires>
+	<!-- Include the following only if you have code that runs in TPF itself. -->
+
+	<!-- In most case, you plugin will be included in the development library which will allow others to compile and debug against your code. -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+
+	<!-- WAR EXTENSION POINTS -->
+
+	<extension-point id="gatekeeper.html-WARMODULE-DECLARATION" parent-plugin-id="org.tolven.component.war" parent-point-id="warModule-declaration" extension-multiplicity="none">
+		<parameter-def id="context-id" default-value="gatekeeperhtml" />
+	</extension-point>
+
+
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="notice-lib-legacypostgresql" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="legacypostgresql/notice-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="notice-lib-oracle" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="oracle/notice-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="notice-ejb" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="notice-ejb.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="notice-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="notice-web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+	<!-- TOLVEN LIB Extensions -->
+	 <extension id="notice-lib-legacypostgresql-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.login.notice" />
+		<parameter id="extension-point" value="notice-lib-legacypostgresql" />
+		<parameter id="database-code" value="legacypostgresql" />
+		<parameter id="contains-entities" />
+	</extension>
+	<extension id="notice-lib-oracle-libProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="libProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.login.notice" />
+		<parameter id="extension-point" value="notice-lib-oracle" />
+		<parameter id="database-code" value="oracle" />
+		<parameter id="contains-entities" />
+	</extension> 
+	<!-- TOLVEN LIB Extensions End -->
+
+	<!-- HTML WAR WEBDIRECTORY EXTENSIONS -->
+
+	<extension id="notice-loginDirectory-webDirectory-adaptor" plugin-id="org.tolven.gatekeeper" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.login.notice" />
+		<parameter id="extension-point" value="notice.html-loginDirectory" />
+		<parameter id="targetWebDirectory" value="login" />
+		<parameter id="parent-context-id" value="gatekeeperhtml" />
+	</extension>
+	<!-- HTML WAR WEBDIRECTORY EXTENSIONS END -->
+
+	<!-- EJB Extensions -->
+	<extension id="notice-ejb-ejbModuleProduct-adaptor" plugin-id="org.tolven.gatekeeper" point-id="ejbModuleProduct-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.login.notice" />
+		<parameter id="extension-point" value="notice-ejb" />
+	</extension>
+	<!-- EJB EXTENSIONS End -->
+
+	<!-- WAR EXTENSIONS -->
+	<extension id="notice.web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.gatekeeper" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.login.notice" />
+		<parameter id="extension-point" value="notice-web" />
+	</extension>
+	<!-- WAR EXTENSIONS End -->
+
+	<extension-point id="notice.html-loginDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/login" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="login.notice-managed-bean" plugin-id="org.tolven.component.faces" point-id="managed-bean">
+		<parameter id="description" value="Used for notice activities" />
+		<parameter id="managed-bean-name" value="noticeAct" />
+		<parameter id="managed-bean-class" value="org.tolven.gatekeeper.web.NoticeAction" />
+		<parameter id="managed-bean-scope" value="request" />
+		<parameter id="target-plugin-id" value="org.tolven.gatekeeper" />
+	</extension>
+</plugin>

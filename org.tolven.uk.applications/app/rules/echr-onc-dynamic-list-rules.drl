@@ -1,0 +1,63 @@
+package oncapps
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+//@use echr placeholders
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.rules.RulesLocal;
+import org.tolven.rules.DynamicRulesLocal;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+import function org.tolven.trim.contstants.PatientImportance.isVIP;
+
+rule "Initialize our custom event bean"
+	when
+		not RulesLocal()
+	then
+		insert(app.lookupResource( "java:global/tolven/tolvenEJB/RulesBean!org.tolven.rules.RulesLocal"));
+end
+
+rule "Initialize our dynamic rules event bean"
+	when
+		not DynamicRulesLocal()
+	then
+		insert(app.lookupResource( "java:global/tolven/tolvenEJB/DynamicRulesBean!org.tolven.rules.DynamicRulesLocal"));
+end
+
+rule "Place Patient List Definition on Patient List Definition list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:patientListDefinition" )
+		$md: MenuData( menuStructure == $ms )
+		$rulesBean: RulesLocal()
+		$dynamicRulesBean: DynamicRulesLocal()
+		// Get the menustructure for "mypatients"
+		$mypatientlist: MenuStructure( role == "list", path == "echr:patients:all" ) 
+	then
+		app.info( "Place Patient List Definition on Patient List Definition list");
+		app.info( "Creating new list based on My Patients list" );
+		$dynamicRulesBean.createDynamicList($md, $mypatientlist);
+		app.info( "Loading new rule package" );
+		
+		// Go get the rule content from the database and then run it against the RulesBean.createRulePackage
+		$rulesBean.createRulePackage((String)$md.getField("rule"));
+		app.info( "New rule package loaded." );
+		//app.info( "Reprocessing placeholders." );
+		$dynamicRulesBean.reprocessPlaceholders($md, "echr:patients:all");
+		//app.info( "Completed reprocessing placeholders." );
+end
+
+

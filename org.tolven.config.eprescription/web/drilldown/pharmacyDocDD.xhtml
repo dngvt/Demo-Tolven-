@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<head>
+<title>Pharmacy Selected - Drilldown</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<ui:composition>
+	<wiz:body>
+		<wiz:group title="Details">
+			<c:if test="#{trim.trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value == ''}">
+				<script>
+					$("#{menu.elementLabel}submitButton").disabled = true;
+				</script>
+				<div style="color:red; font-size:10pt;">Please select a pharmacy.</div>
+			</c:if>
+			<c:if test="#{trim.trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value != ''}">
+				<div id="pharmacyDD">
+					<script>
+						insertPharmacyDetails("#{trim.trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value}", '#{menu.element}', 'pharmacyDD');
+					</script>
+				</div>
+			</c:if>
+		</wiz:group>
+	</wiz:body>
+</ui:composition>
+</body>
+</html>

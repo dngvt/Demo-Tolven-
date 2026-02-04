@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Patient Quality Review</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:step title="#{msg.GettingStarted}" >
+			<wiz:body>
+				<p>Use this form to capture Quality Review data from an IP Encounter</p>
+				<p>Click the next button to document the inpatient encounter.</p>
+			</wiz:body>
+			<wiz:help>
+				<h1>getting Started</h1>
+				<p>Help provides additional information about each page</p>
+				<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+				If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+				Once submitted, you will not be able to Cancel the form.</p>
+			</wiz:help>		
+		</wiz:step>
+		<wiz:step title="Enter #{menu.menuDataItem.string01}" >		
+		<!--  wiz:step title="#{msg.Identity}"  -->
+			<wiz:body>	
+	    		<h:panelGrid columns="2">
+					<h:outputText value="Patient Name:"/>
+					<h:outputText value="#{menu.menuDataItem.parent01.string01}, #{menu.menuDataItem.parent01.string02} #{menu.menuDataItem.parent01.string03}"/>
+					<h:outputText value="DOB: "/>					
+					<h:outputText value="#{menu.menuDataItem.parent01.date01}"/>	
+					<h:outputText value="Hospital:"/>
+					<h:outputText value="#{top.accountTitle} "/>
+				</h:panelGrid>
+			</wiz:body>
+
+			<wiz:body>
+
+				<wiz:group title="#{trim.trim.act.relationship['ipDates'].act.title.ST}">
+						<table width="100%" cellpadding="5">
+							<tr>
+								<td width="20%">
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[0].label.value}: "/>
+								</td>
+								<td width="20%">
+									<trim:TS id="admitDate" value="#{trim.trim.act.relationship['ipDates'].act.observation.values[0].TS}" dateStyle="short" timeStyle="short" validate="past" required="true"/>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[1].label.value}: "/>
+								</td>
+								<td>
+									 <trim:TS id="dischargeDate" value="#{trim.trim.act.relationship['ipDates'].act.observation.values[1].TS}" dateStyle="short" timeStyle="short" validate="past" required="true"/>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+				</wiz:group>			
+											
+				<wiz:group title="VTE Prophylaxis" style="align:left;">
+<table style="align:left;">
+   <tr>
+     <td style="align:left;">
+				 <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE1 Exclusions</i></div>
+				    </div>
+	 
+			 <h:inputText value = "DDIIII" id ="result" />
+			 
+<br/>
+				   
+<h:selectManyCheckbox id="VTE1X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',0)">
+			<nobr>
+                        <f:selectItem itemLabel="Comfort Measures" itemValue="1" />	
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2" />
+			<f:selectItem itemLabel="ICU Direct Admit/Transfer" itemValue="3" />
+			<f:selectItem itemLabel="Behavioral Health patient" itemValue="4" />
+			<f:selectItem itemLabel="Obstetrics patient" itemValue="5" />
+			<f:selectItem itemLabel="Hemorrhagic or Ischemic Stroke principal Dx" itemValue="6" />
+			<f:selectItem itemLabel="VTE principal Dx" itemValue="7" />
+			<f:selectItem itemLabel="none of the above" itemValue="8" />
+                      </nobr>
+ </h:selectManyCheckbox>
+			 </div>	
+                         <br/>
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE1 Numerator</i></div>
+				    </div>
+			 
+				    
+<h:selectManyCheckbox id="VTE1N" layout="lineDirection"
+						   onclick ="qr1Init(this,'N',0)">
+			<f:selectItem itemLabel="VTE Prophylaxis Hospital at Admission" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Reasons for No VTE Prophylaxis at Hospital Admission" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="VTE Prophylaxis Declined Hospital Admission" itemValue="3"/>&nbsp;&nbsp;
+	<f:selectItem itemLabel="none of the above" itemValue="4"/>&nbsp;&nbsp;
+			
+	</h:selectManyCheckbox>
+			 </div>	
+</td>
+</tr>
+</table>
+ 			
+				</wiz:group>	
+
+
+
+
+<wiz:group title="Intensive Care Unit (ICU) VTE Prophylaxis" style="align:left;">
+<table style="align:left;">
+   <tr>
+     <td style="align:left;">
+				 <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE2 Exclusions</i></div>
+				    </div>
+			 
+				    
+<h:selectManyCheckbox id="VTE2X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',1)">
+			<nobr>
+            <f:selectItem itemLabel="Comfort Measures" itemValue="1"/>	
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+			<f:selectItem itemLabel="ICU lt 1 day" itemValue="3"/>
+			<f:selectItem itemLabel="VTE Principal Dx" itemValue="4"/>
+			<f:selectItem itemLabel="Obstetrics patient" itemValue="5"/>
+			<f:selectItem itemLabel="VTE Prophylaxis" itemValue="6"/>
+			<f:selectItem itemLabel="Reasons for No VTE Prophylaxis" itemValue="7"/>
+			<f:selectItem itemLabel="none of the above" itemValue="8"/>
+                      </nobr>
+ </h:selectManyCheckbox>
+			 </div>	
+                         <br/>
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i> VTE2 Numerator</i></div>
+				    </div>
+			 
+				    
+<h:selectManyCheckbox id="VTE2N" layout="lineDirection"
+						   onclick ="qr1Init(this,'N',1)">
+			<f:selectItem itemLabel=" VTE Prophylaxis Hospital at Admission" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Reasons for No VTE Prophylaxis at Hospital Admission" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="VTE Prophylaxis Declined Hospital Admission" itemValue="3"/>&nbsp;&nbsp;
+	<f:selectItem itemLabel="none of the above" itemValue="4"/>&nbsp;&nbsp;
+			
+	</h:selectManyCheckbox>
+			 </div>	
+</td>
+</tr>
+</table>
+ 			
+				</wiz:group>				
+			
+  				<wiz:yesno id="dxVTE">
+ 						Any Diagnosis of VTE confirmed?
+ 				</wiz:yesno>
+ 				               						
+		<wiz:group title="VTE Treatment Measures" style="align:left;"
+				visible="$('#{menu.elementLabel}:dxVTE').isTrue();">
+				
+			<wiz:group title="VTE Patients with Anticoagulation Overlap Therapy" style="align:left;">
+		<table style="align:left;">
+  		 <tr>
+     			<td style="align:left;">
+				 <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE3 Denominator</i></div>
+				    </div>
+			 
+				    
+					<h:selectManyCheckbox id="VTE3D" layout="lineDirection"
+						   onclick ="qr1Init(this,'D',2)">
+			<nobr>
+                        <f:selectItem itemLabel="Any Diagnosis of VTE Confirmed" itemValue="1"/>	
+			<f:selectItem itemLabel="none of the above" itemValue="2"/>
+                      </nobr>
+ </h:selectManyCheckbox>
+			 </div>	
+                         <br/>
+	<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE3 Exclusions</i></div>
+				    </div>
+			 
+				    
+	<h:selectManyCheckbox id="VTE3X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',2)">
+			<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Warfarin Administration" itemValue="3"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Warfarin Prescribed at Discharge" itemValue="4"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="VTE Diagnostic Test" itemValue="5"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="none of the above" itemValue="6"/>&nbsp;&nbsp;
+			
+	</h:selectManyCheckbox>
+
+			 </div>	
+			<br/>
+			
+			<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE3 Numerator</i></div>
+				    </div>
+			 
+				    
+			<h:selectManyCheckbox id="VTE3N" layout="lineDirection"
+						   onclick ="qr1Init(this,'N',2)">
+			<f:selectItem itemLabel="Warfarin and parenteral anticoagulation gte 5 days and INR gte 2" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Warfarin and parenteral anticoagulation gte 5 days and INR lt 2 and discharged on overlap therapy" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Warfarin and parenteral anticoagulation lt 5 days and discharged on overlap therapy" itemValue="3"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="none of the above" itemValue="3"/>&nbsp;&nbsp;
+			</h:selectManyCheckbox>
+			 </div>	
+			</td>
+		</tr>
+	</table>
+ </wiz:group>	
+
+
+<wiz:group title="VTE Patients Receiving Unfractionated Heparin (UFH)" style="align:left;">
+		<table style="align:left;">
+  		 <tr>
+     			<td style="align:left;">
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+
+ <div class="group-title"><i>VTE4 Denominator</i></div>
+				    </div>
+			 
+				    
+					<h:selectManyCheckbox id="VTE4D" layout="lineDirection"
+						   onclick ="qr1Init(this,'D',3)">
+			<nobr>
+                        <f:selectItem itemLabel="Any Diagnosis of VTE Confirmed" itemValue="1"/>	
+			<f:selectItem itemLabel="IV UFH Therapy Administration" itemValue="2"/>
+		<f:selectItem itemLabel="none of the above" itemValue="3"/>
+             </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+			<br/>
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+			<div class="group-title"><i>VTE4 Exclusions</i></div>
+				  
+ </div>
+			 
+				    
+					<h:selectManyCheckbox id="VTE4X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',3)">
+			<nobr>
+                        <f:selectItem itemLabel="Comfort Measures" itemValue="1"/>	
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+		<f:selectItem itemLabel="VTE Diagnostic Test" itemValue="3"/>
+		<f:selectItem itemLabel="none of the above" itemValue="4"/>
+                      </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+<br/>
+
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE4 Numerator</i></div>
+				    </div>
+			 
+				    
+	<h:selectManyCheckbox id="VTE4N" layout="lineDirection"
+						   onclick ="qr1Init(this,'N',3)">
+			<f:selectItem itemLabel="Monitoring Documentation (Platelet count before therapy)" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Monitoring Documentation (Platelet count within 1 day of therapy)" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Monitoring Documentation (Platelet count within 3 day of therapy)" itemValue="3"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Monitoring Documentation (following protocol)" itemValue="4"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="none of the above" itemValue="5"/>&nbsp;&nbsp;
+			
+	</h:selectManyCheckbox>
+
+			 </div>		 
+
+			</td>
+		</tr>
+
+
+	</table>
+ </wiz:group>	
+
+
+<wiz:group title="VTE Discharge Instructions" style="align:left;">
+		<table style="align:left;">
+  		 <tr>
+     			<td style="align:left;">
+			 <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+
+ <div class="group-title"><i>VTE5 Denominator</i></div>
+				    </div>
+			 
+				    
+					<h:selectManyCheckbox id="VTE5D" layout="lineDirection"
+						   onclick ="qr1Init(this,'D',4)">
+			<nobr>
+                        <f:selectItem itemLabel="Any Diagnosis of VTE Confirmed" itemValue="1"/>	
+			<f:selectItem itemLabel="Discharge to Home or Homehealth or hospice" itemValue="2"/>
+		<f:selectItem itemLabel="none of the above" itemValue="3"/>
+             </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+			<br/>
+ <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+<div class="group-title"><i>VTE5 Exclusions</i></div>
+				    </div>
+			 
+				 
+					<h:selectManyCheckbox id="VTE5X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',4)">
+			<nobr>
+                        <f:selectItem itemLabel="Comfort Measures" itemValue="1"/>	
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+			<f:selectItem itemLabel="Warfarin Prescribed at Discharge" itemValue="3"/>
+			<f:selectItem itemLabel="VTE Diagnostic Test" itemValue="4"/>
+			<f:selectItem itemLabel="none of the above" itemValue="5"/>
+                      </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+			<br/>
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE5 Numerator</i></div>
+				    </div>
+			 
+				 
+	<h:selectManyCheckbox id="VTE5N" layout="lineDirection"
+						   onclick ="qr1Init(this,'N',4)">
+			<f:selectItem itemLabel="Address Compliance Issues" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="Address Dietary Advice" itemValue="2"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Address Follow-up Monitoring" itemValue="3"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Address Potential for Adverse Drug Reactions and Interactions" itemValue="4"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="Address Activation of Emergency" itemValue="5"/>&nbsp;&nbsp;
+			<f:selectItem itemLabel="none of the above" itemValue="5"/>&nbsp;&nbsp;
+	</h:selectManyCheckbox>
+
+			 </div>	
+
+			</td>
+		</tr>
+
+
+	</table>
+ </wiz:group>	
+
+
+
+<wiz:group title="Incidence of Potentially-Preventable VTE" style="align:left;">
+		<table style="align:left;">
+  		 <tr>
+     			<td style="align:left;">
+				 <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+
+ <div class="group-title"><i>VTE6 Denominator</i></div>
+				    </div>
+			 
+				 
+					<h:selectManyCheckbox id="VTE6D" layout="lineDirection"
+						   onclick ="qr1Init(this,'D',5)">
+			<nobr>
+                        <f:selectItem itemLabel="Reasons for not administering mechanical and pharmacologic prophylaxis" itemValue="1"/>	
+			<f:selectItem itemLabel="VTE Present on Arrival" itemValue="2"/>
+			<f:selectItem itemLabel="Principal Diagnosis of VTE" itemValue="3"/>
+			<f:selectItem itemLabel="none of the above" itemValue="4"/>
+
+
+             </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+
+			<br/>
+	<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE6 Exclusions</i></div>
+				    </div>
+			 
+				 
+					<h:selectManyCheckbox id="VTE6X" layout="lineDirection"
+						   onclick ="qr1Init(this,'X',5)">
+			<nobr>
+                        <f:selectItem itemLabel="Comfort Measures" itemValue="1"/>	
+			<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+			<f:selectItem itemLabel="VTE Diagnostic Test" itemValue="3"/>
+			<f:selectItem itemLabel="none of the above" itemValue="4"/>
+                      </nobr>
+ 		</h:selectManyCheckbox>
+			 </div>	
+<br/>
+
+<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				    <div class="group-title"><i>VTE6 Numerator</i></div>
+				    </div>
+			 
+				 
+	<h:selectManyCheckbox id="VTE6N" layout="lineDirection"
+						 onclick ="qr1Init(this,'N',5)">
+			<f:selectItem itemLabel="No Documentation of VTE prophylaxis (mechanical and/or pharmacologic) administration" itemValue="1"/>&nbsp;&nbsp;		
+			<f:selectItem itemLabel="none of the above" itemValue="2"/>&nbsp;&nbsp;
+	</h:selectManyCheckbox>
+
+			 </div>	
+
+			</td>
+		</tr>
+
+
+	</table>
+ </wiz:group>
+</wiz:group>
+
+<h:inputHidden id="VTE_Prophylaxis" value="#{trim.trim.act.relationship['vte1'].act.observation.value.ST.value}"   />
+<h:inputHidden id="ICU_VTE_Prophylaxis" value="#{trim.trim.act.relationship['vte2'].act.observation.value.ST.value}"   />
+<h:inputHidden id="Anticoagulation_Overlap_Therapy" value="#{trim.trim.act.relationship['vte3'].act.observation.value.ST.value}"   />
+<h:inputHidden id="VTE_UFH" value="#{trim.trim.act.relationship['vte4'].act.observation.value.ST.value}"   />
+<h:inputHidden id="Discharge_Instructions" value="#{trim.trim.act.relationship['vte5'].act.observation.value.ST.value}"   />
+<h:inputHidden id="VTE_Potentially_Preventable" value="#{trim.trim.act.relationship['vte6'].act.observation.value.ST.value}"   />
+
+<!-- please see above for correct trim targets
+<h:inputHidden id="VTE_Prophylaxis" value="#{trim.trim.act.relationships[1].act.observation.values[0].CE.value}"   />
+<h:inputHidden id="ICU_VTE_Prophylaxis" value="#{trim.trim.act.relationships[2].act.observation.values[0].CE.value}"   />
+<h:inputHidden id="Anticoagulation_Overlap_Therapy" value="#{trim.trim.act.relationships[3].act.observation.values[0].CE.value}"   />
+<h:inputHidden id="VTE_UFH" value="#{trim.trim.act.relationships[4].act.observation.values[0].CE.value}"   />
+<h:inputHidden id="Discharge_Instructions" value="#{trim.trim.act.relationships[5].act.observation.values[0].CE.value}"   />
+<h:inputHidden id="VTE_Potentially_Preventable" value="#{trim.trim.act.relationships[6].act.observation.values[0].CE.value}"   />
+-->
+			
+			</wiz:body>
+			<wiz:help>
+				<h1>Quality Review</h1>
+				<p>Help needed here.</p>
+			</wiz:help>
+		</wiz:step>
+
+		<wiz:uploadStep title="Attach a document">
+			TBD.
+		</wiz:uploadStep>
+	</ui:composition>
+
+<!--  script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/qr1.js">
+</script-->	
+	
+</body>
+
+</html>

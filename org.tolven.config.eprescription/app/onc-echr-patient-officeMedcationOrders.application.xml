@@ -1,0 +1,161 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient">
+		<placeholder name="officeMedicationOrder" title="Medication Order" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/medicationLink.xhtml">
+			<field name="name" internal="string01">
+				<from>#{act.participation['consumableProduct'].role.player.code.CE.displayName}</from><!-- eprescription -->
+				<from>#{trim.description}</from>
+			</field>
+			<field name="code" internal="string02">
+				<from>#{act.participation['consumableProduct'].role.player.code.CE.code}</from>	<!-- eprescription -->
+			</field>
+			<field name="start" internal="date01">
+				<from>#{act.participation['consumableProduct'].role.effectiveTime.IVLTS.low.TS.date}</from>	 <!-- eprescription -->
+			</field>
+			<field name="end" internal="date02">
+				<from>#{act.relationship['consumableProduct'].act.effectiveTime.IVLTS.high.TS.date}</from>	 <!-- eprescription -->
+			</field>
+			<field name="status" internal="string03">
+				<from>#{toLowerCaseValue(act.statusCode)}</from>
+				<from>#{toLowerCaseValue(trim.act.statusCode)}</from>
+			</field>
+			<field name="patient" internal="parent01">
+				<from>#{patient}</from>
+			</field>
+			<field name="author" internal="parent02">
+				<from>#{internalId( account, trim.act.participation['author'].role.id)}</from>
+			</field>
+			<field name="encounter" internal="parent03">
+				<from>#{internalId( account, trim.act.relationship['encounter'].act.id)}</from>
+			</field>
+			<field name="diagnosis" internal="parent04">
+				<from>#{internalId( account, trim.act.relationship['diagnosis'].act.id)}</from>
+			</field>
+			<field name="enteredBy" internal="string04">
+				<from>#{internalId( account, trim.act.participation['dataEnterer'].role.id)}</from>
+			</field>
+			<field name="route" internal="string05">
+				<from>#{act.substanceAdministration.routeCode.value.displayName}</from>
+			</field>
+			<field name="dispenseAmount" internal="string06">
+				<from>#{act.participation['consumableProduct'].role.player.quantity.PQ.value}</from>
+			</field>
+			<field name="refill" internal="string07">
+				<from>#{act.relationship['refill'].act.text.ST.value}</from>
+			</field>
+			<field name="instructions" internal="_extended">
+				<from>#{act.relationship['sigCodes'].act.observation.value.ED.stringValue}</from>
+			</field>
+			<field name="comments" internal="_extended">
+				<from>#{act.relationship['comment'].act.observation.value.ED.stringValue}</from>
+			</field>
+			<field name="quantityValue" internal="string08">
+				<from>#{act.participation['consumableProduct'].role.player.quantity.PQ.value}</from><!-- eprescription -->
+			</field>
+			
+		</placeholder>
+	</extends>
+	<extends path="echr:patient">
+		<menu name="officeMedicationOrders" sequence="4" title="Medication Orders" page="/five/bar2.xhtml" visible="true">
+			<list name="active" title="Active" page="/five/list.xhtml" visible="true">
+				<column name="name" internal="string01" reference="true" width="25.0">
+					<from>#{officeMedicationOrder.name}</from>
+				</column>
+				<column name="dispenseAmount" internal="string02" width="25.0">
+					<from>#{officeMedicationOrder.dispenseAmount}</from>
+				</column>
+				<column name="instructions" internal="string03" width="10.0">
+					<from>#{officeMedicationOrder.instructions}</from>
+				</column>
+				<column name="refill" internal="string04" width="10.0">
+					<from>#{officeMedicationOrder.refill}</from>
+				</column>
+				<column name="start" internal="date01" width="10.0" format="MM/dd/yy">
+					<from>#{officeMedicationOrder.start}</from>
+				</column>
+				<column name="enteredBy" internal="string05" width="10.0">
+					<from>#{officeMedicationOrder.enteredBy}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:officeMedicationOrdersMenu">
+					<column name="Medication" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+			<list name="inactive" title="Inactive" page="/five/list.xhtml" visible="true">
+				<column name="name" internal="string01" reference="true" width="25.0">
+					<from>#{officeMedicationOrder.name}</from>
+				</column>
+				<column name="dispenseAmount" internal="string02" width="25.0">
+					<from>#{officeMedicationOrder.dispenseAmount}</from>
+				</column>
+				<column name="instructions" internal="string03" width="10.0">
+					<from>#{officeMedicationOrder.instructions}</from>
+				</column>
+				<column name="refill" internal="string04" width="10.0">
+					<from>#{officeMedicationOrder.refill}</from>
+				</column>
+				<column name="start" internal="date01" width="10.0" format="MM/dd/yy">
+					<from>#{officeMedicationOrder.start}</from>
+				</column>
+				<column name="enteredBy" internal="string05" width="10.0">
+					<from>#{officeMedicationOrder.enteredBy}</from>
+				</column>
+			</list>
+			<list name="all" title="All" page="/five/list.xhtml" visible="true">
+				<column name="name" internal="string01" reference="true" width="25.0">
+					<from>#{officeMedicationOrder.name}</from>
+				</column>
+				<column name="dispenseAmount" internal="string02" width="25.0">
+					<from>#{officeMedicationOrder.dispenseAmount}</from>
+				</column>
+				<column name="instructions" internal="string03" width="10.0">
+					<from>#{officeMedicationOrder.instructions}</from>
+				</column>
+				<column name="refill" internal="string04" width="10.0">
+					<from>#{officeMedicationOrder.refill}</from>
+				</column>
+				<column name="start" internal="date01" width="10.0" format="MM/dd/yy">
+					<from>#{officeMedicationOrder.start}</from>
+				</column>
+				<column name="enteredBy" internal="string05" width="10.0">
+					<from>#{officeMedicationOrder.enteredBy}</from>
+				</column>
+			</list>
+			<list name="nullified" title="Entered in Error" page="/five/list.xhtml" visible="true">
+				<column name="name" internal="string01" reference="true" width="25.0">
+					<from>#{officeMedicationOrder.name}</from>
+				</column>
+				<column name="dispenseAmount" internal="string02" width="25.0">
+					<from>#{officeMedicationOrder.dispenseAmount}</from>
+				</column>
+				<column name="instructions" internal="string03" width="10.0">
+					<from>#{officeMedicationOrder.instructions}</from>
+				</column>
+				<column name="refill" internal="string04" width="10.0">
+					<from>#{officeMedicationOrder.refill}</from>
+				</column>
+				<column name="start" internal="date01" width="10.0" format="MM/dd/yy">
+					<from>#{officeMedicationOrder.start}</from>
+				</column>
+				<column name="enteredBy" internal="string05" width="10.0">
+					<from>#{officeMedicationOrder.enteredBy}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:patient:summary">
+		<list name="omedsum" visible="never">
+			<column name="date" internal="date01" format="MM/dd/yy">
+				<from>#{officeMedicationOrder.start}</from>
+			</column>
+			<column name="name" internal="string01">
+				<from>#{officeMedicationOrder.name}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="omedsum" portalColumn="2" sequence="1" title="Office Medication Orders" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:omedsum" visible="true" drilldown=":officeMedicationOrders">
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:officeMedicationOrdersMenu">
+				<column name="Medication" internal="string01" instantiate="true" width="40.0" />
+			</action>
+		</portlet>
+	</extends>
+</application>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" id="org.tolven.component.datamigration" version="2.1.0" vendor="Tolven" class="org.tolven.component.datamigration.DataMigrationPlugin">
+
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.faces" />
+		<import plugin-id="org.tolven.component.application" />
+		<import plugin-id="org.tolven.component.war" />
+		<import plugin-id="org.tolven.component.tolvenear" />
+		<import plugin-id="org.tolven.component.tolvenlocale" />
+		<import plugin-id="org.tolven.component.tolvenlocale_en" />
+		<import plugin-id="org.tolven.component.tolvenweb.taglibs.trim" />
+	</requires>
+	<runtime>
+		<library type="code" path="tpf/classes/" id="classes" />
+	</runtime>
+
+	<extension id="applications" plugin-id="org.tolven.component.application" point-id="applications">
+		<parameter id="dir" value="app" />
+	</extension>
+	<extension id="trims" plugin-id="org.tolven.component.application" point-id="trims">
+		<parameter id="dir" value="app/trim" />
+	</extension>
+	<extension id="application-locale" plugin-id="org.tolven.component.tolvenlocale_en" point-id="application-locale">
+		<parameter id="application-name" value="echr" />
+		<parameter id="properties-file" value="locale/datamigration-locale.properties" />
+	</extension>
+
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<extension id="fiveDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="fiveDirectory">
+		<parameter id="sourceDirectory" value="web/five" />
+	</extension>
+	<extension id="wizardDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="wizardDirectory">
+		<parameter id="sourceDirectory" value="web/wizard" />
+	</extension>
+	<extension id="scriptsDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="scriptsDirectory">
+		<parameter id="sourceDirectory" value="web/scripts" />
+	</extension>
+	<extension id="warclasses" plugin-id="org.tolven.component.war" point-id="classes">
+		<parameter id="dir" value="web/classes" />
+		<parameter id="target-plugin-id" value="org.tolven.component.tolvenweb" />
+	</extension>
+	<extension id="dataMigrationScripts" plugin-id="org.tolven.component.tolvenweb" point-id="portalScriptInclude">
+		<parameter id="includeFile" value="scriptInclude/tolvenDataMigration.txt" />
+	</extension>
+</plugin>

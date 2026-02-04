@@ -1,0 +1,8 @@
+
+<script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/hcqm2.js">
+</script>
+
+<script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/hcqm1.js">
+</script>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.tolven.document.store.fs" version="2.1.2" vendor="Tolven" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd">
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenear" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+	</requires>
+
+	<!-- DEV EXTENSION POINTS -->
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<!-- DEV EXTENSION POINTS End -->
+
+	<!-- LOCAL RESOURCE EXTENSION POINTS -->
+	<extension-point id="doc-store-fs-lib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="doc-store-fs-lib.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="doc-store-fs-web" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="doc-store-fs-web.jar" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- LOCAL RESOURCE EXTENSION POINTS End -->
+
+	<extension id="ejbClasses" plugin-id="org.tolven.component.tolvenejb" point-id="classes">
+		<parameter id="dir" value="java/classes" />
+	</extension>
+	
+	<!-- WAR EXTENSIONS -->
+	<extension id="doc-store-fs-web-WEB-INF-LIB-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="WEB-INF-LIB-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.document.store.fs" />
+		<parameter id="extension-point" value="doc-store-fs-web" />
+	</extension>
+	<!-- WAR EXTENSIONS End -->
+	
+	<extension-point extension-multiplicity="none" id="tolvenProperties">
+		<parameter-def id="org.tolven.document.store.fs.tmp-dir" default-value="#{pluginProperty['org.tolven.document.store.fs.tmp-dir']}" />
+		<parameter-def id="org.tolven.document.store.fs.mutable-dirs" default-value="#{pluginProperty['org.tolven.document.store.fs.mutable-dirs']}" />
+		<parameter-def id="org.tolven.document.store.fs.immutable-dirs" default-value="#{pluginProperty['org.tolven.document.store.fs.immutable-dirs']}" />
+	</extension-point>
+	
+</plugin>

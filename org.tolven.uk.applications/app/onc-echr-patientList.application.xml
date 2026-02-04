@@ -1,0 +1,39 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<!-- Added placeholder for patient list definition in component L -->
+	<extends path="echr">
+		<placeholder name="patientListDefinition" sequence="40" title="PatientListDefinition" eventInstance="echr:patients:wip" page="/five/patient.xhtml" heading="/five/chartLink.xhtml">
+			<field name="effectiveTime" internal="ts01">
+				<from>#{trim.act.effectiveTime.TS.date}</from>
+			</field>
+			<field name="listName" internal="string01">
+				<from>#{trim.act.relationship['generalDetails'].act.text.ST.value}</from>
+			</field>
+			<field name="existingPatients" internal="string02">
+				<from>#{trim.field['existingPatients']}</from>
+			</field>
+			<field name="listContents" internal="_extended">
+				<from>#{trim.act.relationship['advancedConfiguration'].act.text.ST.value}</from>
+			</field>
+			<field name="rule" internal="_extended" type="string">
+				<from>#{trim.act.text.ST.value}</from>
+			</field>
+			<field name="availabilityTime" internal="updatetime"/>
+		</placeholder>
+	</extends>
+	<extends path="echr:patients">
+		<!-- Added PatientListDefinition list for component L -->
+		<list name="patientListDefinition" title="PatientListDefinition" page="/five/patientListDesigner.xhtml" visible="false" drilldown="echr:patientListDefinition">
+			<column name="Date" internal="ts01" format="dd/MM/yyyy" width="15.0">
+				<from>#{patientListDefinition.effectiveTime}</from>
+			</column>
+			<column name="Title" internal="string01" reference="true" width="40.0">
+				<from>#{patientListDefinition.listName}</from>
+			</column>
+			<column name="Status" internal="actStatus" width="10.0">
+				<from>#{patientListDefinition.actStatus}</from>
+			</column>
+		</list>
+	</extends>
+</application>

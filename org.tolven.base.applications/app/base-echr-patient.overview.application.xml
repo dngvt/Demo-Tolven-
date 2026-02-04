@@ -1,0 +1,7 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient">
+		<menu name="summary" sequence="1" title="Overview" page="/five/bar2.xhtml">
+			<portal name="portal" title="Summary" page="/five/portletView.xhtml" visible="true" />
+		</menu>
+	</extends>
+</application>

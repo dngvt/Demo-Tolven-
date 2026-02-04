@@ -1,0 +1,574 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Patient Quality Review - Stroke</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:step title="#{msg.GettingStarted}" >
+			<wiz:body>
+				<p>Use this form to capture Quality Review data from an IP Encounter for Stroke Diagnoses</p>
+				<p>Click the next button to document the inpatient encounter.</p>
+			</wiz:body>
+			<wiz:help>
+				<h1>getting Started</h1>
+				<p>Help provides additional information about each page</p>
+				<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+				If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+				Once submitted, you will not be able to Cancel the form.</p>
+			</wiz:help>		
+		</wiz:step>
+		<wiz:step title="Enter #{menu.menuDataItem.string01}" >		
+		<!--  wiz:step title="#{msg.Identity}"  -->
+			<wiz:body>	
+	    		<h:panelGrid columns="2">
+					<h:outputText value="Patient Name:"/>
+					<h:outputText value="#{menu.menuDataItem.parent01.string01}, #{menu.menuDataItem.parent01.string02} #{menu.menuDataItem.parent01.string03}"/>
+					<h:outputText value="DOB: "/>					
+					<h:outputText value="#{menu.menuDataItem.parent01.date01}"/>	
+					<h:outputText value="Hospital:"/>
+					<h:outputText value="#{top.accountTitle} "/>
+				</h:panelGrid>
+			</wiz:body>
+
+			<wiz:body>
+				<wiz:group title="#{trim.trim.act.relationship['ipDates'].act.title.ST}">
+						<table width="100%" cellpadding="5">
+							<tr>
+								<td width="20%">
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[0].label.value}: "/>
+								</td>
+								<td width="20%">
+									<trim:TS id="admitDate" value="#{trim.trim.act.relationship['ipDates'].act.observation.values[0].TS}" dateStyle="short" timeStyle="short" validate="past" required="true"/>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[1].label.value}: "/>
+								</td>
+								<td>
+									 <trim:TS id="dischargeDate" value="#{trim.trim.act.relationship['ipDates'].act.observation.values[1].TS}" dateStyle="short" timeStyle="short" validate="past" required="true"/>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+				</wiz:group>
+                <h:inputText value = "IIIIII" id ="result" />	
+				<br/>                
+ 				<wiz:yesno id="iStroke">
+ 						Principal Diagnosis of Ischemic stroke?
+ 				</wiz:yesno>
+  				<wiz:yesno id="hStroke">
+ 						Principal Diagnosis of Hemmorhagic stroke?
+ 				</wiz:yesno>
+ 				               						
+		<wiz:group title="Ischemic stroke Measures" style="align:left;"
+				visible="$('#{menu.elementLabel}:iStroke').isTrue();">
+						
+				<wiz:group title="Patients Discharged on Antithrombolytic Therapy" style="align:left;">
+                                <table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK2 Denominator</i></div>
+				    </div>
+									
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk2D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox  onclick = "qr2Init(this,'D',0)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic stroke" itemValue="1"/>												
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+							
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->		
+
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK2 Exclusions</i></div>
+				    </div>
+				
+								
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',0)">
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="1"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="2"/>
+					<f:selectItem itemLabel="Reason For Not Prescribing Antithrombolytic Therapy at Discharge" itemValue="3"/>									
+					<f:selectItem itemLabel="DischargeTransfer" itemValue="4"/>	
+					<f:selectItem itemLabel="Deceased - Expired" itemValue="5"/>									
+					<f:selectItem itemLabel="VTE Prophylaxis" itemValue="6"/>
+					<f:selectItem itemLabel="VReasons for No VTE Prophylaxis" itemValue="7"/>				
+					<f:selectItem itemLabel="none of the above" itemValue="8"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>				
+								
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->
+								<div class="group-content" style="align:left;">
+				<div class="sub-group-header">
+				<div class="group-title"><i>STK2 Numerator</i></div>
+				</div>
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk2N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',0)">
+					<f:selectItem itemLabel="Antithrombolytic therapy prescribed at discharge" itemValue="1"/>
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+
+				</td>
+				</tr>
+				</table>
+ 				
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->	
+
+					
+			<wiz:group title="Anticoagulation therapy for atrial fibrillation/flutter"  style="align:left;">
+
+				
+                                <table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK3 Denominator</i></div>
+				    </div>
+				<br/>
+
+									
+								
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk3D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',1)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic stroke" itemValue="1"/>
+					<f:selectItem itemLabel="Atrial Fibrillation/Flutter" itemValue="2"/>																		
+					<f:selectItem itemLabel="none of the above" itemValue="3"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+				
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->								
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK3 Exclusions</i></div>
+				    </div>						
+			
+				<h:outputText value="#{trim.trim.act.relationship['stk3X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',1)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>				
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>
+					<f:selectItem itemLabel="Reason For Not Prescribing Antithrombolytic Therapy at Discharge" itemValue="5"/>									
+					<f:selectItem itemLabel="DischargeTransfer" itemValue="6"/>	
+					<f:selectItem itemLabel="Deceased - Expired" itemValue="7"/>																					
+					<f:selectItem itemLabel="none of the above" itemValue="8"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+								
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->
+				
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK3 Numerator</i></div>
+				    </div>
+
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk3N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',1)">
+					<f:selectItem itemLabel="Anticoagulation therapy prescribed at discharge" itemValue="1"/>
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>				
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->		
+
+				<wiz:group title="Thrombolytic Therapy" style="align:left;">
+
+
+				<table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK4 Denominator</i></div>
+				    </div>
+			
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk4D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',3)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic stroke" itemValue="1"/>											
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+								
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->	
+
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK4 Exclusions</i></div>
+				    </div>					
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk4X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',3)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>					
+					<f:selectItem itemLabel="Time last known well to arrival in the ED greater than 2 hrs" itemValue="5"/>
+					<f:selectItem itemLabel="Reason For Not Initiating IV Thrombolytic" itemValue="6"/>																		
+					<f:selectItem itemLabel="none of the above" itemValue="7"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+							
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK4 Numerator</i></div>
+				    </div>
+
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk4N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',3)">
+					<f:selectItem itemLabel="IV thrombolytic therapy initiated within 3 hours of last known well" itemValue="1"/>																
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>				
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->	
+						
+				<wiz:group title="Antithrombolytic Therapy By End of Hospital Day 2">
+
+				<table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK5 Denominator</i></div>
+				    </div>
+
+
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk5D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',4)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic stroke" itemValue="1"/>												
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+								
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->				
+				
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK5 Exclusions</i></div>
+				</div>
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk5X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',4)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>					
+					<f:selectItem itemLabel="IV OR IA Thrombolytic (t-PA) Therapy Administered Within 24 Hrs Prior to Arrival" itemValue="5"/>
+					<f:selectItem itemLabel="Reason For Not Administering Antithrombolytic Therapy By End Of Hospital Day 2" itemValue="6"/>														
+					<f:selectItem itemLabel="none of the above" itemValue="7"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+								
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->
+				
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK5 Numerator</i></div>
+				    </div>
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk5N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',4)">
+					<f:selectItem itemLabel="Antithrombolytic Therapy Administered by End of Hospital Day 2" itemValue="1"/>																										
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>			
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->		
+						
+				<wiz:group title="Discharged on Statin Medication" style="align:left;">
+
+				<table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK6 Denominator</i></div>
+				    </div>
+
+
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk6D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',5)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic stroke" itemValue="1"/>
+					<f:selectItem itemLabel="LDL-c >=100 mg/dL" itemValue="2"/>
+					<f:selectItem itemLabel="LDL-c NOT Measured Within the First 48 Hours of Hospital Arrival" itemValue="3"/>
+					<f:selectItem itemLabel="LDL-c NOT Measured Within 30 Days Prior to Hospital Arrival" itemValue="4"/>					
+					<f:selectItem itemLabel="Pre-Arrival Lipid-Lowering Agent" itemValue="5"/>																							
+					<f:selectItem itemLabel="none of the above" itemValue="6"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>
+				</div>
+				<br/>				
+							
+				<!-- if item#1 AND any of the others above are checked then mark encounter as a Denominator for this measure  -->
+
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK6 Exclusions</i></div>
+				    </div>
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk6X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',5)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>				
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>								
+					<f:selectItem itemLabel="DischargeTransfer" itemValue="5"/>	
+					<f:selectItem itemLabel="Deceased - Expired" itemValue="6"/>
+					<f:selectItem itemLabel="Reason For Not Prescribing Statin Medication at Discharge" itemValue="7"/>																	
+					<f:selectItem itemLabel="none of the above" itemValue="8"/>
+					
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+								
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->	
+
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK6 Numerator</i></div>
+				    </div>			
+
+				<h:outputText value="#{trim.trim.act.relationship['stk6N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',5)">
+					<f:selectItem itemLabel="Statin Medication Prescribed at Discharge" itemValue="1"/>																
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>			
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->
+		</wiz:group>
+		
+		<wiz:group title="Stroke Education Measures" style="align:left;"
+				visible="$('#{menu.elementLabel}:iStroke').isTrue() || $('#{menu.elementLabel}:hStroke').isTrue();">
+						
+				<wiz:group title="Stroke education">
+
+				<table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK8 Denominator</i></div>
+				    </div>
+
+
+			
+				<h:outputText value="#{trim.trim.act.relationship['stk8D'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',6)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic or Hemmorhagic stroke" itemValue="1"/>																							
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>				
+				</div>
+				<br/>				
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK8 Exclusions</i></div>
+				    </div>
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk8X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',6)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>				
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>								
+					<f:selectItem itemLabel="DischargeTransfer" itemValue="5"/>																
+					<f:selectItem itemLabel="none of the above" itemValue="6"/>
+					
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>				
+				</div>
+				<br/>				
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK8 Numerator</i></div>
+				    </div>				
+				
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk8N'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',6)">
+					<f:selectItem itemLabel="Provision of education material" itemValue="1"/>	
+					<f:selectItem itemLabel="addresses Activation of Emergency Medical System" itemValue="2"/>
+					<f:selectItem itemLabel="addresses Need for Follow-up After Discharge" itemValue="3"/>					
+					<f:selectItem itemLabel="addresses Medications Prescribed at Discharge" itemValue="4"/>					
+					<f:selectItem itemLabel="addresses Risk Factors for Stroke" itemValue="5"/>
+					<f:selectItem itemLabel="addresses Warning Signs and Symptoms of Stroke" itemValue="6"/>																														
+					<f:selectItem itemLabel="none of the above" itemValue="7"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>			
+				</wiz:group>
+				<!-- if not an eXclusion, then if ALL of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->																
+						
+				<wiz:group title="Assessed for Rehabilitation" style="align:left;">
+
+				<table style="align:left;">
+                                 <tr>
+                                  <td style="align:left;">
+				   <div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK10 Denominator</i></div>
+				    </div>
+
+
+				
+								
+				<h:selectManyCheckbox onclick = "qr2Init(this,'D',7)">
+					<f:selectItem itemLabel="Principal Diagnosis of Ischemic or Hemmorhagic stroke" itemValue="1"/>																						
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>			
+							
+				<!-- if ALL of the above are checked then mark encounter as a Denominator for this measure  -->
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK10 Exclusions</i></div>
+				    </div>
+				
+				
+				<h:outputText value="#{trim.trim.act.relationship['stk10X'].act.title.ST.value}"/>				
+				<h:selectManyCheckbox onclick = "qr2Init(this,'X',7)">
+					<f:selectItem itemLabel="Comfort Measures" itemValue="1"/>
+					<f:selectItem itemLabel="Clinical Trial" itemValue="2"/>				
+					<f:selectItem itemLabel="Elective Carotid Intervention - Surgery Procedure" itemValue="3"/>
+					<f:selectItem itemLabel="Elective Carotid Intervention - Admission Encounter" itemValue="4"/>								
+					<f:selectItem itemLabel="DischargeTransfer" itemValue="5"/>	
+					<f:selectItem itemLabel="Deceased - Expired" itemValue="6"/>																
+					<f:selectItem itemLabel="none of the above" itemValue="7"/>
+					
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>				
+				</div>
+				<br/>				
+				<!-- if any of the above are checked then mark encounter as an eXclusion for this measure  -->	
+				<div class="group-content" style="align:left;">
+				    <div class="sub-group-header">
+				     <div class="group-title"><i>STK10 Numerator</i></div>
+				    </div>			
+				
+								
+								
+				<h:selectManyCheckbox onclick = "qr2Init(this,'N',7)">
+					<f:selectItem itemLabel="Patient Assessed for Rehabilitation Services" itemValue="1"/>																
+					<f:selectItem itemLabel="none of the above" itemValue="2"/>
+					<f:convertNumber integerOnly="true"/>						
+				</h:selectManyCheckbox>	
+				</div>
+				<br/>
+				</td>
+				</tr>
+				</table>
+                                		
+				</wiz:group>
+				<!-- if not an eXclusion, then if any of the above are checked then
+						mark encounter as a Numerator for this measure, else mark as a Denominator  -->																			
+		</wiz:group>
+		
+				<h:inputHidden id="stk2_value" value="#{trim.trim.act.relationship['stk2'].act.observation.value.ST.value}"/>
+ 
+  				<h:inputHidden id="stk3_value" value="#{trim.trim.act.relationship['stk3'].act.observation.value.ST.value}"/>
+  		 		<h:inputHidden id="stk4_value" value="#{trim.trim.act.relationship['stk4'].act.observation.value.ST.value}"/>
+    			<h:inputHidden id="stk5_value" value="#{trim.trim.act.relationship['stk5'].act.observation.value.ST.value}"/>
+     			<h:inputHidden id="stk6_value" value="#{trim.trim.act.relationship['stk6'].act.observation.value.ST.value}"/>
+      			<h:inputHidden id="stk8_value" value="#{trim.trim.act.relationship['stk8'].act.observation.value.ST.value}"/>
+       			<h:inputHidden id="stk10_value" value="#{trim.trim.act.relationship['stk10'].act.observation.value.ST.value}"/>	
+
+
+			</wiz:body>
+			<wiz:help>
+				<h1>Quality Review</h1>
+				<p>Help needed here.</p>
+			</wiz:help>
+		</wiz:step>
+
+		<wiz:uploadStep title="Attach a document">
+			TBD.
+		</wiz:uploadStep>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Medication order - Drilldown</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:body>
+	 	<c:choose>
+	  		<c:when test="#{menu.drilldownItem.statusName == 'NEW'}">
+	  		<article>
+				<header>								
+						<h:outputText value="#{trim.trim.act.participation['consumable'].role.player.code.CE.displayName}" />
+				</header>
+				<section>
+					<table >
+						<tr>
+							<td>Effective Date</td>
+							<td><trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" readonly="true"/></td>
+						</tr>
+						<tr>
+							<td>Product</td>
+							<td><trim:CE id="product" layout="pageDirection" valueSet="material" value="#{trim.trim.act.participation['consumable'].role.player.code}" readonly="true"/></td>
+						</tr>
+						<tr>
+							<td>Units</td>
+							<td><trim:PQ id="quantity" value="#{trim.trim.act.participation['consumable'].role.player.quantity}" readonly="true"/>  &#160;&#160;&#160;Number Of Times : #{trim.trim.act.relationship['numberOfTimes'].act.observation.value} </td>
+						</tr>
+						<tr>
+							<td>Route</td>
+							<td>#{trim.trim.act.substanceAdministration.routeCode.CE.displayName}</td>
+						</tr>
+						<tr>
+							<td>Frequency</td>
+							<td>#{trim.trim.act.relationship['frequency'].act.observation.value.CE.displayName}</td>
+						</tr>
+						<tr>
+							<td>Timing</td>
+							<td>#{trim.trim.act.relationship['timing'].act.observation.value.ST.value}</td>
+						</tr>
+						<tr>
+							<td>Comments</td>
+							<td><trim:ED id="dose" value="#{trim.trim.act.text}" readonly="true" /></td>
+						</tr>					
+					</table>
+				</section>
+				</article>
+			</c:when>
+	  		<c:when test="#{menu.drilldownItem.statusName == 'ACTIVE'}">
+		  		<article>
+					<header>								
+							<h:outputText value="#{menu.drilldownItem.title}" />
+					</header>
+					<section>
+						<table >
+							<tr>
+								<td>Effective Date</td>
+								<td>#{menu.drilldownItem.start}</td>
+							</tr>
+							<tr>
+								<td>Product</td>
+								<td>#{menu.drilldownItem.title}</td>
+							</tr>
+							<tr>
+								<td>Units</td>
+								<td>#{menu.drilldownItem.numberOfUnits}  &#160;&#160;&#160;Number Of Times : #{menu.drilldownItem.numberOfTimes} </td>
+							</tr>
+							<tr>
+								<td>Route</td>
+								<td>#{menu.drilldownItem.route}</td>
+							</tr>
+							<tr>
+								<td>Frequency</td>
+								<td>#{menu.drilldownItem.frequency}</td>
+							</tr>
+							<tr>
+								<td>Timing</td>
+								<td>#{menu.drilldownItem.timing}</td>
+							</tr>
+							<tr>
+								<td>Comments</td>
+								<td>#{menu.drilldownItem.comments}</td>
+							</tr>					
+						</table>
+					</section>
+					</article>
+	  		</c:when>
+		</c:choose>
+		</wiz:body>
+	</ui:composition>
+</body>
+</html>

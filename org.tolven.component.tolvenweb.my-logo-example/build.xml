@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="deploy-to-local-repository" name="org.tolven.component.tolvenweb.my-logo-example">
+
+	<import file="../plugin/buildImport.xml"/>
+
+	<property name="buildFolder" value="build"/>
+	
+	<target name="build-plugin" depends="init" description="Build all sections of this plugin">
+		<zip destfile="${zipFileName}">
+			<!-- Add Manifest section -->
+			<zipfileset dir="manifest"/>
+		</zip>
+		<!-- Begin list of sections to build. Each section is added to the plugin zip file. -->
+		<antcall target="buildSection">
+			<param name="section" value="web"/>
+		</antcall>
+		<!-- End of list of sections to build -->
+		<jar destfile="${buildFolder}/logos-web.jar">
+			<manifest>
+				<attribute name="Built-By" value="Tolven Healthcare Innovations" />
+			</manifest>
+			<zipfileset dir="web/" />
+		</jar>
+		<!-- Add DevLib.jar to plugin zip -->
+		<zip destfile="${zipFileName}" update="true">
+			<zipfileset dir="${buildFolder}">
+				<include name="logos-web.jar"/>
+			</zipfileset>  
+		</zip> 
+	</target>
+</project>

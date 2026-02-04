@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<head>
+    <title>Hospital Clinical Quality Measures</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" /> 
+     <script language="JavaScript" type="text/javascript"
+	src="#{facesContext.externalContext.request.contextPath}/scripts/test.js">
+	</script>
+</head>
+
+<body>
+
+    <ui:composition>
+		<wiz:step title="#{msg.GettingStarted}" >
+			<wiz:body>
+				<p>Use this form to capture Quality Review data from an ED Encounter</p>
+				<p>Click the next button to document the Inpatient encounter.</p>			    
+			</wiz:body>
+
+			<wiz:help>
+				<h1>QR3 Help</h1>
+				<p>Help provides additional information about each page</p>
+				<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+				If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+				Once submitted, you will not be able to Cancel the form.</p>
+			</wiz:help>	
+ 	
+		</wiz:step>
+		<wiz:step title="#{msg.Identity}">
+			<wiz:body>	
+	    		<h:panelGrid columns="2">
+					<h:outputText value="Patient Name:"/>
+					<h:outputText value="#{menu.menuDataItem.parent01.string01}, #{menu.menuDataItem.parent01.string02} #{menu.menuDataItem.parent01.string03}"/>
+					<h:outputText value="DOB: "/>					
+					<h:outputText value="#{menu.menuDataItem.parent01.date01}"/>										
+					<h:outputText value="Hospital:"/>
+					<h:outputText value="#{top.accountTitle} "/>
+					<h:outputText value="Admit Date: "/>					
+					<h:outputText value="#{encounter.effectiveTimeLow}"/>						
+					<h:outputText value="Discharge Date: "/>					
+					<h:outputText value="#{encounter.effectiveTimeHigh}"/>						
+					
+				</h:panelGrid>
+			</wiz:body>
+		</wiz:step>		
+
+ 		<!--  ui:include src="selectEncounter.xhtml"/  -->		
+				
+		<wiz:step title="Enter #{menu.menuDataItem.string01}" >
+
+			<wiz:body>		
+				<h:outputText value="#{encounter.effectiveTimeLow}, #{encounter.effectiveTimeHigh}"/> 			
+				<wiz:group title="#{trim.trim.act.relationship['ipDates'].act.title.ST}">
+						<table width="100%" cellpadding="5">
+							<tr>
+								<td width="20%">
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[0].label.value}: "/>
+								</td>
+								<td width="20%">
+								<h:panelGroup>
+                                         <h:inputText id="#{id}admitDate"  onchange="$('#{menu.elementLabel}:#{id}admitDateValue').value = this.value;" />
+                                         <h:graphicImage id="#{id}admitDateButton" value="/images/cal-image.png" style="cursor:pointer; margin-left:5px"/>                                                        
+	                            </h:panelGroup>
+						          </td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[1].label.value}: "/>
+								</td>
+								
+						<td>								
+							<h:panelGroup>
+							<h:inputText id="#{id}dischargeDate" 
+                                  onchange="var a = new Date(this.value).getTime();var b =  new Date($('#{menu.elementLabel}:#{id}admitDate').value).getTime() ;var second = 1000, minute = 60 * second, hour = 60 * minute, day = 24 * hour;var diff=(a-b)/minute;$('#{menu.elementLabel}:#{id}wait1').value = diff;   $('#{menu.elementLabel}:#{id}dischargeDateValue').value = this.value;   $('#{menu.elementLabel}:#{id}wait1Value').value = diff;  "   
+required="true"/>
+                            <h:graphicImage id="#{id}dischargeDateButton" value="/images/cal-image.png" style="cursor:pointer; margin-left:5px"/>									 
+	                        </h:panelGroup>
+ 						</td>
+						<td> Time in ED :  </td>
+						<td>  
+                                  <h:inputText id="#{id}wait1"  size="5"   readonly="true"/>
+                                  <h:inputHidden id="#{id}wait1Value" value="#{trim.trim.act.relationships[1].act.observation.value.PQ.value}"   />
+                        </td>
+							</tr>
+
+							<tr>
+								<td>
+									<h:outputText value="#{trim.trim.act.relationship['ipDates'].act.observation.values[2].label.value}: "/>
+								</td>
+
+								<td>
+
+									<h:inputText id="#{id}admitOrderDate"   onchange="var a = new Date(this.value).getTime();var b =  new Date($('#{menu.elementLabel}:#{id}dischargeDate').value).getTime() ;var second = 1000, minute = 60 * second, hour = 60 * minute, day = 24 * hour;var diff=(a-b)/minute;$('#{menu.elementLabel}:#{id}wait2').value = diff;	$('#{menu.elementLabel}:#{id}admitOrderDateValue').value = this.value;	$('#{menu.elementLabel}:#{id}wait2Value').value = diff;"   required="true"/>
+                                    <h:graphicImage id="#{id}admitOrderDateButton" value="/images/cal-image.png" style="cursor:pointer; margin-left:5px"/>									 
+								</td>
+
+								<td>ED admit wait time :  </td>
+								<td>  <h:inputText id="#{id}wait2"  size="5"   readonly="true"/>
+                                      <h:inputHidden id="#{id}wait2Value" value="#{trim.trim.act.relationships[2].act.observation.value.PQ.value}"   />
+                                </td>
+							</tr>				
+		</table>
+
+
+<!-- ADMIT TIME-->
+<h:inputHidden id="#{id}admitOrderDateValue" value="#{trim.trim.act.relationships[0].act.observation.values[2].TS.value}"   />
+<h:inputHidden id="#{id}admitDateValue" value="#{trim.trim.act.relationships[0].act.observation.values[0].TS.value}"   />
+<h:inputHidden id="#{id}dischargeDateValue" value="#{trim.trim.act.relationships[0].act.observation.values[1].TS.value}"   />
+
+
+
+<script type="text/javascript">
+
+// <![CDATA[
+
+Calendar.setup({
+
+inputField   : "#{menu.elementLabel}:#{id}admitDate",
+
+ifFormat     : "%m/%d/%Y %H:%M",
+
+showsTime    : true, 
+
+button       : "#{menu.elementLabel}:#{id}admitDateButton",
+
+electric	 : true, 
+
+weekNumbers  : false,
+
+timeFormat   : "24"
+
+    });
+
+
+
+Calendar.setup({
+
+inputField   : "#{menu.elementLabel}:#{id}dischargeDate",
+
+ifFormat     : "%m/%d/%Y %H:%M",
+
+showsTime    : true,
+
+button       : "#{menu.elementLabel}:#{id}dischargeDateButton",
+
+electric	 : true, 
+
+weekNumbers  : false,
+
+timeFormat   : "24"
+
+    });
+
+Calendar.setup({
+
+inputField   : "#{menu.elementLabel}:#{id}admitOrderDate",
+
+ifFormat     : "%m/%d/%Y %H:%M",
+
+showsTime    : true,
+
+button       : "#{menu.elementLabel}:#{id}admitOrderDateButton",
+
+electric	 : true, 
+
+weekNumbers  : false,
+
+timeFormat   : "24"
+
+    });
+
+
+
+
+
+// Function to change the content of desired field
+
+function computeDateTimeDiff(startDateTimeId,endDateTimeId,fieldName,computedField) {	 
+
+
+/*
+alert('startDateTimeId : ' + startDateTimeId + ' , endDateTimeId : ' + endDateTimeId+ ' fieldName : ' +  fieldName +' computedField : ' + mputedField) ;
+ var endDateTimeIdVal = document.getElementById('#{menu.elementLabel}:'+endDateTimeId).value;	  
+ var startDateTimeIdVal = document.getElementById('#{menu.elementLabel}:'+startDateTimeId).value;	 
+ var endDateTime = new Date(endDateTimeIdVal);
+ var startDateTime = new Date(startDateTimeIdVal);
+ var seconds = endDateTime.getTime() - startDateTime.getTime();
+ var second = 1000, minute = 60 * second, hour = 60 * minute, day = 24 * hour;
+ var timeInMin = Math.floor(seconds/minute);
+ document.getElementById(fieldName).value  = timeInMin;
+ document.getElementById(computedField).value  = timeInMin;
+ alert(" timeInMin" + timeInMin);  
+*/
+
+};
+
+
+
+ 
+
+// Function to add event listener
+function loadListener(startDateTimeId,endDateTimeId,fieldName,computedField) {   
+ //alert("...loading Listener ...." + startDateTimeId + " endDateTimeId " + endDateTimeId + " fieldName  " + fieldName); 
+ var elEdDateTimeIdFld = document.getElementById(endDateTimeId);    
+//alert("...elEdDateTimeIdFld ...." + elEdDateTimeIdFld + " endDateTimeId : " + endDateTimeId);  
+if (elEdDateTimeIdFld.addEventListener){  	  
+         //alert("...1...");
+	elEdDateTimeIdFld.addEventListener('change', function(){computeDateTimeDiff(startDateTimeId,endDateTimeId,fieldName,computedField)}, false);     
+} else if (el.attachEvent){  	  
+         //alert("...2...");
+	elEdDateTimeIdFld.attachEvent('onchange', function(){computeDateTimeDiff(startDateTimeId,endDateTimeId,fieldName,computedField)});   
+} 
+} 
+loadListener('#{menu.elementLabel}:#{id}admitDate','#{menu.elementLabel}:#{id}dischargeDate','#{menu.elementLabel}:#{id}wait1','#{menu.elementLabel}:#{id}wait1Value'); 
+loadListener('#{menu.elementLabel}:#{id}dischargeDate','#{menu.elementLabel}:#{id}admitOrderDate','#{menu.elementLabel}:#{id}wait2','#{menu.elementLabel}:#{id}wait2Value'); 
+
+  // ]]>
+
+</script>
+							
+				</wiz:group>													
+
+				<wiz:group title="ED Discharge Status">				
+				<h:outputText value="#{trim.trim.act.relationships[3].act.title.ST.value}"/>
+					<trim:valueSetMenu id="dischargestatus" layout="pageDirection"
+						slot="#{trim.trim.act.relationship['dischargestatus'].act.observation.value}"/>
+				</wiz:group>						
+
+				<wiz:group title="Patient Class">					
+				<h:outputText value="#{trim.trim.act.relationships[4].act.title.ST.value}"/>
+					<trim:valueSetMenu id="patientclass" layout="pageDirection"
+						slot="#{trim.trim.act.relationship['patientclass'].act.observation.value}"/>				
+				</wiz:group>				
+
+				<wiz:group title="Date of observation">
+					<trim:TS id="effectiveTime" value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" />
+				</wiz:group>
+				
+				<wiz:group title="#{trim.trim.act.observation.value.label.value}" >
+					<trim:ED id="description" value="#{trim.trim.act.observation.value}" readonly="false"/>
+				</wiz:group>
+			</wiz:body>
+
+			<wiz:help>
+				<h1>Quality Review</h1>
+				<p>Help needed here.</p>
+			</wiz:help>
+		</wiz:step>
+		
+		<wiz:uploadStep title="Attach a document">
+			TBD.
+		</wiz:uploadStep>
+	</ui:composition>
+
+</body>
+</html>

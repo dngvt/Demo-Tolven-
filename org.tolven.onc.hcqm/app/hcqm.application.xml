@@ -1,0 +1,135 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	
+	<extends path="echr:patient:encounter">
+		<placeholder name="hcqmform" title="HCQM Form" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/obsLink.xhtml">
+			<field name="effectiveTimeLow" internal="date01">
+				<from>#{act.effectiveTime.TS.date}</from>
+			</field>
+			<field name="encounter" internal="parent01">
+				<from>#{encounter}</from>
+			</field>
+			<field name="patient" internal="parent02">
+				<from>#{encounter.patient}</from>
+			</field>
+			<field name="title" internal="string01" >
+				<!-- from>#{act.text.ST.value}</from-->
+				<from>#{act.title.ST.value}</from>				
+				<!-- from>#{trim.description}</from-->
+			</field>
+			<field name="enteredBy" internal="string05">
+				<from>#{internalId( account, act.participation['dataEnterer'].role.id)}</from>
+			</field>
+		</placeholder>
+	</extends>	
+	
+	<extends path="echr:patient:encounter">
+		<placeholder name="hcqmeasure" title="HCQM" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/encounterLink.xhtml">
+	
+		<field name="measure" internal="string01">
+			<from>#{act.code.CD.code}</from>
+		</field>
+
+		<field name="result1" internal="string02">
+			<from>#{act.observation.value.ST.value}</from>
+		</field>
+				
+		<field name="value1" internal="pqValue01">
+			<from>#{act.relationship['edvalue'].act.observation.value.PQ.value}</from>
+		</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:patient:encounter">
+		<menu name="details" title="Measures" page="/five/bar2.xhtml" visible="true">
+			<list name="encounterDet" title="Encounter Details" page="/five/encounterDet.xhtml" visible='true' drilldown="echr:patient:encounter"/>
+			<list name="documentList" title="Pending" page="/five/list.xhtml"
+				visible="true">
+				<column name="From" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{hcqmform.effectiveTimeLow}</from>
+					<from>#{discharge.dischargedDate}</from>
+				</column>
+				<column name="Title" internal="string01" reference="true" width="40.0">
+						<from>#{hcqmform.title}</from>
+						<from>#{trim.act.title.ST.value}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:encounterDocMenu">
+					<column name="Documents" internal="string01" instantiate="true" width="40.0"></column>
+				</action>
+			</list>
+		</menu>
+	</extends>
+<!-- Encounters with HCQM - at account level -->
+	<extends path="echr:admin">
+		<menu name="hcqmencounters" title="HCQM Encounters" page="/five/bar2.xhtml" visible="true" >
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown="echr:patient:encounter">
+				<column name="From" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{encounter.effectiveTimeLow}</from>
+				</column>
+				<column name="To" internal="date02" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{encounter.effectiveTimeHigh}</from>
+				</column>
+				<column name="Patient" internal="parent02"  visible="false">
+					<from>#{encounter.patient}</from>
+				</column>
+				<column name="PatientName" width="20.0">
+					<from>#{encounter.patient.lastName}, #{encounter.patient.firstName}</from>
+				</column>
+				<column name="Purpose" internal="string01" reference="true" width="20.0">
+					<from>#{encounter.purpose}</from>
+				</column>
+		    <column name="MRN" width="10.0" internal="string05" visible="true">
+    				<from>#{patient.mrn}</from>
+				<output><span title="Patient id: #{patient.id}">#{MRN}</span></output>
+   			</column>
+
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientMenu" >
+				<column name="Action" internal="string01" instantiate="true" width="25.0"/>
+			</action>
+		</list>
+		</menu>
+	</extends>
+<!-- HCQM Results by encounter - at account level -->
+	<extends path="echr:admin">
+		<menu name="hcqmresults" title="HCQM Results" page="/five/bar2.xhtml" visible="true" >
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown="echr:patient:encounter:hcqmmeasure">
+				<column name="From" internal="date01" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{encounter.effectiveTimeLow}</from>
+				</column>
+				<column name="To" internal="date02" format="MMM-dd-yyyy hh:mm" width="10.0">
+					<from>#{encounter.effectiveTimeHigh}</from>
+				</column>
+				<column name="Measure" internal="string01"  visible="true">
+					<from>#{hcqmeasure.measure}</from>
+				</column>				
+				<column name="Result" internal="string02"  visible="true">
+					<from>#{hcqmeasure.result1}</from>
+				</column>				
+				<column name="Value" internal="pqValue01"  visible="true">
+					<from>#{hcqmeasure.value1}</from>
+				</column>				
+				
+				<column name="Patient" internal="parent02"  visible="false">
+					<from>#{encounter.patient}</from>
+				</column>
+				<column name="PatientName" width="20.0">
+					<from>#{encounter.patient.lastName}, #{encounter.patient.firstName}</from>
+				</column>
+				<column name="Purpose" internal="string04" reference="true" width="20.0">
+					<from>#{encounter.purpose}</from>
+				</column>
+		    <column name="MRN" width="10.0" internal="string05" visible="true">
+    				<from>#{patient.mrn}</from>
+				<output><span title="Patient id: #{patient.id}">#{MRN}</span></output>
+   			</column>
+
+			<!--  action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientMenu" >
+				<column name="Action" internal="string01" instantiate="true" width="25.0"/>
+			</action -->
+		</list>
+		</menu>
+	</extends>	
+	
+</application>
+
+        

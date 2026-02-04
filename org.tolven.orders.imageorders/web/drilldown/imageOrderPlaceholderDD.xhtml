@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+</head>
+<body>
+<div style="margin-left:1%;margin-top:1%;">
+	<table width="80%" >
+		<thead>
+			<tr>
+				<th style="text-align:center; width:50%;"><b>Image Order</b></th>
+				<th style="text-align:center; width:10%;" nowrap="nowrap"><b>Date Of Order*</b></th>
+				<th style="text-align:center; width:10%;"><b>Reason</b></th>
+				<th style="text-align:center; width:10%;"><b>Priority</b></th>
+				<th style="text-align:center; width:10%;"><b>Frequency</b></th>
+				<th style="text-align:center; width:10%;"><b>Timing</b></th>
+
+			</tr>
+		</thead>
+		<tbody >
+			<tr>
+				<td style="text-align:center; width:50%;">
+					<c:if test="#{fn:length(imgOrder.serviceName) != 0}">
+						#{imgOrder.serviceName}	
+					</c:if>
+					<c:if test="#{fn:length(imgOrder.serviceName) == 0}">
+						#{imageOrderRelation.act.text.ST.value}	
+					</c:if>
+				</td>
+				<td style="text-align:center; width:10%;">
+					#{imgOrder.date}
+				</td>
+				<td style="text-align:center; width:10%;">
+					<c:if test="#{fn:length(imgOrder.reason) != 0}">
+						#{imgOrder.reason}	
+					</c:if>
+					<c:if test="#{fn:length(imgOrder.reason) == 0}">
+						#{imageOrderRelation.act.observation.values[0].ST.value}	
+					</c:if>
+				</td>
+				<td style="text-align:center; width:10%;">
+					<c:if test="#{fn:length(imgOrder.priority) != 0}">
+						#{imgOrder.priority}	
+					</c:if>
+					<c:if test="#{fn:length(imgOrder.priority) == 0}">
+						#{imageOrderRelation.act.observation.values[1].CE}	
+					</c:if>
+				</td>
+				<td style="text-align:center; width:10%;">
+					<c:if test="#{fn:length(imgOrder.frequency) != 0}">
+						#{imgOrder.frequency}	
+					</c:if>
+					<c:if test="#{fn:length(imgOrder.frequency) == 0}">
+						#{imageOrderRelation.act.observation.values[2].ST.value}	
+					</c:if>
+				</td>
+				<td style="text-align:center; width:10%;">
+					<c:if test="#{fn:length(imgOrder.timing) != 0}">
+						#{imgOrder.timing}	
+					</c:if>
+					<c:if test="#{fn:length(imgOrder.timing) == 0}">
+						#{imageOrderRelation.act.observation.values[3].ST.value}	
+					</c:if>
+				</td>
+					
+			</tr>
+		</tbody>
+	</table>
+	<br />
+	
+	</div>
+</body>
+</html>

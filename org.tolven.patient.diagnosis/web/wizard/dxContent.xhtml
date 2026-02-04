@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Diagnosis</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<ui:composition>
+		<wiz:step title="#{rel.act.observation.value.CE.displayName}" >
+			<wiz:body>
+				<wiz:group title="Diagnosis: #{rel.act.observation.value.CE.displayName}">
+					<wiz:group title="Date of diagnosis">
+						<!-- <trim:TS id="#{index}effectiveTime" value="#{rel.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" /> -->
+						<trim:TSNew id="#{index}effectiveTime" value="#{rel.act.effectiveTime.TS}" dateStyle="short"/>
+					</wiz:group>
+					<c:if test="#{top.accountType=='echr'}">
+						<wiz:group title="Author">
+				               <h:selectOneMenu id="author#{index}" value="#{rel.act.participation['author'].role.id.for[top.accountUser.account].extension}">
+				               	<f:selectItem itemValue="#{null}" itemLabel="None"/>
+				               	<f:selectItems value="#{trim.list['echr:admin:staff:all~Name']}"/>
+				               </h:selectOneMenu>
+						</wiz:group>
+					</c:if>
+					<wiz:group title="Episodicity">
+						<trim:valueSetMenu id="episodicity#{index}" slot="#{rel.act.relationship['episodicity'].act.observation.value}"/>
+					</wiz:group>
+					<wiz:group title="Severity">
+						<trim:CE id="severity#{index}" valueSet="severity" value="#{rel.act.relationship['severity'].act.observation.value}" layout="pageDirection" />
+					</wiz:group>
+					<wiz:group title="Course">
+						<trim:CE id="course#{index}" valueSet="course" value="#{rel.act.relationship['course'].act.observation.value}"/>
+					</wiz:group>
+					<wiz:group title="Onset">
+						<trim:CE id="onset#{index}" valueSet="onset" value="#{rel.act.relationship['onset'].act.observation.value}" layout="pageDirection" />
+					</wiz:group>
+				</wiz:group>				
+			</wiz:body>
+			<wiz:help>
+				<h1>Diagnosis</h1>
+				<p>TBD</p>
+			</wiz:help>
+		</wiz:step>
+
+</ui:composition>
+</body>
+</html>

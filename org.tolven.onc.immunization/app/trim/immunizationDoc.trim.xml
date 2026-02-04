@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<extends>patientAct</extends>
+	<name>sbadm/rqo/immunizationDoc</name>
+	<page>immunizationDoc.xhtml</page>
+	<drilldown>immunizationDocDD.xhtml</drilldown>
+	<menu>global:immunizationDocMenu</menu>
+	<application name="ephr">
+		<instance>ephr:patient:immunization</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:immunization</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<transitions path="trim.act.statusCodeValue">
+		<transition name="create" to="completed">
+			<label language="en">Active</label>
+		</transition>
+		<transition name="nullifiedActive" from="completed" to="nullified">
+			<label language="en">Entered in Error</label>
+		</transition>
+		<transition name="reviseActive" from="completed" to="completed">
+			<label language="en">Revise</label>
+		</transition>
+	</transitions>
+	<act classCode="SBADM" moodCode="RQO">
+		<title>
+			<ST>Immunizations Document</ST>
+		</title>
+		<compute>
+			<type>org.tolven.process.InsertAct</type>
+			<property name="enableAct">
+				<value xsi:type="xs:boolean">true</value>
+			</property>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="arName">
+				<value xsi:type="xs:string">immunization</value>
+			</property>
+			<property name="arDirection">
+				<value xsi:type="xs:string">OUT</value>
+			</property>
+			<property name="arTypeCode">
+				<value xsi:type="xs:string">COMP</value>
+			</property>
+			<property name="template">
+				<value xsi:type="xs:string"></value>
+			</property>
+			<property name="templateLookupPath">
+				<value xsi:type="xs:string">echr:immunizations</value>
+			</property>
+			<property name="action">
+				<value xsi:type="xs:string">add</value>
+			</property>
+			<property name="position">
+				<value xsi:type="xs:string">0</value>
+			</property>
+		</compute>
+	</act>
+</trim>

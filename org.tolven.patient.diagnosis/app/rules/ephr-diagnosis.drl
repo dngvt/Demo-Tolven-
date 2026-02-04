@@ -1,0 +1,48 @@
+package ephr_diagnosis
+
+
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+rule "Place Diagnosis on diagnosis list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "ephr:patient:diagnosis" )
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis )
+	then
+		app.info( "Place Diagnosis on dx list"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, "ephr:patient:diagnoses:current" );
+		mdDXList.addPhrase( $mdDiagnosis.getString01(), "dx", "en_US" );
+end
+
+rule "Place Diagnosis on dx summary list"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "ephr:patient:diagnosis" )
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis )
+	then
+		app.info( "Place Diagnosis on dx summary"); 
+		MenuData mdDXList = app.createReferenceMD( $mdDiagnosis, "ephr:patient:summary:dxsum" );
+end
+
+rule "Add Diagnosis to patient list word index"
+	when
+		$msDiagnosis: MenuStructure( role == "placeholder", path == "ephr:patient:diagnosis" )
+		$mdDiagnosis: MenuData( menuStructure == $msDiagnosis, $dxName: string01, $mdPat : parent01 )
+	then
+		app.info( "Add Diagnosis to patient list"); 
+		List<MenuData> patListMDs = app.findReferencingMDs( $mdPat, "ephr:patients:all" );
+		for( MenuData md : patListMDs) {
+			md.addPhrase( $dxName, "dx", "en_US" );
+		}
+end

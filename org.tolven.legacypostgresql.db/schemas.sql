@@ -1,0 +1,12 @@
+CREATE SCHEMA app;
+COMMENT ON SCHEMA app IS 'Application metadata and extracted instance data';
+CREATE SCHEMA core;
+COMMENT ON SCHEMA core IS 'User, account, sequence generator and related tables';
+CREATE SCHEMA doc;
+COMMENT ON SCHEMA doc IS 'Document Metaphor storage';
+CREATE SCHEMA gen;
+COMMENT ON SCHEMA gen IS 'Seed Data for Virtual Patient Generation';
+CREATE SCHEMA provider;
+COMMENT ON SCHEMA provider IS 'Provider';
+CREATE SCHEMA public;
+COMMENT ON SCHEMA public IS 'Default schema';

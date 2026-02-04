@@ -1,0 +1,14 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">	
+	<property accountType="echr" name="org.tolven.xslt.ccr" file="xslt/ccr.xsl"/>
+	<property accountType="echr" name="tolven.xslt/urn:astm-org:CCR" file="xslt/ccr.xsl"/>	
+	<property accountType="echr" name="org.tolven.xslt.ccr.date" file="xslt/date.format-date.template.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.code" file="xslt/code.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.datetime" file="xslt/datetime.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.actor" file="xslt/actor.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.footer" file="xslt/footer.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.problemDescription" file="xslt/problemDescription.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.directions" file="xslt/directions.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.defaultCSS" file="xslt/defaultCSS.xsl"/>
+	<property accountType="echr" name="org.tolven.xslt.ccr.str.padding" file="xslt/str.padding.template.xsl"/>	
+</application>

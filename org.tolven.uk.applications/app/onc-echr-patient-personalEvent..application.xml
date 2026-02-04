@@ -1,0 +1,5 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patient:summary:calendar">
+		<entry name="pevnsum" sequence="6" title="Personal Event" query="echr:patient:summary:pevnsum" visible="true" drilldown=":personalEvents" />
+	</extends>
+</application>

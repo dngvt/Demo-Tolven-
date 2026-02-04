@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" 
+id="org.tolven.onc.accountshares" version="2.1.1" vendor="Tolven">
+
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+	</requires>
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<extension-point id="applications" parent-plugin-id="org.tolven.component.application" parent-point-id="applications">
+		<parameter-def id="dir" default-value="app" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension-point id="trims" parent-plugin-id="org.tolven.component.application" parent-point-id="trims">
+		<parameter-def id="dir" default-value="app/trim" multiplicity="none-or-one" />
+	</extension-point>
+	<extension id="accountshares-fiveDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.onc.accountshares" />
+		<parameter id="extension-point" value="accountshares-fiveDirectory" />
+		<parameter id="targetWebDirectory" value="five" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="accountshares-fiveDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/five" multiplicity="none-or-one" />
+	</extension-point>
+	<extension id="accountshares-drilldownDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.onc.accountshares" />
+		<parameter id="extension-point" value="accountshares-drilldownDirectory" />
+		<parameter id="targetWebDirectory" value="drilldown" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="accountshares-drilldownDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/drilldown" multiplicity="none-or-one" />
+	</extension-point>
+	<extension id="accountshares-wizardDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.onc.accountshares" />
+		<parameter id="extension-point" value="accountshares-wizardDirectory" />
+		<parameter id="targetWebDirectory" value="wizard" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="accountshares-wizardDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/wizard" multiplicity="none-or-one" />
+	</extension-point>
+
+</plugin>

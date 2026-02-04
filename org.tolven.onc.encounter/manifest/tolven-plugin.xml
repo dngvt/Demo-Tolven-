@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd"
+	id="org.tolven.onc.encounter" version="2.1.2" vendor="Tolven">
+
+<requires>
+     <import plugin-id="org.tolven.component.tolvenweb" />
+	 <import plugin-id="org.tolven.component.application" />
+	 <import plugin-id="org.tolven.component.tolvenlocale" />
+	 <import plugin-id="org.tolven.component.tolvenlocale_en" />
+	 <import plugin-id="org.tolven.component.tolvenweb.taglibs.trim" />
+	 <import plugin-id="org.tolven.component.tolvenweb.taglibs.wizard" />
+	 <import plugin-id="org.tolven.component.war" />
+	 <import plugin-id="org.tolven.component.faces" />	 
+</requires>
+
+<extension id="applications" plugin-id="org.tolven.component.application" point-id="applications">
+	<parameter id="dir" value="app" />
+</extension>
+
+<extension id="trims" plugin-id="org.tolven.component.application" point-id="trims">
+	<parameter id="dir" value="app/trim" />
+</extension>
+
+<extension id="tagSourceDirectory.trim" plugin-id="org.tolven.component.tolvenweb.taglibs.trim" point-id="tagSourceDirectory">
+	<parameter id="source-directory" value="web/META-INF/tags/trim" />
+</extension>
+
+<extension id="tagSourceDirectory.wizard" plugin-id="org.tolven.component.tolvenweb.taglibs.wizard" point-id="tagSourceDirectory">
+	<parameter id="source-directory" value="web/META-INF/tags/wizard" />
+</extension>
+
+<extension id="drilldownDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="drilldownDirectory">
+     <parameter id="sourceDirectory" value="web/drilldown" />
+</extension>
+
+<extension id="wizardDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="wizardDirectory">
+     <parameter id="sourceDirectory" value="web/wizard" />
+</extension>
+
+<extension id="application-global-locale-echr" plugin-id="org.tolven.component.tolvenlocale" point-id="application-global-locale">
+		<parameter id="application-name" value="echr"></parameter>
+		<parameter value="locale/onc-encounter-global.properties" id="properties-file" />
+</extension>
+
+<extension id="application-locale" plugin-id="org.tolven.component.tolvenlocale" point-id="application-locale">
+        <parameter id="application-name" value="echr"></parameter>
+        <parameter value="locale/onc-encounter.properties" id="properties-file" />
+</extension>
+
+</plugin>

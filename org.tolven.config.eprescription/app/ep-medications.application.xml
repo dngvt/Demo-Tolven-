@@ -1,0 +1,656 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path = "echr:patient">
+		<placeholder name="currentMedication" eventInstance="echr:patients:wip" page="/five/provider.xhtml" heading="/five/medicationLink.xhtml">
+			<field name="prescriberOrderNumber" internal="long04">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[31].INT.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[10].INT.value : act.observation.values[8].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="prescriptionDate" internal="date01">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[11].TS.date}</from>
+				<!-- <from>#{trim.name=='docclin/evn/sharePatientIn' ? act.observation.values[7].TS.date : null}</from> -->
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[1].TS.date}</from>
+			</field>
+			<field name="medicationName" internal="string01">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[21].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[0].ST.value : act.text.ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="medicationStrength" internal="string02">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[1].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[2].ST.value : act.observation.values[0].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="medicationDose" internal="string03">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[17].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[5].ST.value : ''}</from>
+			</field>
+			<field name="medicationFrequency" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[2].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[6].CE.displayName : act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="date03">	
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.effectiveTime.IVLTS.low.TS.date}</from>
+				<!-- <from>#{trim.isName['docclin/evn/sharePatientIn'] ? act.observation.values[3].TS.date : null}</from> -->
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[4].TS.date}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.effectiveTime.IVLTS.low.TS.date : ''}</from>
+			</field>
+			<field name="medicationEndDate" internal="date02">	
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.effectiveTime.IVLTS.high.TS.date}</from>
+				<!-- <from>#{trim.isName['docclin/evn/sharePatientIn'] ? act.observation.values[4].TS.date : null}</from>-->
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[5].TS.date}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.effectiveTime.IVLTS.high.TS.date : ''}</from>
+			</field>
+			<field name="medicationRoute" internal="string04">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[3].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[4].CE.displayName : act.observation.values[1].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[6].ST.value}</from>
+			</field>
+			<field name="dispenseAmount" internal="pqUnits04">
+				<from>#{trim.isName['docclin/evn/sharePatientIn'].act.relationship['toSureScripts'].act.observation.values[13].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[7].ST.value}</from>
+				<from>#{act.relationship['toSureScripts'].act.observation.values[13].ST.value}</from>				
+			</field>
+			<field name="numberOfRefills" internal="pqUnits03">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[4].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[8].ST.value}</from>
+			</field>
+			<field name="prescriber" internal="string05">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[1].ST.value}</from>
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[9].ST.value}</from>
+			</field>
+			<field name="status" internal="string06">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[0].CE.displayName}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[12].CE.displayName : act.observation.values[5].ST.value}</from>	
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[10].ST.value}</from>		
+			</field>
+			<field name="surescriptStatus" internal="string08">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[40].ST.value}</from>
+				 <from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[11].ST.value}</from>
+			</field>
+			<field name="messageID" internal="string07">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[19].ST.value}</from>
+				<!-- <from>#{trim.name=='docclin/evn/sharePatientIn' ? act.observation.values[6].ST.value : ''}</from> -->
+				<from>#{trim.isName['obs/evn/currentMedicationDetailsForRefillRequest'].act.relationship['CurrentMedication'].act.observation.values[12].ST.value}</from>
+			</field>
+			<field name="statusForRxChange" internal="pqStringVal01">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[34].ST.value}</from>
+			</field>
+			<field name="attender" internal="parent04">
+				 <from>#{internalId( account, act.participation['attender'].role.id)}</from>
+			</field>
+			<field name="medicine" internal="parent02">
+				 <from>#{internalId( account, act.id)}</from>
+			</field>
+			<field name="preferredPharmacy" internal="pqStringVal02">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['pharmacy'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="dispense" internal="pqStringVal03">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[9].ST.value}</from>
+			</field>
+			<field name="lotNumber" internal="pqStringVal04">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[10].ST.value}</from>
+			</field>
+			<field name="comments" internal="pqUnits01">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[16].ST.value}</from>
+			</field>
+			<field name="sigCode" internal="pqUnits02">
+				 <from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[15].ST.value}</from>
+			</field>
+			<field name="drugQualifier" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[39].ST.value}</from>
+		   		<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[3].ST.value : ''}</from>
+		   	</field>
+		   	<field name="drugClass" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[41].ST.value}</from>
+		   		<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[1].ST.value : ''}</from>
+		   	</field>
+		   	<field name="refillQualifier" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[12].CE.displayName}</from>
+			</field>
+			<field name="dispenseFromOffice" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[5].CE.displayName}</from>
+			</field>
+			<field name="subAllowed" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medicationDetails'].act.observation.values[6].CE.displayName}</from>
+			</field>
+			<field name="ctActionGroup" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[45].ST.value}</from>
+			</field>
+			<field name="ctEtc" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[46].ST.value}</from>
+			</field>
+			<field name="ctFdb" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[47].ST.value}</from>
+			</field>
+			<field name="fdbReponse" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[20].ST.value}</from>
+			</field>
+			<field name="ddResponse" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[25].ST.value}</from>
+			</field>
+			<field name="drugFoodResp" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[26].ST.value}</from>
+			</field>
+			<field name="duplicateTherapy" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[27].ST.value}</from>
+			</field>
+			<field name="drugAllergy" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[36].ST.value}</from>
+			</field>
+			<field name="patientInstructions" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[48].ST.value}</from>
+				<from>#{trim.name=='obs/evn/medicationHistory' ? act.observation.values[8].ST.value : ''}</from>
+			</field>
+			<field name="prescriberInstructions" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[49].ST.value}</from>
+			</field>
+			<field name="isControlled" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[50].ST.value}</from>
+			</field>
+			<field name="overridecomments" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[33].ST.value}</from>
+			</field>
+			<field name="prescriberDea" internal="_extended" type="string">
+				<from>#{act.relationship['toSureScripts'].act.observation.values[62].ST.value}</from>
+			</field>
+			<field name="daySupply" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[14].INT.value}</from>
+			</field>
+			<field name="isFormularyDrug" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['isDrugFromulary'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="productCode" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[53].ST.value}</from>
+			</field>
+			<field name="productCodeQual" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[54].ST.value}</from>
+			</field>
+			<field name="ndcStrength" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[56].ST.value}</from>
+			</field>
+			<field name="ndcStrengthUnits" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['toSureScripts'].act.observation.values[57].ST.value}</from>
+			</field>
+			<field name="medID" internal="_extended" type="string">
+				<from>#{trim.isName['obs/evn/patientPrescription'].act.relationship['medID'].act.observation.values[0].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path = "echr:patient:currentMedication">
+		<placeholder name="dispenseMedication" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="dispensedDate" internal="date01">
+				<from>#{act.relationship['dispense'].act.observation.values[0].TS.date}</from>
+			</field>
+			<field name="medicationName" internal="string01">
+				<from>#{act.relationship['dispense'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="status" internal="string02">
+				<from>#{act.relationship['dispense'].act.observation.values[2].CE.displayName}</from>
+			</field>
+			<field name="medicationStrength" internal="string03">
+				<from>#{act.relationship['dispense'].act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="medicationFrequency" internal="long01">
+				<from>#{act.relationship['dispense'].act.observation.values[4].INT.value}</from>
+			</field>
+			<field name="medicationRoute" internal="string04">
+				<from>#{act.relationship['dispense'].act.observation.values[5].ST.value}</from>
+			</field>
+			<field name="remainingRefills" internal="long02">
+				<from>#{act.relationship['dispense'].act.observation.values[6].INT.value}</from>
+			</field>
+			<field name="dispenseAmount" internal="pqUnits04">
+				<from>#{act.relationship['dispense'].act.observation.values[7].INT.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="string05">
+				<from>#{act.relationship['dispense'].act.observation.values[8].ST.value}</from>
+			</field>
+			<field name="medicationEndDate" internal="string06">
+				<from>#{act.relationship['dispense'].act.observation.values[9].ST.value}</from>
+			</field>
+			<field name="dispense" internal="long04">
+				<from>#{act.relationship['dispense'].act.observation.values[10].INT.value}</from>
+			</field>
+			<field name="packSize" internal="string07">
+				<from>#{act.relationship['dispense'].act.observation.values[11].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:patient:currentMedication">
+		<placeholder name="administerMedication" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="effectiveTime" internal="date01" >
+				<from>#{act.relationship['administration'].act.observation.values[10].TS.date}</from>
+			</field>
+			<field name="medicationName" internal="string01">
+				<from>#{act.relationship['administration'].act.observation.values[0].ST.value}</from>
+				<from>#{act.text.ST.value}</from>
+			</field>
+			<field name="medicationStrength" internal="string02">
+				<from>#{act.relationship['administration'].act.observation.values[1].ST.value}</from>
+				<from>#{act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="medicationFrequency" internal="string08">
+				<from>#{act.relationship['administration'].act.observation.values[2].ST.value}</from>
+				<from>#{act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="medicationRoute" internal="string03">
+				<from>#{act.relationship['administration'].act.observation.values[3].ST.value}</from>
+				<from>#{act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="medicationStartDate" internal="string04">
+				<from>#{act.relationship['administration'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="medicationEndDate" internal="string05">
+				<from>#{act.relationship['administration'].act.observation.values[5].ST.value}</from>
+			</field>
+			<field name="status" internal="string06">
+				<from>#{act.relationship['administration'].act.observation.values[7].CE.displayName}</from>
+				<from>#{act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="messageID" internal="string07">
+				<from>#{act.relationship['administration'].act.observation.values[9].ST.value}</from>
+				<from>#{act.observation.values[4].ST.value}</from>
+			</field>	
+		</placeholder>
+	</extends>
+	<extends path="echr:patient:currentMedication">
+		<placeholder name="medActivity" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="date" internal="date01">
+				<from>#{act.relationship['administration'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="action" internal="string01">
+				<from>#{trim.description}</from>
+			</field>
+			<field name="status" internal="string08">
+				<from>#{currentMedication.surescriptStatus}</from>
+			</field>
+			<field name="messageId" internal="string07">
+				<from>#{act.relationship['administration'].act.observation.values[9].ST.value}</from>
+			</field>	
+		</placeholder>
+	</extends>
+	<extends path = "echr:patient:currentMedication">
+		<menu name="medicationDetails" title="Medication Details" page="/five/bar2.xhtml" visible="true">
+				<list name="identity" title="Identity" page="/five/medicationDetails.xhtml" visible="true" drilldown="echr:patient:currentMedication"/>
+		</menu>
+	</extends>
+	
+	<extends path = "echr:patient:currentMedication">
+		<placeholder name="refillMedication" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+		</placeholder>
+	</extends>
+	<!-- 
+	<extends path="echr:patient:medications">
+		<list name="all" title="Patient Activity" sequence="5" page="/five/list.xhtml" visible="true" drilldown="echr:patient:currentMedication">
+				 <column name="prescriberOrderNumber" internal="long04" width="6">
+					<from>#{currentMedication.prescriberOrderNumber}</from>
+				</column>
+				<column name="prescriptionDate" internal="date01" width="10" format="MMM-dd-yyyy">
+					<from>#{currentMedication.prescriptionDate}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="25">
+					<from>#{currentMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10">
+					<from>#{currentMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationDose" internal="string03" visible="false" width="7">
+					<from>#{currentMedication.medicationDose}</from>
+				</column>
+				<column name="medicationFrequency" internal="long01" visible="false" width="7">
+					<from>#{currentMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationStartDate" internal="date03" width="10" format="MMM-dd-yyyy">
+					<from>#{currentMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="date02" width="10" format="MMM-dd-yyyy">
+					<from>#{currentMedication.medicationEndDate}</from>
+				</column>
+				<column name="medicationRoute" internal="string04" width="15">
+					<from>#{currentMedication.medicationRoute}</from>
+				</column>
+				<column name="dispenseAmount" internal="pqUnits04" width="7">
+					<from>#{currentMedication.dispenseAmount}</from>
+				</column>
+				<column name="numberOfRefills" internal="pqUnits03" width="7">
+					<from>#{currentMedication.numberOfRefills}</from>
+				</column>
+				<column name="prescriber" internal="string05" width="15">
+					<from>#{currentMedication.prescriber}</from>
+				</column>
+				<column name="status" internal="string06" width="10">
+					<from>#{currentMedication.status}</from>
+				</column>
+				<column name="SureScriptStatus" internal="string08" width="10">
+					<from>#{currentMedication.surescriptStatus}</from>
+				</column>
+			 	<column name="messageID" internal="string07" width="20">
+					<from>#{currentMedication.messageID}</from>
+				</column> 
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{currentMedication.prescriptionDate}</from>
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{currentMedication.medicationName} </from>
+					<from>#{medication.title} </from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{currentMedication.medicationRoute}</from>
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{currentMedication.medicationFrequency}</from>
+					<from>#{medication.frequency}</from>
+				</column>				
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:medicationDocMenu">
+					<column name="Medication" internal="string01" instantiate="true" width="40.0"/>
+				</action>			
+			</list>
+	</extends>
+	<extends path="echr:patient:medications">
+		<list name="active" title="Active" sequence="1" page="/five/listMedication.xhtml" visible="true" drilldown="echr:patient:currentMedication">
+				<column name="prescriberOrderNumber" internal="long04" width="10" visible="true">
+					<from>#{currentMedication.prescriberOrderNumber}</from>
+					<output>					
+						<a onclick="#{dispenseAmount==''?'javascript:showSharedPopup(this)':'javascript:showPopup(this)'}" class="#{prescriptionDate==''?'popup':(dispenseAmount==''?'sharepopup':'popup')}" >#{prescriberOrderNumber}</a>					
+					<a onclick="#{dispenseAmount==''?'javascript:showSharedPopup(this)':'javascript:showPopup(this)'}">#{prescriberOrderNumber}</a>
+					</output>
+				</column>
+				<column name="prescriptionDate" internal="date01" width="10" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.prescriptionDate}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="50" reference="true">
+					<from>#{currentMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="20">
+					<from>#{currentMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationDose" internal="string03" visible="false" width="7">
+					<from>#{currentMedication.medicationDose}</from>
+				</column>
+				<column name="medicationStartDate" internal="date03" width="10" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="date02" width="10" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.medicationEndDate}</from>
+				</column>
+				<column name="medicationRoute" internal="string04" width="20">
+					<from>#{currentMedication.medicationRoute}</from>
+				</column>
+				<column name="dispenseAmount" internal="pqUnits04" width="15">
+					<from>#{currentMedication.dispenseAmount}</from>
+				</column>
+				<column name="numberOfRefills" internal="pqUnits03" width="7">
+					<from>#{currentMedication.numberOfRefills}</from>
+				</column>
+				<column name="prescriber" internal="string05" width="40">
+					<from>#{currentMedication.prescriber}</from>
+				</column>
+				<column name="status" internal="string06" width="10">
+					<from>#{currentMedication.status}</from>
+				</column>
+			 	<column name="messageID" internal="string07" width="20" visible="false">
+					<from>#{currentMedication.messageID}</from>
+				</column> 
+				<column name="statusForRxChange" internal="pqStringVal01" width="10" visible="false">
+					<from>#{currentMedication.statusForRxChange}</from>
+				</column>
+				
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{currentMedication.prescriptionDate}</from>
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title}</from>
+					<from>#{currentMedication.medicationName}</from>					
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{currentMedication.medicationRoute}</from>
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{currentMedication.medicationFrequency}</from>
+					<from>#{medication.frequency}</from>
+				</column>				
+			</list>
+	</extends>
+	<extends path="echr:patient:medications">
+		<list name="inactive" title="Inactive" sequence="2" page="/five/list.xhtml" visible="true" drilldown="echr:patient:currentMedication">
+				<column name="prescriberOrderNumber" internal="long04" width="6">
+					<from>#{currentMedication.prescriberOrderNumber}</from>
+				</column>
+				<column name="prescriptionDate" internal="date01" width="6" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.prescriptionDate}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="16">
+					<from>#{currentMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10">
+					<from>#{currentMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationDose" internal="string03" visible="false" width="10">
+					<from>#{currentMedication.medicationDose}</from>
+				</column>
+				<column name="medicationStartDate" internal="date03" width="10" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="date02" width="10" format="MMM-dd-yyyy" >
+					<from>#{currentMedication.medicationEndDate}</from>
+				</column>
+				<column name="medicationRoute" internal="string04" width="5">
+					<from>#{currentMedication.medicationRoute}</from>
+				</column>
+				<column name="dispenseAmount" internal="pqUnits04" width="10">
+					<from>#{currentMedication.dispenseAmount}</from>
+				</column>
+				<column name="numberOfRefills" internal="pqUnits03" width="10">
+					<from>#{currentMedication.numberOfRefills}</from>
+				</column>
+				<column name="prescriber" internal="string05" width="10">
+					<from>#{currentMedication.prescriber}</from>
+				</column>
+				<column name="status" internal="string06" width="10">
+					<from>#{currentMedication.status}</from>
+				</column>
+			 	<column name="messageID" internal="string07" width="20" visible="false">
+					<from>#{currentMedication.messageID}</from>
+				</column>				
+				<column name="Start" internal="date01" format="MMM-dd-yyyy" width="10.0">
+					<from>#{currentMedication.prescriptionDate}</from>
+					<from>#{medication.start}</from>
+				</column>
+				<column name="Medication" internal="string01" reference="true" width="25.0">
+					<from>#{medication.title}</from>
+					<from>#{currentMedication.medicationName}</from>
+				</column>								
+				<column name="route" internal="string04" width="10.0">
+					<from>#{currentMedication.medicationRoute}</from>
+					<from>#{medication.route}</from>
+				</column>
+				<column name="frequency" internal="string05" width="10.0">
+					<from>#{currentMedication.medicationFrequency}</from>
+					<from>#{medication.frequency}</from>
+				</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:medications">
+		<list name="dispense" title="Dispense" sequence="3" page="/five/list.xhtml" visible="true" drilldown="echr:patient:dispenseMedication">
+				<column name="dispensedDate" internal="date01" width="10" format="MMM-dd-yyyy" >
+					<from>#{dispenseMedication.dispensedDate}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="16">
+					<from>#{dispenseMedication.medicationName}</from>
+				</column>
+				<column name="status" internal="string02" width="10">
+					<from>#{dispenseMedication.status}</from>
+				</column>
+				<column name="medicationStrength" internal="string03" width="10">
+					<from>#{dispenseMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="long01" width="10">
+					<from>#{dispenseMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string04" width="5">
+					<from>#{dispenseMedication.medicationRoute}</from>
+				</column>
+				<column name="remainingRefills" internal="long02" width="10">
+				<from>#{dispenseMedication.remainingRefills}</from>
+				</column>
+				<column name="dispenseAmount" internal="pqUnits04" width="10">
+					<from>#{dispenseMedication.dispenseAmount}</from>
+				</column>
+				<column name="medicationStartDate" internal="string05" width="10">
+					<from>#{dispenseMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string06" width="10">
+					<from>#{dispenseMedication.medicationEndDate}</from>
+				</column>
+				<column name="dispense" internal="long04" width="6">
+					<from>#{dispenseMedication.dispense}</from>
+				</column>
+				<column name="packSize" internal="string07" width="5">
+					<from>#{dispenseMedication.packSize}</from>
+				</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:medications">
+		<list name="administration" title="Administration" sequence="4" page="/five/list.xhtml" visible="true" drilldown="echr:patient:administerMedication">
+				<column name="effectiveTime" internal="date01" width="20.0">
+					<from>#{administerMedication.effectiveTime}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="25.0">
+					<from>#{administerMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10.0">
+					<from>#{administerMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="string08" visible="false" width="10.0">
+					<from>#{administerMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string03" width="5">
+					<from>#{administerMedication.medicationRoute}</from>
+				</column>
+				<column name="medicationStartDate" internal="string04" width="10.0">
+					<from>#{administerMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string05" width="10.0">
+					<from>#{administerMedication.medicationEndDate}</from>
+				</column>
+				<column name="status" internal="string06" width="10.0">
+					<from>#{administerMedication.status}</from>
+				</column>
+				<column name="messageID" internal="string07" width="20.0" visible="false">
+					<from>#{administerMedication.messageID}</from>
+				</column>
+		</list>
+	</extends>	
+	 -->
+	<!-- <extends path="echr:patient">
+		<menu name="patientActivity" title="Patient Activities" page="/five/bar2.xhtml" visible="true">
+		
+		</menu>
+	</extends> -->
+	<extends path="echr:patient:currentMedication">
+	 	<list name="activity" title="MedicationActivity" page="/five/list.xhtml" visible="true" drilldown=":currentMedication">
+				<column name="date" internal="date01" width="15.0">
+					<from>#{currentMedication.prescriptionDate}</from>
+				</column>
+				<column name="action" internal="string01" width="15.0">
+					<from>#{currentMedication.rxFill}</from>
+<!--					<from>#{trim.isName['obs/evn/patientPrescription'].act.title.ST.value}</from>-->
+<!--					<from>#{trim.isName['obs/evn/refillRequest'].description}</from>-->
+				</column>
+				<column name="status" internal="string08" width="10.0">
+					<from>#{currentMedication.surescriptStatus}</from>
+				</column>
+				<column name="messageId" internal="string07" width="25.0">
+					<from>#{currentMedication.messageID}</from>
+				</column>
+<!--				<column name="medicationName" internal="string01" width="20.0">-->
+<!--					<from>#{currentMedication.medicationName}</from>-->
+<!--				</column>-->
+<!--				<column name="medicationEndDate" internal="string05" width="10.0">-->
+<!--					<from>#{currentMedication.medicationEndDate}</from>-->
+<!--				</column>-->
+		</list>
+	</extends>
+	<extends path="echr:patient:currentMedication">
+	 	<list name="administration" title="Administration" page="/five/list.xhtml" visible="true" initialSort="effectiveTime DESC">
+				<column name="effectiveTime" internal="date01" width="20.0" >
+					<from>#{administerMedication.effectiveTime}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="25.0">
+					<from>#{administerMedication.medicationName}</from>
+				</column>
+				<column name="medicationStrength" internal="string02" width="10.0">
+					<from>#{administerMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="string08" visible="false" width="10.0">
+					<from>#{administerMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string03" width="5">
+					<from>#{administerMedication.medicationRoute}</from>
+				</column>
+				<column name="medicationStartDate" internal="string04" width="10.0">
+					<from>#{administerMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string05" width="10.0">
+					<from>#{administerMedication.medicationEndDate}</from>
+				</column>
+				<column name="status" internal="string06" width="10.0">
+					<from>#{administerMedication.status}</from>
+				</column>
+				<column name="messageID" internal="string07" width="20.0" visible="false">
+					<from>#{administerMedication.messageID}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:administrationMenu" >
+					<column name="Form" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+		</list>
+	</extends>
+	<extends path="echr:patient:currentMedication">
+		<list name="dispense" title="Dispense" page="/five/list.xhtml" visible="true" >
+				<column name="dispensedDate" internal="date01" width="10" format="MMM-dd-yyyy" >
+					<from>#{dispenseMedication.dispensedDate}</from>
+				</column>
+				<column name="medicationName" internal="string01" width="16">
+					<from>#{dispenseMedication.medicationName}</from>
+				</column>
+				<column name="status" internal="string02" width="10">
+					<from>#{dispenseMedication.status}</from>
+				</column>
+				<column name="medicationStrength" internal="string03" width="10">
+					<from>#{dispenseMedication.medicationStrength}</from>
+				</column>
+				<column name="medicationFrequency" internal="long01" visible="false" width="10">
+					<from>#{dispenseMedication.medicationFrequency}</from>
+				</column>
+				<column name="medicationRoute" internal="string04" width="5">
+					<from>#{dispenseMedication.medicationRoute}</from>
+				</column>
+				<column name="remainingRefills" internal="long02" width="10">
+				<from>#{dispenseMedication.remainingRefills}</from>
+				</column>
+				<column name="dispenseAmount" internal="pqUnits04" width="10">
+					<from>#{dispenseMedication.dispenseAmount}</from>
+				</column>
+				<column name="medicationStartDate" internal="string05" width="10">
+					<from>#{dispenseMedication.medicationStartDate}</from>
+				</column>
+				<column name="medicationEndDate" internal="string06" width="10">
+					<from>#{dispenseMedication.medicationEndDate}</from>
+				</column>
+				<column name="dispense" internal="long04" width="6">
+					<from>#{dispenseMedication.dispense}</from>
+				</column>
+				<column name="packSize" internal="string07" width="5">
+					<from>#{dispenseMedication.packSize}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:dispenseMenu"  >
+					<column name="Form" internal="string01" instantiate="true" width="40.0"/>
+				</action>
+			</list>
+	</extends>
+</application>

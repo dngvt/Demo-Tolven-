@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugin id="org.tolven.assembler.jboss6.legacypostgresql" version="2.1.3" vendor="Tolven" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<requires>
+		<import plugin-id="org.tolven.assembler.jboss6" />
+		<import plugin-id="org.tolven.component.ear" />
+		<import plugin-id="org.tolven.assembler.ejbmodule" />
+		<import plugin-id="org.tolven.legacypostgresql.db" />
+	</requires>
+	<extension id="databasePlugin" plugin-id="org.tolven.assembler.jboss6" point-id="databasePlugin" />
+	<extension id="orm" plugin-id="org.tolven.assembler.ejbmodule" point-id="orm">
+		<parameter id="ormId" value="legacypostgresql" />
+		<parameter id="name" value="em" />
+		<parameter id="transaction-type" value="JTA" />
+		<parameter id="jta-data-source" value="TolvenDS" />
+	</extension>
+	<extension id="datasource" plugin-id="org.tolven.component.ear" point-id="datasource">
+		<parameter id="database-code" value="legacypostgresql" />
+	</extension>
+	<extension id="persistence-unit" plugin-id="org.tolven.component.ear" point-id="persistence-unit">
+		<parameter id="name" value="em" />
+		<parameter id="transaction-type" value="JTA" />
+		<parameter id="provider" value="org.hibernate.ejb.HibernatePersistence" />
+		<parameter id="jta-data-source" value="TolvenDS" />
+		<parameter id="property">
+			<parameter id="name" value="eclipselink.ddl-generation" />
+			<parameter id="value" value="create-tables" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="eclipselink.ddl-generation.output-mode" />
+			<parameter id="value" value="database" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="eclipselink.logging.levelxxxx" />
+			<parameter id="value" value="FINEST" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="eclipselink.target-database" />
+			<parameter id="value" value="PostgreSQL" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="hibernate.dialect" />
+			<parameter id="value" value="org.hibernate.dialect.PostgreSQLDialect" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="hibernate.show_sql" />
+			<parameter id="value" value="false" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="hibernate.hbm2ddl.auto" />
+			<parameter id="value" value="update" />
+		</parameter>
+		<parameter id="property">
+			<parameter id="name" value="hibernate.cache.provider_class" />
+			<parameter id="value" value="org.hibernate.cache.NoCacheProvider" />
+		</parameter>
+	</extension>
+</plugin>

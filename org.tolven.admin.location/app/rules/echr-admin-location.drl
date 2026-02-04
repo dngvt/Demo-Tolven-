@@ -1,0 +1,36 @@
+package base_echr_admin_location
+// See http://wiki.tolven.org/doc/index.php/Plugin:org.tolven.component.tolvenejb#PlaceholderFacts
+// for details on the following annotation:
+
+ /* Tolven */
+import java.util.*;
+import org.tolven.trim.*;
+import org.tolven.trim.ex.*;
+import org.tolven.doc.entity.*;
+import java.lang.Integer;
+import org.tolven.app.entity.MenuStructure;
+import org.tolven.app.entity.MenuData;
+import org.tolven.app.bean.Mode;
+import org.tolven.app.bean.Plan;
+import org.tolven.core.entity.Status;
+import org.tolven.doc.bean.TolvenMessage;
+import org.tolven.model.Patient;
+import org.tolven.trim.Observation;
+import org.tolven.trim.process.ProcessTrim;
+
+global org.tolven.app.AppEvalAdaptor app;
+global Date now;
+
+/**
+ * Add Location to location list
+ */
+rule "Add location to location list"
+	when
+		$ms: MenuStructure( role == "placeholder", path == "echr:location" )
+		$msList: MenuStructure( role == "list", path == "echr:admin:locations:all" )
+		$md: MenuData( menuStructure == $ms )
+	then
+		MenuData mdLocList = app.createReferenceMD( $md, $msList );
+		mdLocList.addPhrase( $md.getString01(), "location", "en_US" );
+end
+

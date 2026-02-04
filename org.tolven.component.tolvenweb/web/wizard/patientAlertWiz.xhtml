@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wiz="http://www.tolven.org/jsf/wizard"
+	xmlns:trim="http://www.tolven.org/jsf/trim">
+
+<head>
+<title>Alert</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition>
+		<wiz:step title="Alert">
+			<wiz:body>
+				<wiz:group title="Alert">
+					<h:outputText id="text" value="#{trim.trim.field['text']}"/>
+				</wiz:group>
+				<wiz:group title="Actions">
+					<table width="100%">
+						<tr>
+							<td width="15%">
+								Recommended Action:
+							</td>
+							<td>
+								<h:outputText id="recAction" value="#{trim.trim.field['recommendedAction']}"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<wiz:yesno id="recommendedActionTaken">Take Recommended Action</wiz:yesno>
+								<wiz:group title="Reason For Not Taking Recommended Clinical Action" visible="$('#{menu.elementLabel}:recommendedActionTaken').isFalse();">
+									<h:inputText id="actTaken" value="#{trim.trim.field['actionTaken']}"/>
+								</wiz:group>
+								
+							</td>
+						</tr>
+					</table>
+				</wiz:group>
+				<wiz:group title="Alert Status">
+					<wiz:yesno id="reviewed">Record Reviewed</wiz:yesno>
+					<wiz:yesno id="sent">Alert Completed</wiz:yesno>
+				</wiz:group>
+			</wiz:body>
+			<wiz:help>
+				<h1>Help</h1>
+				<p></p>
+			</wiz:help>
+		</wiz:step>
+	</ui:composition>
+
+</body>
+</html>

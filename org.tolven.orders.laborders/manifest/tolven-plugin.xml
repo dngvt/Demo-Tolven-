@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" 
+id="org.tolven.orders.laborders" version="2.1.12" class="org.tolven.deploy.LabOrders.LoaderLabOrders" vendor="Tolven">
+
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenejb" />
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+		<import plugin-id="org.tolven.component.tolvenlocale_en" />
+	</requires>
+
+	<runtime>
+		<library id="classes" path="tpf/classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+
+	<extension-point id="devLib" extension-multiplicity="none">
+		<parameter-def id="jar" default-value="devLib.jar" />
+	</extension-point>
+	<extension-point id="trims" parent-plugin-id="org.tolven.component.application" parent-point-id="trims">
+		<parameter-def id="dir" default-value="app/trim" multiplicity="none-or-one" />
+	</extension-point>
+	<extension-point id="applications" parent-plugin-id="org.tolven.component.application" parent-point-id="applications">
+		<parameter-def id="dir" default-value="app" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- Add EJB classes -->
+	<extension id="ejbclasses" plugin-id="org.tolven.component.tolvenejb" point-id="classes">
+		<parameter id="dir" value="ejb/classes" />
+	</extension>
+	<!-- Add locale extensions -->
+	<!-- extension id="application-locale" plugin-id="org.tolven.component.tolvenlocale_en" point-id="application-locale"> <parameter id="application-name" value="echr" /> <parameter id="properties-file" value="locale/cchit-lab-orders-locale.properties" /> </extension -->
+	<!--extension id="application-global-locale" plugin-id="org.tolven.component.tolvenlocale_en" point-id="application-global-locale"> <parameter id="application-name" value="echr" /> <parameter id="properties-file" value="locale/cchit-lab-orders-global-locale.properties" /> </extension -->
+	<!-- Web pages extensions -->
+	<extension id="drilldownDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="drilldownDirectory">
+		<parameter id="sourceDirectory" value="web/drilldown" />
+	</extension>
+	<extension id="wizardDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="wizardDirectory">
+		<parameter id="sourceDirectory" value="web/wizard" />
+	</extension>
+	<extension id="scriptsDirectory" plugin-id="org.tolven.component.tolvenweb" point-id="scriptsDirectory">
+		<parameter id="sourceDirectory" value="web/scripts" />
+	</extension>
+	<extension id="labOrderWizardScripts" plugin-id="org.tolven.component.tolvenweb" point-id="portalScriptInclude">
+		<parameter id="includeFile" value="scriptInclude/labOrder.txt" />
+	</extension>
+</plugin>

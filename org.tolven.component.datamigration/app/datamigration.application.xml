@@ -1,0 +1,12 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr">
+		<menu name="datamigration" sequence="20" title="Admin" page="/five/datamigration.xhtml" visible="true">
+			<menu name="migratedata" title="MigrateData" page="/wizard/migrateExtendedFieldsData.xhtml" visible="true">
+			</menu>
+			<menu name="rollbackMigration" title="RollbackMigration" page="/wizard/rollBackMigrationChanges.xhtml" visible="true">
+			</menu>
+			<menu name="viewExtendedFields" title="ViewExtendedFields" page="/wizard/viewExtendedFields.xhtml" visible="true">
+			</menu>
+		</menu>
+	</extends>
+</application>

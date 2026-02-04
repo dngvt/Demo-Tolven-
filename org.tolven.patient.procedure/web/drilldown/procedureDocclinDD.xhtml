@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+  <title>Patient Procedures - Drilldown</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <ui:composition>
+    <wiz:body>
+
+      <table style="width:80%;border:1px solid #999999" class="grid">
+        <thead>
+         <th>Procedure</th>
+          <th>#{msg.Date}</th>
+          <th>Additional Detail</th>
+          <th>Problems</th>
+          <th>Diagnoses</th>
+        </thead>
+        <tbody>
+          <c:forEach items="#{trim.trim.act.relationshipsList[trim.trim.act.computes[0].property['arName']]}" var="rel" varStatus="entryIndex">
+			<c:set var="trClass" value="odd"/>
+			<c:if test="#{entryIndex.index%2 == 0}">
+				<c:set var="trClass" value="even"/>
+			</c:if>
+            <tr class="#{trClass}">
+              <td>#{rel.act.code.CE.displayName}</td>
+              <td><trim:TS id="effectiveTime#{entryIndex.index}" value="#{rel.act.effectiveTime.TS}" dateStyle="short" timeStyle="short" readonly="true"/></td>
+			  <td><trim:ED id="procedureInfo#{rel.sequenceNumber}" value="#{rel.act.relationship['procedureInfo'].act.observation.value}" readonly="true"/></td>
+			  <td>
+				<c:forEach items="#{rel.act.relationshipsList['problem']}" var="problem" varStatus="problemIndex">
+					#{problem.act.observation.value.CE.displayName} <br/>
+          		</c:forEach>  
+			  </td>
+			   <td>
+				<c:forEach items="#{rel.act.relationshipsList['diagnosis']}" var="diagnosis" varStatus="diagnosisIndex">
+					#{diagnosis.act.observation.value.CE.displayName}<br/>
+          		</c:forEach>  
+			  </td>
+            </tr>
+          </c:forEach>
+        </tbody>
+      </table>
+    </wiz:body>
+  </ui:composition>
+</body>
+</html>

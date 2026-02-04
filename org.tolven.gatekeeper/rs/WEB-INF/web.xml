@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" version="3.0" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<context-param>
+		<param-name>com.sun.jersey.config.property.packages</param-name>
+		<param-value>org.tolven.jersey</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>JAXRSServlet</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JAXRSServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<env-entry>
+		<env-entry-name>webContextId</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>gatekeeperrs</env-entry-value>
+	</env-entry>
+</web-app>

@@ -1,0 +1,21 @@
+article
+{
+	border:1px solid #6699CC;
+	border-radius:10px;
+	margin:10px;
+}
+article header{
+	background: #6699CC;
+	border-radius:10px 10px 0px 0px;
+	border: 5px solid #6699CC;
+	color: #FFFFFF;
+font-weight: bold;
+}
+article section{
+	padding: 5px;
+}
+
+article section table tbody tr td:first-child{
+font-style: italic;
+padding-right: 20px;
+}

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim xmlns="urn:tolven-org:trim:4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4">
+	<abstract>true</abstract>
+	<name>px</name>
+	<author>Tolven</author>
+	<page>px.xhtml</page>
+	<drilldown>pxDD.xhtml</drilldown>
+	<menu>global:pxMenu</menu>
+	<reference>http://www.wikihit.org/wiki/index.php/Procedure</reference>
+	<application name="ephr">
+		<instance>ephr:patient:px</instance>
+		<wip>ephr:activity:all</wip>
+	</application>
+	<application name="echr">
+		<instance>echr:patient:px</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act moodCode="EVN" classCode="PROC">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:patient:px</path>
+			</placeholder>
+		</bind>
+		<bind application="ephr" phase="create">
+			<placeholder bindAction="merge">
+				<path>ephr:patient:px</path>
+			</placeholder>
+		</bind>
+		<effectiveTime>
+			<label>Start time</label>
+			<new datatype="TS" function="now" />
+		</effectiveTime>
+		<participation name="author" typeCode="AUT">
+			<role classCode="ASSIGNED">
+				<bind application="echr" phase="request">
+					<list cardinality="multiple">
+						<path>echr:admin:staff:all</path>
+					</list>
+				</bind>
+				<id />
+			</role>
+		</participation>
+		<relationship typeCode="COMP" direction="OUT" name="procedureInfo">
+			<act classCode="OBS" moodCode="EVN">
+				<observation>
+					<value>
+						<label>Additional Detail</label>
+						<ED></ED>
+					</value>
+				</observation>
+			</act>
+		</relationship>		
+		<compute>
+			<type>org.tolven.process.InsertAssociatedPlaceholder</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="arName">
+				<value xsi:type="xs:string">problem</value>
+			</property>
+			<property name="arDirection">
+				<value xsi:type="xs:string">OUT</value>
+			</property>
+			<property name="arTypeCode">
+				<value xsi:type="xs:string">RSON</value>
+			</property>
+			<property name="template">
+				<value xsi:type="xs:string">associatedProblem</value>
+			</property>
+			<property name="placeholderList">
+				<value xsi:type="xs:string">#{patient.path}:problems:active</value>
+			</property>
+			<property name="placeholderPath">
+				<value xsi:type="xs:string"></value>
+			</property>
+			<property name="action">
+				<value xsi:type="xs:string">add</value>
+			</property>
+			<property name="position">
+				<value xsi:type="xs:string">0</value>
+			</property>
+		</compute>
+		<compute>
+			<type>org.tolven.process.InsertAssociatedPlaceholder</type>
+			<property name="enabled">
+				<value xsi:type="xs:boolean">false</value>
+			</property>
+			<property name="arName">
+				<value xsi:type="xs:string">diagnosis</value>
+			</property>
+			<property name="arDirection">
+				<value xsi:type="xs:string">OUT</value>
+			</property>
+			<property name="arTypeCode">
+				<value xsi:type="xs:string">RSON</value>
+			</property>
+			<property name="template">
+				<value xsi:type="xs:string">associatedDiagnosis</value>
+			</property>
+			<property name="placeholderList">
+				<value xsi:type="xs:string">#{patient.path}:diagnoses:current</value>
+			</property>
+			<property name="placeholderPath">
+				<value xsi:type="xs:string"></value>
+			</property>
+			<property name="action">
+				<value xsi:type="xs:string">add</value>
+			</property>
+			<property name="position">
+				<value xsi:type="xs:string">0</value>
+			</property>
+		</compute>
+	</act>
+	
+</trim>

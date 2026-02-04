@@ -1,0 +1,22 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+
+	<extends path="echr:patient">
+		<placeholder name="cod" title="CauseOfDeath" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/deathDetailsLink.xhtml">
+			<field name="patient" internal="parent01">
+				<from>#{patient}</from>
+			</field>
+			<field name="cause" internal="string01">
+				<from>#{trim.act.relationship['problem'].act.observation.value.ST.value}</from>
+			</field>
+			<field name="effectiveDate" internal="date01" type="date">
+				<from>#{trim.act.effectiveTime.TS.date}</from>
+			</field>
+			<field name="author" internal="string02">
+				<from>#{internalId( account, act.participation['dataEnterer'].role.id)}</from>
+			</field>
+			<field name="availabilityTime" internal="updatetime"/>
+		</placeholder>
+	</extends>
+
+</application>	

@@ -1,0 +1,246 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr">
+		<placeholder name="patient" sequence="40" title="Patient" eventInstance="echr:patients:wip" page="/five/patient.xhtml" heading="/five/chartLink.xhtml">
+			<field name="lastName" internal="string01">
+				<from>#{xpath['patient/name/family/text()']}</from>
+				<from>#{xpath['patient/name/text()']}</from>
+				<from>#{role.player.name.EN['L'].formattedParts['FAM']}</from>
+			</field>
+			<field name="firstName" internal="string02">
+				<from>#{xpath['patient/name/given/text()']}</from>
+				<from>#{role.player.name.EN['L'].formattedParts['GIV[0]']}</from>
+			</field>
+			<field name="middleName" internal="string03">
+				<from>#{xpath["patient/name/family[@qualifier='BR']/text()"]}</from>
+				<from>#{role.player.name.EN['L'].formattedParts['GIV[1]']}</from>
+			</field>
+			<field name="familyName" internal="string08">
+				<from>#{role.player.name.EN['L'].formattedParts['GIV[2]']}</from>
+			</field>
+			<field name="prefix" internal="_extended" type="string">
+				<from>#{role.player.name.EN['L'].formattedParts['PFX']}</from>
+			</field>
+			<field name="suffix" internal="_extended" type="string">
+				<from>#{role.player.name.EN['L'].formattedParts['SFX']}</from>
+			</field>
+			<field name="ssn" internal="_extended" type="string">
+				<from>#{role.player.id.for['2.16.840.1.113883.4.1'].extension}</from>
+			</field>
+			<field name="dob" internal="ts01" >
+				<from>#{xpath['patient/birthTime/@value']}</from>
+                <from>#{role.player.livingSubject.birthTime.TS}</from>				
+			</field>
+			<field name="sex" internal="string04">
+				<from>#{xpath['patient/administrativeGenderCode/@code']}</from>
+				<from>#{role.player.livingSubject.administrativeGenderCode.CE.displayName}</from>
+			</field>
+			<field name="mrn" internal="string05">
+				<from>#{role.id.for['MRN'].extension}</from>
+			</field>
+			<field name="vip" internal="_extended">
+				<from>#{trim.act.participation['patient'].role.patient.veryImportantPersonCode.value}</from>
+			</field>
+			<field name="gender" internal="_extended">
+				<from>#{trim.act.participation['patient'].role.player.livingSubject.administrativeGenderCode.value}</from>
+			</field>
+			<field name="homeAddr1" internal="_extended" type="string">
+				<from>#{xpath["addr[@use='H']/streetName/text()"]}</from>
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['SAL[0]'].ST.value}</from>
+			</field>
+			<field name="homeAddr2" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['SAL[1]'].ST.value}</from>
+			</field>
+			<field name="homeCity" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['CTY[0]'].ST.value}</from>
+			</field>
+			<field name="homeCounty" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['CTY[1]'].ST.value}</from>
+			</field>
+			<field name="homeState" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['STA'].ST.value}</from>
+			</field>
+			<field name="homeZip" internal="_extended" type="string">
+				<from>#{xpath["addr[@use='H']/postalCode"]}</from>
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['ZIP'].ST.value}</from>
+			</field>
+			<field name="homeCountry" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['CNT'].ST.value}</from>
+			</field>
+			<field name="emailId" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.addr.AD['H'].part['UNID'].ST.value}</from>
+			</field>
+			<field name="homeTelecom" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.telecom.TEL['H'].value}</from>
+			</field>
+			<field name="workTelecom" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.telecom.TEL['WP'].value}</from>
+			</field>
+			<field name="cellTelecom" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.telecom.TEL['MC'].value}</from>
+			</field>
+			<field name="eMail" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.telecom.TEL['DIR'].value}</from>
+			</field>
+			<field name="seMail" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.telecom.TEL['TMP'].value}</from>
+			</field>
+			<field name="ethnicity" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.ethnicGroupCode.value}</from>
+			</field>
+			<field name="race" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.person.raceCode.values}</from>
+			</field>
+			<!-- <field name="comments" internal="_extended" type="string"> <from>#{trim.isName['reg/evn/patient.*'].act.relationship['patientOtherInfo'].act.observation.values[0].ST.value}</from> </field> -->
+			<field name="language" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.languageCommunications[0].languageCode.value}</from>
+			</field>
+			<field name="languageCode" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/patient.*'].act.participation['patient'].role.player.languageCommunications[0].languageCode.CE.code}</from>
+			</field>
+			<field name="primaryName" internal="_computed">
+				<from>#{patient.primary.lastName}</from>
+				<from>#{patient.otherPrimary}</from>
+			</field>
+			<field name="primary" internal="parent03">
+				<from>#{internalId( account, trim.act.participation['patient'].role.participation['primaryCarePhysician'].act.participation['primaryMD'].role.id)}</from>
+			</field>
+			<field name="otherPrimary" internal="_extended">
+				<from>#{trim.act.participation['patient'].role.participation['primaryCarePhysician'].act.participation['primaryMD'].role.player.name.ENS[0].parts[0].ST.value}</from>
+			</field>
+			<field name="surgeonName" internal="_computed">
+				<from>#{patient.surgeon.lastName}</from>
+				<from>#{patient.otherSurgeon}</from>
+			</field>
+			<field name="surgeon" internal="parent04">
+				<from>#{internalId( account, trim.act.participation['patient'].role.participation['primarySurgeon'].act.participation['primarySurgeon'].role.id)}</from>
+			</field>
+			<field name="otherSurgeon" internal="_extended">
+				<from>#{trim.act.participation['patient'].role.participation['primarySurgeon'].act.participation['primarySurgeon'].role.player.name.ENS[0].parts[0].ST.value}</from>
+			</field>
+			<field name="allergyCount" internal="long01">
+			</field>
+
+			<!-- Notification Fields -->
+			<field name="reminderCheckBox" internal="_extended" type="string">
+				<from>#{trim.field['reminderCheckBox']}</from>
+			</field>
+			<field name="deliveryType" internal="_extended" type="string">
+				<from>#{trim.field['deliveryType']}</from>
+			</field>
+			
+			<field name="notifyMethod" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyMethod'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyAnnualPhysical" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyAnnualPhysical'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyTetanus" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyTetanus'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyFlu" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyFlu'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyBMI" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyBMI'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyColorectal" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyColorectal'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyBreast" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyBreast'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyA1C" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyA1C'].act.code.CD.code}</from>
+			</field>
+			<field name="notifyDrugAllergy" internal="_extended" type="string">
+				<from>#{trim.isName['reg/evn/notification.*'].act.relationship['notifyDrugAllergy'].act.code.CD.code}</from>
+			</field>
+		</placeholder>
+	</extends>
+
+
+	<extends path="echr:patient">
+		<menu name="personal" sequence="3" title="Personal" page="/five/bar2.xhtml" visible="true">
+			<list name="identity" title="Identity" page="/five/personal.xhtml" visible="true" drilldown="echr:patient" />
+		</menu>
+	</extends>
+
+	<!-- <extends path="echr:patient"> <menu name="tolvenreports" title="Tolven Reports" page="/five/bar2.xhtml" visible="true"> <list name="list" title="List" page="/five/tolvenReports.xhtml" visible="true" drilldown="echr:patient"/> </menu> </extends> -->
+	<extends path="echr:patient">
+		<instance name="wip" title="New Patient Event" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml" />
+	</extends>
+
+	<!-- Patient lists -->
+	<extends path="echr">
+		<menu name="patients" sequence="30" title="Patients" page="/five/patients.xhtml" visible="true">
+			<list name="all" title="My Patients" page="/five/patientList.xhtml" visible="true" drilldown="echr:patient" sequence="1000">
+				<column name="Name" internal="string01,string02,string03" format="%s, %s %s" reference="true" width="20.0" />
+				<column name="Last" internal="string01" visible="false">
+					<from>#{patient.lastName}</from>
+				</column>
+				<column name="First" internal="string02" visible="false">
+					<from>#{patient.firstName}</from>
+				</column>
+				<column name="Middle" internal="string03" visible="false">
+					<from>#{patient.middleName}</from>
+				</column>
+				
+				<column name="DOB" internal="ts01" format="d MMM yyyy" width="9">
+					<from>#{patient.dob}</from>
+				</column>
+				<column name="Age" internal="ts01" format="age" width="6" />				
+				<column name="Sex" internal="string04" width="6">
+					<from>#{patient.sex}</from>
+					<from>#{patient.gender}</from>
+					<output>
+						<span style="color:#{ Sex=='Female'?'HotPink':'Blue'}" title="#{ageInYears(date01) lt 21?'child':'adult'}">#{Sex}</span>
+					</output>
+				</column>
+				<column name="Phone" width="11.0" internal="string06" visible="true">
+					<from>#{patient.homeTelecom}</from>
+					<output>
+						<a href="javascript:alert('Primary: #{patient.primary.firstName} #{patient.primary.lastName} #{patient.primary.workTelecom}');">#{Phone}</a>
+					</output>
+				</column>
+				<column name="MRN" width="10.0" internal="string05" visible="true">
+					<from>#{patient.mrn}</from>
+					<output>
+						<span title="Patient id: #{patient.id}">#{MRN}</span>
+					</output>
+				</column>
+				<column name="Race" width="10.0" visible="false">
+					<from>#{patient.race}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:patientMenu">
+					<column name="Action" internal="string01" instantiate="true" width="25.0" />
+				</action>
+			</list>
+			<list name="in" title="Inpatients" page="/five/list.xhtml" visible="true" drilldown="echr:patient" sequence="1500">
+				<column name="Name" internal="string01,string02" format="%s, %s" reference="true" width="20.0" />
+				<column name="Last" internal="string01" visible="false">
+					<from>#{patient.lastName}</from>
+				</column>
+				<column name="First" internal="string02" visible="false">
+					<from>#{patient.firstName}</from>
+				</column>
+				<column name="Problem" internal="string03" visible="false" />
+				<column name="DOB" internal="ts01" format="d MMM yyyy" width="9.0">
+					<from>#{patient.dob}</from>
+				</column>
+				<column name="Age" internal="ts01" format="age" width="6" />
+				<column name="Sex" internal="string04" width="6.0">
+					<from>#{patient.sex}</from>
+				</column>
+				<column name="Location" internal="string05" width="10.0">
+					<from>#{encounter.location.name}</from>
+					<from>#{encounter.locationExtension}</from>
+				</column>
+				<column name="Attending" internal="string06" width="20.0">
+					<from>#{encounter.attender.lastName}, #{encounter.attender.firstName}</from>
+				</column>
+			</list>
+			<instance name="wip" title="WIP" page="/wizard/wizard.xhtml" heading="/five/chartLink.xhtml" />
+		</menu>
+	</extends>
+</application>

@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trim 
+	xmlns="urn:tolven-org:trim:4.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:trim:4.0	http://tolven.org/xsd/trim4"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<name>obs/evn/RxChangeRequest</name>
+	<description>RxChangeRequest</description>
+	<page>RxChangeRequest.xhtml</page>
+	<drilldown>RxChangeRequestDD.xhtml</drilldown>
+	<application name="echr">
+		<instance>echr:responses</instance>
+		<wip>echr:activity:all</wip>
+	</application>
+	<act moodCode="EVN" classCode="OBS">
+		<bind application="echr" phase="create">
+			<placeholder bindAction="merge">
+				<path>echr:responses</path>
+			</placeholder>
+		</bind>
+		<relationship typeCode="NAME" direction="IN" name="header">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>From</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>To</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Message Id</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>RxReferenceNumber</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>PrescriberOrderNumber</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>RelatesToMessageID</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="pharmacy">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>NCPDPID</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>StoreName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>AddressLine1</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>City</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>State</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>ZipCode</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="prescriber">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>ClinicName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>LastName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>FirstName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>AddressLine1</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>AddressLine2</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>City</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>State</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>ZipCode</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>SPI</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="patient">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>LastName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>FirstName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>MiddleName</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dob</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Gender</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="MedicationPrescribed">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>Drug Description</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dispense Amount</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>RefillQualifier</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="MedicationRequested">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>Drug Description</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dispense Amount</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>RefillQualifier</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="MedicationRequested1">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>Drug Description</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dispense Amount</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>RefillQualifier</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="MedicationRequested2">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>Drug Description</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dispense Amount</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>RefillQualifier</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="RequestedChange">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>Drug Selected</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Drug Food Interaction</label>
+						<ST>Avoid Food containing Grapes.</ST>
+					</value>
+					<value>
+						<label>Duplicate Therapy</label>
+						<ST>No Duplicate Comments</ST>
+					</value>
+					<value>
+						<label>Drug Food Boolean</label>
+						<ST>true</ST>
+					</value>
+					<value>
+						<label>Duplicate Therapy Boolean</label>
+						<ST>false</ST>
+					</value>
+					<value>
+						<label>Over Ride Comments</label>
+						<ST> It is my wish</ST>
+					</value>
+					<value>
+						<label>Was Over rided</label>
+						<ST>false</ST>
+					</value>
+					<value>
+						<label>FDB Response</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Quantity</label>
+						<ST></ST>	
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+    	 				<label>Refill Qualifier</label>
+    	 				<valueSet>refillQualifier</valueSet>
+    	 				<CE>
+				    		<displayName>R</displayName>
+				    		<code>C0034444</code>
+							<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+							<codeSystemVersion>2007AA</codeSystemVersion>
+				    	</CE>
+    	 			</value>	
+				</observation>
+			</act>
+		</relationship>
+		<relationship typeCode="NAME" direction="IN" name="responseType">
+        	<act classCode="OBS" moodCode="EVN">
+        		<title>
+    				<ST>Response Type</ST>
+    			</title>
+	        	<observation>
+	                <value>
+	                	<label>Response Type</label>
+	                	<valueSet>response</valueSet>
+	                	<CE>
+				 			<displayName>Denied</displayName>
+				 			<code>C0024773</code>
+							<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+							<codeSystemVersion>2007AA</codeSystemVersion>
+				 		</CE>
+	                </value>
+	                <value>
+						<label>Note For Approved</label>
+						<ST></ST>
+					</value>
+					<value>
+	                	<label>Denial Reason Code</label>
+	                	<valueSet>denialReasonCode</valueSet>
+	                	<CE>
+				 			<displayName>AA Patient unknown to the Prescriber</displayName>
+				 			<code>C0024661</code>
+							<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+							<codeSystemVersion>2007AA</codeSystemVersion>
+				 		</CE>
+	                </value>
+	                <value>
+						<label>Denial Reason</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Note For Approved with Change</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>MessageID for RXChange Response</label>
+						<ST></ST>
+					</value>
+	            </observation>
+	        </act>
+	    </relationship>
+	    <relationship typeCode="NAME" direction="IN" name="FinalMedication">
+			<act moodCode="EVN" classCode="OBS">
+				<observation>					
+					<value>
+						<label>DrugDescription</label>
+						<ST></ST>
+					</value>
+					<value>
+						<label>Dispense Amount</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>Refill</label>
+						<INT><value>0</value></INT>
+					</value>
+					<value>
+						<label>RefillQualifier</label>
+						<ST></ST>
+					</value>
+				</observation>
+			</act>
+		</relationship>
+		<compute>
+        	<type>org.tolven.process.MessageID</type>
+        	<property name="enabled">
+            	<value xsi:type="xs:boolean">true</value>
+        	</property>
+        	<property name="action">
+		        <value xsi:type="xs:string">rxChangeRequest</value>
+			</property>
+   		</compute>
+	</act>
+	<valueSet name="response"> 
+		<CE>
+ 			<displayName>Approved</displayName>
+ 			<code>C0024771</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>Approved With Change</displayName>
+ 			<code>C0024772</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>Denied</displayName>
+ 			<code>C0024773</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet> 
+ 	<valueSet name="denialReasonCode"> 
+		<CE>
+ 			<displayName>AA Patient unknown to the Prescriber</displayName>
+ 			<code>C0024661</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AB Patient never under Prescriber care</displayName>
+ 			<code>C0024772</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AC Patient no longer under Prescriber care</displayName>
+ 			<code>C0024663</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AD Patient has requested refill too soon</displayName>
+ 			<code>C0024664</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AE Medication never prescribed for the patient</displayName>
+ 			<code>C0024665</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AF Patient should contact Prescriber first</displayName>
+ 			<code>C0024666</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AG Refill not appropriate</displayName>
+ 			<code>C0024667</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AH Patient has picked up prescription</displayName>
+ 			<code>C0024668</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AJ Patient has picked up partial fill of prescription</displayName>
+ 			<code>C0024669</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AK Patient has not picked up prescription, drug returned to stock</displayName>
+ 			<code>C0024610</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AL Change not appropriate</displayName>
+ 			<code>C0024611</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AM Patient needs appointment</displayName>
+ 			<code>C0024612</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AN Prescriber not associated with this practice or location</displayName>
+ 			<code>C0024613</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AO No attempt will be made to obtain Prior Authorization</displayName>
+ 			<code>C0024614</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName>AP Request already responded to by other means (e.g. phone or fax)</displayName>
+ 			<code>C0024615</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		 <CE>
+            <displayName>Others</displayName>
+            <code>C0183107</code>
+            <codeSystem>2.16.840.1.113883.6.56</codeSystem>
+            <codeSystemVersion>2007AA</codeSystemVersion>
+        </CE>
+ 	</valueSet> 	
+ 	<valueSet name="requestedMedicines"> 
+ 		<CE>
+ 			<displayName>Select</displayName>
+ 			<code>C0024775</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+		<CE>
+ 			<displayName></displayName>
+ 			<code>C0024771</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName></displayName>
+ 			<code>C0024773</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 		<CE>
+ 			<displayName></displayName>
+ 			<code>C0024770</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+ 		</CE>
+ 	</valueSet> 
+ 	<valueSet name="refillQualifier">
+    	<CE>
+    		<displayName>R</displayName>
+    		<code>C0034444</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+    	</CE>
+    	<CE>
+    		<displayName>PRN</displayName>
+    		<code>C0044554</code>
+			<codeSystem>2.16.840.1.113883.6.56</codeSystem>
+			<codeSystemVersion>2007AA</codeSystemVersion>
+    	</CE>
+    </valueSet>
+</trim>

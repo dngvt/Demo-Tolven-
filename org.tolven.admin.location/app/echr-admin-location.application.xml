@@ -1,0 +1,24 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr">
+		<placeholder name="location" title="Location" eventInstance="echr:admin:wip" page="/five/location.xhtml" heading="/five/locationLink.xhtml">
+			<field name="name" internal="string01">
+				<from>#{trim.isName['reg/evn/location/.*'].act.participation['subject'].role.player.name.EN['L'].formatted}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr">
+		<menu name="admin" sequence="20" title="Admin" page="/five/admin.xhtml" visible="true">
+			<menu name="locations" title="Location" page="/five/bar2.xhtml" visible="true">
+				<list name="all" title="All Locations" page="/five/list.xhtml" visible="true" drilldown="echr:location">
+					<column name="Name" internal="string01" width="25.0" reference="true">
+						<from>#{location.name}</from>
+					</column>
+					<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:locationMenu">
+						<column name="Location" internal="string01" instantiate="true" width="40.0" />
+					</action>
+				</list>
+			</menu>
+		</menu>
+	</extends>
+</application>
+	

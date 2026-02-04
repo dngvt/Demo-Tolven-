@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugins xmlns="urn:tolven-org:plugins:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:plugins:1.0 http://tolven.org/xsd/plugins.xsd">
+
+	<!-- DO NOT EDIT. Override properties via the tolven-config/plugins.xml file or an overlay plugins.xml -->
+
+	<property name="include">
+		<property name="oracle" value="true" />
+	</property>
+
+	<property name="db">
+		<property name="plugin" value="org.tolven.oracle.db" />
+		<property name="user" value="tolven" />
+		<property name="host" value="localhost" />
+		<property name="port" value="1521" />
+		<property name="name" value="ORCL" />
+		<property name="protocol" value="TCP" />
+		<property name="driverClass" value="oracle.jdbcDriver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=#{db['protocol']})(HOST=#{db['host']})(PORT=#{db['port']}))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=#{db['user']})))" />
+	</property>
+
+	<!-- For SSL, replace the relevant commented above with: -->
+	<!--
+	<property name="port" value="2484" />
+	<property name="protocol" value="TCPS" />
+	-->
+
+	<property name="gatekeeper">
+		<property name="tablePrefix" value="" />
+	</property>
+
+	<property name="password">
+		<!-- The following passwords can be used to change installed passwords -->
+
+		<!--If changing the following passwords, the corresponding keystores or servers must also be synchronized beforehand -->
+		<property name="dbUser" value="tolven" />
+	</property>
+
+</plugins>

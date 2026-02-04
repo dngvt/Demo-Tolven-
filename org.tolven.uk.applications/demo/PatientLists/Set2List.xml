@@ -1,0 +1,36 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patients">
+		<list name="InfluenzaAge3" title="InfluenzaAge3" page="/five/patientList.xhtml"
+			visible="true" drilldown="echr:patient">
+			<column name="Name" internal="string01,string02,string03"
+				format="%s, %s %s" reference="true" width="20.0" />
+			<column name="Last" internal="string01" visible="false">
+				<from>#{patient.lastName}</from>
+			</column>
+			<column name="First" internal="string02" visible="false">
+				<from>#{patient.firstName}</from>
+			</column>
+			<column name="Middle" internal="string03" visible="false">
+				<from>#{patient.middleName}</from>
+			</column>
+			<column name="DOB" internal="date01" format="d MMM yyyy"
+				width="7.0">
+				<from>#{patient.dob}</from>
+			</column>
+			<column name="Age" internal="date01" format="age" width="4.5" />
+			<column name="Sex" internal="string04" width="6.0">
+				<from>#{patient.sex}</from>
+				<from>#{patient.gender}</from>
+			</column>
+			<column name="Race" width="10.0" visible="false">
+				<from>#{patient.race}</from>
+			</column>
+			<column name="Immunization" internal="string07" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:immu:current,lower(string01) like '%influenza%'"].string01}</from>
+			</column>
+		</list>
+	</extends>
+</application>
+				

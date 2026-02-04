@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_2_0.xsd"
+	version="2.0">
+	<table-generator name="DOC_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="DOC" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<table-generator name="CORE_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="CORE" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<table-generator name="GROWTHCHART_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="GROWTHCHART" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<table-generator name="APP_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="app" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="APP" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<table-generator name="PROVIDER_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="PROVIDER" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<table-generator name="GEN_SEQ_GEN" table="SEQUENCE_GENERATOR"
+		schema="core" pk-column-name="SEQ_NAME" value-column-name="NEXT_VAL"
+		pk-column-value="GEN" initial-value="1000" allocation-size="1000">
+		<unique-constraint>
+			<column-name>SEQ_NAME</column-name>
+		</unique-constraint>
+	</table-generator>
+	<mapped-superclass class="org.tolven.security.key.TolvenPublicKey">
+		<attributes>
+			<basic name="x509EncodedKeySpec">
+				<column name="X509_ENCODED__KEY_SPEC" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="algorithm">
+				<column name="PUBLIC_KEY_ALGORITHM"></column>
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.tolven.security.key.TolvenEncryptedPrivateKey">
+		<attributes>
+			<basic name="encodedEncryptedPrivateKeyInfo">
+				<column name="ENCODED_ENCRYPTED_PRIVATE_KEY_INFO"
+					column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="keySize">
+				<column name="PRIVATE_KEY_SIZE"></column>
+			</basic>
+			<basic name="algorithm">
+				<column name="PRIVATE_KEY_ALGORITHM"></column>
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.tolven.security.key.TolvenEncryptedSecretKey">
+		<attributes>
+			<basic name="encryptedKey">
+				<column name="ENCRYPTED_SECRET_KEY" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="algorithm">
+				<column name="SECRET_KEY_ALGORITHM"></column>
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	<entity class="org.tolven.app.entity.MSResource">
+		<table name="MS_RESOURCE" schema="app">
+			<unique-constraint>
+				<column-name>ACCOUNT_ID</column-name>
+				<column-name>NAME</column-name>
+			</unique-constraint>
+		</table>
+		<attributes>
+			<basic name="name">
+				<column name="NAME" length="255"></column>
+			</basic>
+			<basic name="value">
+				<column name="VALUE" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocBase">
+		<table name="DOCUMENT" schema="doc"></table>
+		<discriminator-column name="DISC" length="10"></discriminator-column>
+		<attributes>
+			<basic name="mediaType">
+				<column name="MEDIA_TYPE"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS"></column>
+			</basic>
+			<basic name="content">
+				<column name="CONTENT" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="isSignatureRequired">
+				<column name="SIGNATURE_REQUIRED"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MenuDataWord">
+		<table name="MENU_DATA_WORD" schema="app"></table>
+		<attributes>
+			<basic name="language">
+				<column name="LANGUAGE"></column>
+			</basic>
+			<basic name="field">
+				<column name="FIELD"></column>
+			</basic>
+			<basic name="position">
+				<column name="POSITION"></column>
+			</basic>
+			<basic name="word">
+				<column name="WORD"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.TrimHeader">
+		<table name="TRIM_HEADER" schema="app"></table>
+		<attributes>
+			<basic name="name">
+				<column name="NAME" length="255"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS"></column>
+			</basic>
+			<basic name="trim">
+				<column name="TRIM" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.Question">
+		<table name="QUESTION" schema="core"></table>
+		<attributes>
+			<id name="id">
+				<column name="QUESTION_ID"></column>
+			</id>
+			<basic name="question">
+				<column name="QUESTION" length="255"></column>
+			</basic>
+			<basic name="type">
+				<column name="TYPE" length="20"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocXML">
+		<attributes>
+			<basic name="xmlNS">
+				<column name="XML_NS"></column>
+			</basic>
+			<basic name="xmlName">
+				<column name="XML_NAME"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocumentSignature">
+		<table name="DOCUMENT_SIGNATURE" schema="doc"></table>
+		<attributes>
+			<basic name="signature">
+				<column name="SIGNATURE" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="signatureAlgorithm">
+				<column name="SIGNATURE_ALGORITHM"></column>
+			</basic>
+			<basic name="certificate">
+				<column name="CERTIFICATE" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="timestamp">
+				<column name="TIMESTAMP"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.ConfigChange">
+		<table name="config_change" schema="app"></table>
+		<attributes>
+			<basic name="heading">
+				<column name="heading"></column>
+			</basic>
+			<basic name="createdDate">
+				<column name="created_date"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.DataMigrationLog">
+		<table name="data_migration_log" schema="app"></table>
+		<attributes>
+			<basic name="menuData">
+				<column name="menuData_id"></column>
+			</basic>
+			<basic name="createdDate">
+				<column name="created_date"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+
+
+	<entity class="org.tolven.app.entity.AccountMenuStructure">
+		<table name="MENU_STRUCTURE" schema="app"></table>
+		<attributes>
+			<basic name="path">
+				<column name="PATH_NAME" length="255"></column>
+			</basic>
+			<basic name="node">
+				<column name="NODE_NAME" length="50"></column>
+			</basic>
+			<basic name="role">
+				<column name="ROLE_NAME" length="50"></column>
+			</basic>
+			<basic name="text">
+				<column name="NODE_TEXT" length="50"></column>
+			</basic>
+			<basic name="textOverride">
+				<column name="NODE_TEXT_OVERRIDE" length="50"></column>
+			</basic>
+			<basic name="level">
+				<column name="NODE_LEVEL"></column>
+			</basic>
+			<basic name="sequence">
+				<column name="NODE_SEQ"></column>
+			</basic>
+			<basic name="columnNumber">
+				<column name="COLUMN_NUMBER"></column>
+			</basic>
+			<basic name="allowRoles">
+				<column name="ALLOW_ROLES" length="255"></column>
+			</basic>
+			<basic name="denyRoles">
+				<column name="DENY_ROLES" length="255"></column>
+			</basic>
+			<basic name="template">
+				<column name="TEMPLATE_NAME" length="255"></column>
+			</basic>
+			<basic name="menuTemplate">
+				<column name="MENU_TEMPLATE_NAME" length="255"></column>
+			</basic>
+			<basic name="visible">
+				<column name="NODE_VISIBLE" length="255"></column>
+			</basic>
+			<basic name="repeating">
+				<column name="NODE_REPEATING"></column>
+			</basic>
+			<basic name="defaultPathSuffix">
+				<column name="DEFAULT_PATH_SUFFIX"></column>
+			</basic>
+			<basic name="enableBackButton">
+				<column name="ENABLE_BACK_BUTTON"></column>
+			</basic>
+			<basic name="menuEventHandlerData">
+				<column length="10000"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.bean.TolvenMessage">
+		<table schema="doc"></table>
+		<attributes>
+			<basic name="payload">
+				<column column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="encryptedKey">
+				<column column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.Provider">
+		<table name="PROVIDER" schema="provider"></table>
+		<attributes>
+			<basic name="name">
+				<column name="NAME" length="100"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS" length="50"></column>
+			</basic>
+			<basic name="showFrom">
+				<column name="SHOW_FROM"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="showTo">
+				<column name="SHOW_TO"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.TolvenUserAnswer">
+		<table name="TOLVEN_USER_ANSWER" schema="core"></table>
+		<attributes>
+			<many-to-one name="question">
+				<join-column name="QUESTION_ID"></join-column>
+			</many-to-one>
+			<many-to-one name="answer">
+				<join-column name="ANSWER_ID"></join-column>
+			</many-to-one>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.PlaceholderID">
+		<table name="PLACEHOLDER_ID" schema="app"></table>
+		<attributes>
+			<basic name="root">
+				<column name="ID_ROOT"></column>
+			</basic>
+			<basic name="extension">
+				<column name="ID_EXTENSION"></column>
+			</basic>
+			<basic name="assigningAuthority">
+				<column name="AUTHORITY"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.ProviderSpecialty">
+		<table name="PROVIDER_SPECIALTY" schema="provider"></table>
+	</entity>
+	<entity class="org.tolven.app.entity.PlaceholderTransition">
+		<table name="PLACEHOLDER_TRANSITION" schema="app"></table>
+		<attributes>
+			<basic name="code">
+				<column name="CODE"></column>
+			</basic>
+			<basic name="codeSystem">
+				<column name="CODE_SYSTEM"></column>
+			</basic>
+			<basic name="codeSystemName">
+				<column name="CODE_SYSTEM_NAME"></column>
+			</basic>
+			<basic name="fromStatus">
+				<column name="FROM_STATUS"></column>
+			</basic>
+			<basic name="label">
+				<column name="LABEL"></column>
+			</basic>
+			<basic name="path">
+				<column name="PATH"></column>
+			</basic>
+			<basic name="toStatus">
+				<column name="TO_STATUS"></column>
+			</basic>
+			<basic name="transitionName">
+				<column name="TRANSITION_NAME"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.QuestionAnswer">
+		<table name="QUESTION_ANSWER" schema="core"></table>
+		<attributes>
+			<id name="id">
+				<column name="ANSWER_ID"></column>
+			</id>
+			<basic name="answer">
+				<column name="ANSWER" length="255"></column>
+			</basic>
+			<many-to-one name="question">
+				<join-column name="QUESTION_ID"></join-column>
+			</many-to-one>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MSColumn">
+		<table name="MS_COLUMN" schema="app"></table>
+		<attributes>
+			<basic name="sequence">
+				<column name="DISPLAY_SEQ"></column>
+			</basic>
+			<basic name="heading">
+				<column name="HEADING_NAME"></column>
+			</basic>
+			<basic name="internal">
+				<column name="INTERNAL_NAME"></column>
+			</basic>
+			<basic name="displayFunction">
+				<column name="DISPLAY_FUNCTION"></column>
+			</basic>
+			<basic name="displayFunctionArguments">
+				<column name="DF_ARGS"></column>
+			</basic>
+			<basic name="supressColumns">
+				<column name="SUPRESS"></column>
+			</basic>
+			<basic name="visible">
+				<column name="VISIBLE"></column>
+			</basic>
+			<basic name="width">
+				<column name="WIDTH_EMS"></column>
+			</basic>
+			<basic name="align">
+				<column name="ALIGN"></column>
+			</basic>
+			<basic name="fromDocument">
+				<column name="FROMDOC" length="5000"></column>
+			</basic>
+			<basic name="outputFormat">
+				<column name="OUTPUTFORMAT" length="1000"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountUserRole">
+		<table name="ACCOUNT_USER_ROLE" schema="core">
+			<unique-constraint>
+				<column-name>ACCOUNTUSER_ID</column-name>
+				<column-name>ROLE</column-name>
+			</unique-constraint>
+		</table>
+		<attributes>
+			<basic name="role">
+				<column name="ROLE" length="50"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.report.entity.TolvenReport">
+		<table schema="app"></table>
+		<attributes>
+			<basic name="report">
+				<column length="100000"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.TolvenUser">
+		<table name="TOLVEN_USER" schema="core"></table>
+		<attributes>
+			<basic name="ldapUID">
+				<column name="UID" length="100"></column>
+			</basic>
+			<basic name="lastLogin">
+				<column name="LAST_LOGIN"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="creation">
+				<column name="CREATION"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="status">
+				<column name="STATUS" length="10"></column>
+			</basic>
+			<basic name="timeZone">
+				<column name="TIME_ZONE" length="40"></column>
+			</basic>
+			<basic name="locale">
+				<column name="USER_LOCALE" length="10"></column>
+			</basic>
+			<basic name="emailFormat">
+				<column name="EMAIL_FORMAT" length="10"></column>
+			</basic>
+			<basic name="demoUser">
+				<column name="DEMO_USER"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.us.states.entity.StateNames">
+		<table name="states_names" schema="app"></table>
+		<attributes>
+			<id name="stateCode">
+				<column name="state_code" length="8"></column>
+			</id>
+			<basic name="stateName">
+				<column name="state_desc" length="75"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.RulePackage">
+		<table name="RULE_PACKAGE" schema="doc"></table>
+		<attributes>
+			<basic name="packageName">
+				<column name="PNAME" length="255"></column>
+			</basic>
+			<basic name="description">
+				<column name="PDESCR" length="1000"></column>
+			</basic>
+			<basic name="packageVersion">
+				<column name="PVERSION"></column>
+			</basic>
+			<basic name="packageBody">
+				<column name="PBODY" column-definition="text"></column>
+			</basic>
+			<basic name="timestamp">
+				<column name="PTIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="packageStatus">
+				<column name="PSTATUS"></column>
+			</basic>
+			<basic name="compiledPackage">
+				<column name="COMPILED" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.bean.TolvenMessageProperty">
+		<table schema="doc"></table>
+	</entity>
+	<entity class="org.tolven.core.entity.Property">
+		<table name="PROPERTY" schema="core"></table>
+		<attributes>
+			<id name="name">
+				<column name="PROPERTY_NAME"></column>
+			</id>
+			<basic name="value">
+				<column name="PROPERTY_VALUE"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountUserProperty">
+		<table name="ACCOUNT_USER_PROPERTY" schema="core"></table>
+		<attributes>
+			<basic name="longStringValue">
+				<column name="longStringValue" column-definition="text"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountTemplate">
+		<table name="ACCOUNT_TEMPLATE" schema="core"></table>
+		<attributes>
+			<id name="knownType">
+				<column name="KNOWN_TYPE" length="20"></column>
+			</id>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocAttachment">
+		<table name="ATTACHMENT" schema="doc"></table>
+		<attributes>
+			<basic name="description">
+				<column name="DESCRIPTION" length="1000"></column>
+			</basic>
+			<basic name="mediaType">
+				<column name="MEDIA_TYPE"></column>
+			</basic>
+			<basic name="uploadTime">
+				<column name="UPLOAD_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocCCR">
+	</entity>
+	<entity class="org.tolven.gen.entity.VirtualPerson">
+		<table name="VIRTUAL_PERSON" schema="gen"></table>
+		<attributes>
+			<basic name="first">
+				<column name="FIRST" length="50"></column>
+			</basic>
+			<basic name="last">
+				<column name="LAST" length="50"></column>
+			</basic>
+			<basic name="maiden">
+				<column name="MAIDEN" length="50"></column>
+			</basic>
+			<basic name="middle">
+				<column name="MIDDLE" length="50"></column>
+			</basic>
+			<basic name="gender">
+				<column name="GENDER" length="1"></column>
+			</basic>
+			<basic name="dob">
+				<column name="DOD"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="dod">
+				<column name="DOB"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="causeOfDeath">
+				<column name="COD" length="255"></column>
+			</basic>
+			<basic name="ssn">
+				<column name="SSN" length="10"></column>
+			</basic>
+			<basic name="mobilePhone">
+				<column name="MOBILE_PHONE" length="50"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountRole">
+		<table name="ACCOUNT_ROLE" schema="core">
+			<unique-constraint>
+				<column-name>ACCOUNT_ID</column-name>
+				<column-name>ROLE</column-name>
+			</unique-constraint>
+		</table>
+		<attributes>
+			<basic name="role">
+				<column name="ROLE" length="50"></column>
+			</basic>
+			<basic name="title">
+				<column name="TITLE"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MenuDataVersion">
+		<table name="MENU_DATA_VERSION" schema="app"></table>
+		<attributes>
+			<basic name="element">
+				<column name="ELEMENT"></column>
+			</basic>
+			<basic name="version">
+				<column name="VERSION"></column>
+			</basic>
+			<basic name="minDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="maxDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.OID">
+		<table name="OIDS" schema="core">
+			<unique-constraint>
+				<column-name>OWNER_ID</column-name>
+				<column-name>OID</column-name>
+			</unique-constraint>
+		</table>
+		<attributes>
+			<basic name="oid">
+				<column name="OID" length="255"></column>
+			</basic>
+			<basic name="name">
+				<column name="OID_NAME" length="255"></column>
+			</basic>
+			<basic name="description">
+				<column name="OID_DESC" length="255"></column>
+			</basic>
+			<many-to-one name="owner">
+				<join-column name="OWNER_ID"></join-column>
+			</many-to-one>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.Specialty">
+		<table name="SPECIALTY" schema="provider"></table>
+		<attributes>
+			<basic name="name">
+				<column name="NAME" length="100"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MenuLocator">
+		<table name="MENU_LOCATOR" schema="app"></table>
+	</entity>
+	<entity class="org.tolven.doc.entity.DocType">
+		<table name="DOC_TYPE" schema="doc"></table>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountProperty">
+		<table name="ACCOUNT_PROPERTY" schema="core"></table>
+		<attributes>
+			<basic name="longStringValue">
+				<column name="longStringValue" column-definition="text"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountType">
+		<table name="ACCOUNT_TYPE" schema="core">
+			<unique-constraint>
+				<column-name>KNOWN_TYPE</column-name>
+			</unique-constraint>
+		</table>
+		<attributes>
+			<basic name="knownType">
+				<column name="KNOWN_TYPE" length="20"></column>
+			</basic>
+			<basic name="homePage">
+				<column name="HOME_PAGE" length="255"></column>
+			</basic>
+			<basic name="createAccountPage">
+				<column name="CREATE_ACCOUNT_PAGE" length="255"></column>
+			</basic>
+			<basic name="logo">
+				<column name="LOGO" length="255"></column>
+			</basic>
+			<basic name="CSS">
+				<column name="CSS" length="255"></column>
+			</basic>
+			<basic name="readOnly">
+				<column name="READ_ONLY"></column>
+			</basic>
+			<basic name="creatable">
+				<column name="USER_CAN_CREATE"></column>
+			</basic>
+			<basic name="longDesc">
+				<column name="LONG_DESC" length="255"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS" length="10"></column>
+			</basic>
+			<basic name="rules">
+				<column name="RULES" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<version name="version">
+				<column name="VERSION"></column>
+			</version>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MSAccessRole">
+		<table name="ms_access_role" schema="app"></table>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountUser">
+		<table name="ACCOUNT_USER" schema="core"></table>
+		<attributes>
+			<basic name="effectiveDate">
+				<column name="EFFECTIVE_DATE"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="expirationDate">
+				<column name="EXPIRATION_DATE"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="lastLoginTime">
+				<column name="LAST_LOGIN_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="accountPermission">
+				<column name="ACCOUNT_PERMISSION"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS"></column>
+			</basic>
+			<embedded name="accountPrivateKey">
+				<attribute-override name="keySize">
+					<column name="PRIVATE_KEY_SIZE"></column>
+				</attribute-override>
+				<attribute-override name="algorithm">
+					<column name="PRIVATE_KEY_ALGORITHM"></column>
+				</attribute-override>
+			</embedded>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.ProviderEndorsement">
+		<table name="ENDORSEMENT" schema="provider"></table>
+		<attributes>
+			<basic name="comment">
+				<column name="COMMENT" length="255"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS" length="50"></column>
+			</basic>
+			<basic name="effectiveTimeFrom">
+				<column name="EFFECT_TIME_FROM"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="effectiveTimeTo">
+				<column name="EFFECT_TIME_TO"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.PatientLink">
+		<table name="PATIENT_LINK" schema="provider"></table>
+		<attributes>
+			<basic name="request">
+				<column name="REQUEST" length="255"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS" length="50"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.gen.entity.FamilyUnit">
+		<table name="FAMILY_UNIT" schema="gen"></table>
+		<attributes>
+			<basic name="familyName">
+				<column name="FAMILY_NAME" length="100"></column>
+			</basic>
+			<basic name="address">
+				<column name="ADDRESS" length="50"></column>
+			</basic>
+			<basic name="city">
+				<column name="CITY" length="50"></column>
+			</basic>
+			<basic name="state">
+				<column name="STATE" length="50"></column>
+			</basic>
+			<basic name="zip">
+				<column name="ZIP" length="50"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.gen.entity.FamilyMember">
+		<table name="FAMILY_MEMBER" schema="gen"></table>
+		<attributes>
+			<basic name="memberNumber">
+				<column name="MEMBER_NUMBER"></column>
+			</basic>
+			<basic name="role">
+				<column name="ROLE" length="20"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.AccountExchange">
+		<table name="ACCOUNT_EXCHANGE" schema="core"></table>
+		<attributes>
+			<basic name="direction">
+				<enumerated>STRING</enumerated>
+			</basic>
+			<basic name="name">
+				<column name="NAME"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS"></column>
+			</basic>
+			<basic name="effectiveTime">
+				<column name="EFFECTIVE_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="expirationTime">
+				<column name="EXPIRATION_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.MyProvider">
+		<table name="MY_PROVIDER" schema="provider"></table>
+		<attributes>
+			<basic name="status">
+				<column name="STATUS" length="50"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.UserMenuStructure">
+		<table name="USER_MENU_STRUCTURE" schema="app"></table>
+		<attributes>
+			<basic name="visible">
+				<column name="NODE_VISIBLE" length="255"></column>
+			</basic>
+			<basic name="sequence">
+				<column name="NODE_SEQ"></column>
+			</basic>
+			<basic name="columnNumber">
+				<column name="COLUMN_NUMBER"></column>
+			</basic>
+			<basic name="windowstyle">
+				<column name="WINDOW_STYLE" length="10"></column>
+			</basic>
+			<basic name="numSummaryItems">
+				<column name="NUM_SUMMARY_ITEMS"></column>
+			</basic>
+			<basic name="defaultPathSuffix">
+				<column name="DEFAULT_PATH_SUFFIX"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.MenuData">
+		<table name="MENU_DATA" schema="app"></table>
+		<attributes>
+			<basic name="path">
+				<column name="MENU_PATH"></column>
+			</basic>
+			<basic name="documentId">
+				<column name="DOCUMENT_ID"></column>
+			</basic>
+			<basic name="status">
+				<column name="STATUS"></column>
+				<enumerated>STRING</enumerated>
+			</basic>
+			<basic name="deleted">
+				<column name="DELETED"></column>
+			</basic>
+			<basic name="parentPath01">
+				<column name="PARENT_PATH01"></column>
+			</basic>
+			<basic name="parentPath02">
+				<column name="PARENT_PATH02"></column>
+			</basic>
+			<basic name="parentPath03">
+				<column name="PARENT_PATH03"></column>
+			</basic>
+			<basic name="parentPath04">
+				<column name="PARENT_PATH04"></column>
+			</basic>
+			<basic name="referencePath">
+				<column name="REFERENCE_PATH"></column>
+			</basic>
+			<basic name="dateType">
+				<column name="DATETYPE"></column>
+			</basic>
+			<basic name="expirationTime">
+				<column name="EXPIRATION_TIME"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="date01">
+				<column name="DATE01"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="date02">
+				<column name="DATE02"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="date03">
+				<column name="DATE03"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="date04">
+				<column name="DATE04"></column>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="date01String">
+				<column name="DATE01STRING"></column>
+			</basic>
+			<basic name="date02String">
+				<column name="DATE02STRING"></column>
+			</basic>
+			<basic name="date03String">
+				<column name="DATE03STRING"></column>
+			</basic>
+			<basic name="date04String">
+				<column name="DATE04STRING"></column>
+			</basic>
+			<basic name="string01">
+				<column name="STRING01" length="1000"></column>
+			</basic>
+			<basic name="string02">
+				<column name="STRING02" length="1000"></column>
+			</basic>
+			<basic name="string03">
+				<column name="STRING03" length="1000"></column>
+			</basic>
+			<basic name="string04">
+				<column name="STRING04" length="1000"></column>
+			</basic>
+			<basic name="string05">
+				<column name="STRING05" length="1000"></column>
+			</basic>
+			<basic name="string06">
+				<column name="STRING06" length="1000"></column>
+			</basic>
+			<basic name="string07">
+				<column name="STRING07" length="1000"></column>
+			</basic>
+			<basic name="string08">
+				<column name="STRING08" length="1000"></column>
+			</basic>
+			<basic name="long01">
+				<column name="LONG01"></column>
+			</basic>
+			<basic name="long02">
+				<column name="LONG02"></column>
+			</basic>
+			<basic name="long03">
+				<column name="LONG03"></column>
+			</basic>
+			<basic name="long04">
+				<column name="LONG04"></column>
+			</basic>
+			<basic name="pqValue01">
+				<column name="PQVALUE01"></column>
+			</basic>
+			<basic name="pqStringVal01">
+				<column name="PQSVAL01"></column>
+			</basic>
+			<basic name="pqUnits01">
+				<column name="PQUNITS01"></column>
+			</basic>
+			<basic name="pqValue02">
+				<column name="PQVALUE02"></column>
+			</basic>
+			<basic name="pqStringVal02">
+				<column name="PQSVAL02"></column>
+			</basic>
+			<basic name="pqUnits02">
+				<column name="PQUNITS02"></column>
+			</basic>
+			<basic name="pqValue03">
+				<column name="PQVALUE03"></column>
+			</basic>
+			<basic name="pqStringVal03">
+				<column name="PQSVAL03"></column>
+			</basic>
+			<basic name="pqUnits03">
+				<column name="PQUNITS03"></column>
+			</basic>
+			<basic name="pqValue04">
+				<column name="PQVALUE04"></column>
+			</basic>
+			<basic name="pqStringVal04">
+				<column name="PQSVAL04"></column>
+			</basic>
+			<basic name="pqUnits04">
+				<column name="PQUNITS04"></column>
+			</basic>
+			<basic name="xml01">
+				<column name="XML01" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+			<basic name="secretKey">
+				<column name="secret_key" column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.doc.bean.TolvenMessageAttachment">
+		<table schema="doc"></table>
+		<attributes>
+			<basic name="payload">
+				<column column-definition="oid"></column>
+				<lob></lob>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.provider.entity.ProviderLocation">
+		<table name="PROVIDER_LOCATION" schema="provider"></table>
+		<attributes>
+			<basic name="address1">
+				<column name="ADDRESS1" length="50"></column>
+			</basic>
+			<basic name="address2">
+				<column name="ADDRESS2" length="50"></column>
+			</basic>
+			<basic name="address3">
+				<column name="ADDRESS3" length="50"></column>
+			</basic>
+			<basic name="city">
+				<column name="CITY" length="50"></column>
+			</basic>
+			<basic name="state">
+				<column name="STATE" length="50"></column>
+			</basic>
+			<basic name="zip">
+				<column name="ZIP" length="50"></column>
+			</basic>
+			<basic name="hours">
+				<column name="HOURS" length="150"></column>
+			</basic>
+			<basic name="phone">
+				<column name="PHONE" length="150"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.core.entity.Sponsorship">
+		<table name="SPONSORSHIP" schema="core"></table>
+		<attributes>
+			<basic name="title">
+				<column name="TITLE" length="50"></column>
+			</basic>
+			<basic name="referenceCode">
+				<column name="REFERENCE_CODE" length="20"></column>
+			</basic>
+		</attributes>
+	</entity>
+	<entity class="org.tolven.app.entity.PlaceholderAssociation">
+		<table name="placeholder_association" schema="app"></table>
+	</entity>
+	<entity class="org.tolven.core.entity.Account">
+		<table name="ACCOUNT" schema="core"></table>
+		<attributes>
+			<basic name="title">
+				<column name="TITLE" length="50"></column>
+			</basic>
+			<basic name="subsetAccount">
+				<column name="SUBSET"></column>
+			</basic>
+			<basic name="timeZone">
+				<column name="TIME_ZONE" length="40"></column>
+			</basic>
+			<basic name="locale">
+				<column name="USER_LOCALE" length="10"></column>
+			</basic>
+			<basic name="emailFormat">
+				<column name="EMAIL_FORMAT" length="10"></column>
+			</basic>
+			<basic name="enableBackButton">
+				<column name="ENABLE_BACK_BUTTON"></column>
+			</basic>
+			<basic name="disableAutoRefresh">
+				<column name="DISABLE_AUTO_REFRESH"></column>
+			</basic>
+			<basic name="manualMetadataUpdate">
+				<column name="MANUAL_METADATA_UPDATE"></column>
+			</basic>
+			<embedded name="accountProcessingPublicKey">
+				<attribute-override name="x509EncodedKeySpec">
+					<column name="PROCESSING_X509_ENCODED__KEY_SPEC"
+						column-definition="oid"></column>
+				</attribute-override>
+				<attribute-override name="algorithm">
+					<column name="PROCESSING_PUBLIC_KEY_ALGORITHM"></column>
+				</attribute-override>
+			</embedded>
+		</attributes>
+	</entity>
+</entity-mappings>

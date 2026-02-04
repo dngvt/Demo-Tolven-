@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+	<head>
+   		<title>#{trim.trim.act.title.ST}</title>
+   		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   		<script type="text/javascript" src="ePrescriptionScripts.js">	
+		</script>
+	</head>
+	<body>
+		<ui:composition>
+			<script type="text/javascript">
+				if(flag==0) {
+					loadMedicationDetails('#{menu.element}','#{menu.elementLabel}');		
+				}
+				flag=0;
+			</script>
+			<wiz:step title="#{msg.GettingStarted}" >
+				<wiz:body>
+					<p><!-- Selecting an active medication allows the user to manually create a dispense record 
+					   against that medication. The submitted placeholder is added to that
+					   medication’s activity list.--></p>
+				</wiz:body>		
+				<wiz:help>
+					<h1>getting Started</h1>
+					<p>Help provides additional information about each page</p>
+					<p>You can close this form by clicking the [x] above at any time. The form will remain in your list of new activity so that yuo can continue at any time later.
+						If you want to completely cancel the form prior to submission, removing all traces of the form from the system, click the Cancel button.
+						Once submitted, you will not be able to Cancel the form.
+					</p>
+				</wiz:help>
+			</wiz:step>
+		    <wiz:step title="Medication" >
+				<wiz:body >	
+					<wiz:group title="#{trim.trim.act.relationship['dispense'].act.title.ST}">
+						<table width ="80%" cellpadding="5">
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[0].label.value} 
+								</td>          
+	               				<td width="40%">
+									<trim:TS id="dispenseDate" value="#{trim.trim.act.relationship['dispense'].act.observation.values[0].TS}" dateStyle="short"  />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[1].label.value} 
+								</td>          
+								<td width="40%">
+									<h:outputText id="medication" value="#{trim.trim.act.relationship['dispense'].act.observation.values[1].ST.value}" />
+								</td>
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[2].label.value} 
+								</td>          
+	               				<td width="40%">
+									<wiz:radio id="status" value="#{trim.trim.act.relationship['dispense'].act.observation.values[2].CE}" layout="lineDirection">
+				                 		 <f:selectItems value="#{trim.valueSets['status']}"/>
+				                 		 <f:converter converterId="DataTypeConverter"/>
+				                	</wiz:radio>
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[3].label.value}
+								</td>
+								<td width="40%">
+									<h:outputText id="strength" value="#{trim.trim.act.relationship['dispense'].act.observation.values[3].ST.value}" />
+								</td>
+							</tr>
+<!--							<tr>-->
+<!--								<td width="10%">-->
+<!--									#{trim.trim.act.relationship['dispense'].act.observation.values[4].label.value} -->
+<!--								</td>          -->
+<!--	               				<td width="40%">-->
+<!--									<h:outputText id="frequency" value="#{trim.trim.act.relationship['dispense'].act.observation.values[4].INT.value}"  />-->
+<!--								</td>	-->
+<!--							</tr>-->
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[5].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:outputText id="route" value="#{trim.trim.act.relationship['dispense'].act.observation.values[5].ST.value}" />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[6].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:outputText id="remainingRefills" value="#{trim.trim.act.relationship['dispense'].act.observation.values[6].ST.value}" />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[7].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:outputText id="dispenseAmount" value="#{trim.trim.act.relationship['dispense'].act.observation.values[7].INT.value}"  />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[8].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:outputText id="startDate" value="#{trim.trim.act.relationship['dispense'].act.observation.values[8].ST.value}" />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[9].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:outputText id="endDate" value="#{trim.trim.act.relationship['dispense'].act.observation.values[9].ST.value}" />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[10].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:inputText id="dispense" value="#{trim.trim.act.relationship['dispense'].act.observation.values[10].INT.value}" size="20" />
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[11].label.value} 
+								</td>          
+	               				<td width="40%">
+	               					<h:inputText id="packSize" value="#{trim.trim.act.relationship['dispense'].act.observation.values[11].ST.value}" size="20" />							
+								</td>	
+							</tr>
+							<tr>
+								<td width="10%">
+									#{trim.trim.act.relationship['dispense'].act.observation.values[12].label.value} 
+								</td>          
+	               				<td width="40%">
+									<h:inputText id="lotNumber" value="#{trim.trim.act.relationship['dispense'].act.observation.values[12].INT.value}" size="20" />
+								</td>	
+							</tr>
+						</table>
+				 	</wiz:group>
+			 	</wiz:body>
+			</wiz:step>
+  		</ui:composition>
+  	</body>
+ </html>
+  

@@ -1,0 +1,359 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr">
+		<placeholder name="SureScript" title="Registration" eventInstance="echr:admin:wip" page="/wizard/wizard.xhtml" heading="/five/allergyLink.xhtml">
+			<field name="name" internal="string01">
+				<from>#{act.observation.values[0].ST.value} #{act.observation.values[1].ST.value} #{act.observation.values[2].ST.value}</from>
+			</field>
+			<field name="SureScriptID" internal="string04">
+				<from>#{act.observation.values[8].ST.value}</from>
+			</field>
+			<field name="nextUpdate" internal="date02">
+				<from>#{act.observation.values[9].TS.date}</from>
+			</field>
+			<field name="lastUpdate" internal="date01">
+				<from>#{act.observation.values[10].TS.date}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<!-- Patient Pharmacies. placeholder name cannot be changed(has dependency on EPAction) -->
+	<extends path="echr:patient">
+		<placeholder name="pharmacy" title="Pharmacy" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/allergyLink.xhtml">
+			<field name="NCPDPID" internal="string01">
+				<from>#{trim.act.relationship['pharmacyId'].act.observation.values[0].ST.value}</from>
+				<from>#{act.observation.values[0].CE.code}</from>
+				<from>#{act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="storeName" internal="string02">
+				<from>#{trim.act.relationship['pharmacyDetails'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="addressLine1" internal="string03">
+				<from></from>
+			</field>
+			<field name="city" internal="string04">
+				<from></from>
+			</field>
+			<field name="state" internal="string05">
+				<from>#{trim.act.relationship['pharmacyDetails'].act.observation.values[3].ST.value}</from>
+			</field>
+			<field name="zip" internal="string06">
+				<from>#{trim.act.relationship['pharmacyDetails'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="primaryPhone" internal="string07">
+				<from></from>
+			</field>
+			<field name="fax" internal="string08">
+				<from></from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr">
+		<placeholder name="addPharmacy" title="Pharmacy" eventInstance="echr:patient:wip" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="NCPDPID" internal="string01">
+				<from>#{act.relationship['registration'].act.observation.values[0].ST.value}</from>
+			</field>
+			<field name="storeName" internal="string02">
+				<from>#{act.relationship['registration'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="city" internal="string03">
+				<from>#{act.relationship['registration'].act.observation.values[4].ST.value}</from>
+			</field>
+			<field name="state" internal="string04">
+				<from>#{act.relationship['registration'].act.observation.values[5].ST.value}</from>
+			</field>
+			<field name="zip" internal="string05">
+				<from>#{act.relationship['registration'].act.observation.values[6].ST.value}</from>
+			</field>
+			<field name="fax" internal="string06">
+				<from>#{act.relationship['registration'].act.observation.values[7].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:assigned">
+		<placeholder name="responses" page="/wizard/wizard.xhtml" heading="/five/wipLink.xhtml">
+			<field name="date" internal="date01">
+				<from></from>
+			</field>
+			<field name="Action" internal="string01">
+				<from>#{trim.description}</from>
+			</field>
+			<field name="Status" internal="string08">
+				<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['currentMedication'].act.observation.values[11].ST.value}</from>
+			</field>
+			<field name="StatusCode" internal="string03">
+				<from>#{act.relationship['response'].act.observation.values[1].ST.value}</from>
+			</field>
+			<field name="messageId" internal="string07">
+				<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['currentMedication'].act.observation.values[12].ST.value}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:admin">
+		<menu name="SureScriptRegistration" title="SureScript Account Registration" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="Registration" page="/five/list.xhtml" visible="true" drilldown="echr:SureScript">
+				<column name="Name" internal="string01" visible="true" reference="true" width="20.0">
+					<from>#{SureScript.name}</from>
+				</column>
+				<column name="SureScriptID" internal="string04" visible="true" width="20.0">
+					<from>#{SureScript.SureScriptID}</from>
+				</column>
+				<column name="LastUpdate" internal="date01" visible="true" width="20.0">
+					<from>#{SureScript.lastUpdate}</from>
+				</column>
+				<column name="nextUpdate" internal="date02" visible="true" width="20.0">
+					<from>#{SureScript.nextUpdate}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:SureScriptRegistration">
+					<column name="Form" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:admin">
+		<list name="pharmacies" title="Pharmacies" page="/five/list.xhtml" visible="never" query="global:pharmacyMenu">
+			<column name="pharmacy" title="Pharmacy" internal="string01" visible="never" width="30.0" />
+			<column name="description" internal="string05" width="20.0" />
+			<column name="address" title="Address" internal="string03" width="20.0" />
+			<column name="city" title="City" internal="pqStringVal01" width="10.0" />
+			<column name="state" title="State" internal="string06" width="5.0" />
+			<column name="zip" title="Zip" internal="string04" width="5.0" />
+		</list>
+	</extends>
+	<extends path="echr:patient">
+		<menu name="pharmacies" sequence="3" title="Pharmacies" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="Current" page="/five/pharmacies.xhtml" visible="true" drilldown=":pharmacy">
+				<column name="NCPDPID" internal="string01" width="8.0">
+					<from>#{pharmacy.NCPDPID}</from>
+				</column>
+				<column name="storeName" internal="string02" reference="true" width="18.0">
+					<from>#{pharmacy.storeName}</from>
+				</column>
+				<column name="addressLine1" internal="string03" width="18.0">
+					<from>#{pharmacy.addressLine1}</from>
+				</column>
+				<column name="city" internal="string04" width="15.0">
+					<from>#{pharmacy.city}</from>
+				</column>
+				<column name="state" internal="string05" width="7.0">
+					<from>#{pharmacy.state}</from>
+				</column>
+				<column name="zip" internal="string06" width="5.0">
+					<from>#{pharmacy.zip}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:pharmacyDocMenu">
+					<column name="Pharmacy" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:admin">
+		<menu name="pharmacy" title="Pharmacy(Fax)" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="" page="/five/list.xhtml" visible="true">
+				<column name="NCPDPID" internal="string01" width="10.0">
+					<from>#{addPharmacy.NCPDPID}</from>
+				</column>
+				<column name="storeName" internal="string02" reference="true" width="20.0">
+					<from>#{addPharmacy.storeName}</from>
+				</column>
+				<column name="city" internal="string03" width="20.0">
+					<from>#{addPharmacy.city}</from>
+				</column>
+				<column name="state" internal="string04" width="10.0">
+					<from>#{addPharmacy.state}</from>
+				</column>
+				<column name="zip" internal="string05" width="10.0">
+					<from>#{addPharmacy.zip}</from>
+				</column>
+				<column name="fax" internal="string06" width="10.0">
+					<from>#{addPharmacy.fax}</from>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:registerPharmacyMenu">
+					<column name="Name" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+		</menu>
+	</extends>
+
+	<extends path="echr:assigned">
+		<menu name="activity" title="PrescriberAcitvity" page="/five/bar2.xhtml" visible="true" sequence="1">
+			<list name="all" title="All" page="/five/list.xhtml" visible="true" drilldown="echr:patient:currentMedication">
+				<column name="date" internal="date01" width="15.0">
+					<from>#{currentMedication.prescriptionDate}</from>
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[7].TS.date}</from>
+				</column>
+				<column name="messageType" internal="string01" reference="true" width="20.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].description}</from>
+					<from>#{currentMedication.medicationName}</from>
+				</column>
+				<column name="status" internal="string08" width="15.0">
+					<from>#{currentMedication.surescriptStatus}</from>
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[6].ST.value}</from>
+					<!--<output> <a style="color:#{status=='Error'?'Red':'Black'};text-decoration:#{status=='Error'?'underline':''};cursor:#{status=='Error'?'pointer':''};" class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a> </output> -->
+					<output>
+						<a class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a>
+					</output>
+				</column>
+				<column name="messageId" internal="string07" width="25.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[2].ST.value}</from>
+					<from>#{currentMedication.messageID}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:activity">
+		<list name="eRxAll" title="eRx Activity" page="/five/list.xhtml" visible="true" drilldown="echr:patient:currentMedication" sequence="2000">
+			<column name="date" internal="date01" width="15.0">
+				<from>#{currentMedication.prescriptionDate}</from>
+			</column>
+			<column name="messageType" internal="string01" reference="true" width="20.0">
+				<from>#{currentMedication.medicationName}</from>
+			</column>
+			<column name="status" internal="string08" width="15.0">
+				<from>#{currentMedication.surescriptStatus}</from>
+				<!-- <output> <a style="color:#{status=='Error'?'Red':'Black'};text-decoration:#{status=='Error'?'underline':''};cursor:#{status=='Error'?'pointer':''};" class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a> </output> -->
+				<output>
+					<a class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a>
+				</output>
+			</column>
+			<column name="messageId" internal="string07" width="25.0">
+				<from>#{currentMedication.messageID}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:admin">
+		<menu name="surescriptResponse" title="SureScript Account Response List" page="/five/bar2.xhtml" visible="true">
+			<list name="responseList" title="Response List" page="/five/list.xhtml" visible="true" drilldown="">
+				<column name="date" internal="date01" width="15.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[7].TS.date}</from>
+				</column>
+				<column name="action" internal="string01" reference="true" width="20.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[9].ST.value}</from>
+					<from>#{trim.description}</from>
+				</column>
+				<column name="status" internal="string08" width="15.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['header'].act.observation.values[6].ST.value}</from>
+					<from>#{trim.act.relationship['header'].act.observation.values[6].ST.value}</from>
+					<!--<output> <a style="color:#{status=='Error'?'Red':'Black'};text-decoration:#{status=='Error'?'underline':''};cursor:#{status=='Error'?'pointer':''};" class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a> </output> -->
+					<output>
+						<a class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a>
+					</output>
+				</column>
+				<column name="messageId" internal="string07" width="25.0">
+					<from>#{trim.isName['obs/evn/refillRequest'].act.relationship['response'].act.observation.values[4].ST.value}</from>
+					<from>#{trim.act.relationship['response'].act.observation.values[4].ST.value}</from>
+				</column>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr:patient:summary">
+		<list name="pharmsum" visible="never">
+			<column name="NCPDPID" internal="string01">
+				<from>#{pharmacy.NCPDPID}</from>
+			</column>
+			<column name="storeName" internal="string02">
+				<from>#{pharmacy.storeName}</from>
+			</column>
+			<column name="state" internal="string05">
+				<from>#{pharmacy.state}</from>
+			</column>
+			<column name="zip" internal="string06">
+				<from>#{pharmacy.zip}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:patient:summary:portal">
+		<portlet name="pharmacysum" portalColumn="1" title="Pharmacy" page="/five/summaryPortletList.xhtml" query="echr:patient:summary:pharmsum" visible="true" drilldown=":pharmacies">
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:pharmacyDocMenu">
+				<column name="Pharmacy" internal="string02" instantiate="true" width="40.0" />
+			</action>
+		</portlet>
+	</extends>
+	<extends path="echr:patients">
+		<list name="patPopupList" title="Patients" page="/five/listPatPopup.xhtml" visible="never" drilldown="echr:patient">
+			<column name="Name" internal="string02,string03,string01" format="%s, %s, %s" reference="true" width="40.0">
+				<output>
+					<a href="javascript:patientPopupRefReq('#{patient.path}', '');">#{Name}</a>
+				</output>
+			</column>
+			<column name="Last" internal="string01" visible="false" reference="false">
+				<from>#{patient.lastName}</from>
+			</column>
+			<column name="Middle" internal="string03" visible="false">
+				<from>#{patient.middleName}</from>
+			</column>
+			<column name="First" internal="string02" visible="false">
+				<from>#{patient.firstName}</from>
+			</column>
+		</list>
+	</extends>
+	<extends path="echr:admin">
+		<menu name="drugFormulary" title="DrugFormulary" page="/five/bar2.xhtml" visible="true">
+			<list name="all" title="Drug Formulary List" page="/five/list.xhtml" visible="true" drilldown="echr:drugFormulary">
+				<column name="drugName" internal="string01" reference="true" width="30.0">
+					<from>#{drugFormulary.drugName}</from>
+				</column>
+				<column name="Strength" internal="string02" width="15.0">
+					<from>#{drugFormulary.strength}</from>
+				</column>
+				<column name="Code" internal="string03" width="15.0" visible="false">
+					<from>#{drugFormulary.drugCode}</from>
+				</column>
+				<column name="NDC" internal="string04" width="15.0">
+					<from>#{drugFormulary.ndc}</from>
+				</column>
+				<column name="element" internal="string05" width="10.0">
+					<from>#{drugFormulary.id}</from>
+					<output>
+						<a onclick="javascript:removeDrugFormulary('#{drugFormulary.id}')" href="#">Delete</a>
+					</output>
+				</column>
+				<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:drugFormularyMenu">
+					<column name="Drug Formulary" internal="string01" instantiate="true" width="40.0" />
+				</action>
+			</list>
+		</menu>
+	</extends>
+	<extends path="echr">
+		<placeholder name="drugFormulary" title="Drug Formulary" page="/wizard/wizard.xhtml" heading="/five/allergyLink.xhtml">
+			<field name="drugName" internal="string01">
+				<from>#{trim.act.relationship['drugDetails'].act.observation.value.CE.displayName}</from>
+			</field>
+			<field name="strength" internal="string02">
+				<from>#{trim.act.relationship['strength'].act.observation.value.ST.value}</from>
+			</field>
+			<field name="drugCode" internal="string03">
+				<from>#{trim.act.relationship['drugDetails'].act.observation.value.CE.code}</from>
+			</field>
+			<field name="ndc" internal="string04">
+				<from>#{trim.act.relationship['drugDetails'].act.observation.value.CE.translations[0].code}</from>
+			</field>
+		</placeholder>
+	</extends>
+	<extends path="echr:admin:staff">
+		<list name="approved" title="All Staff Members" page="/five/list.xhtml" visible="true" drilldown="echr:assigned">
+			<column name="Name" internal="string01" reference="true" width="25.0">
+				<from>#{assigned.lastName}, #{assigned.firstName} #{assigned.middleName}</from>
+			</column>
+			<column name="Gender" internal="string04" width="15.0">
+				<from>#{assigned.sex}</from>
+			</column>
+			<column name="Phone" width="15.0">
+				<from>#{assigned.workTelecom}</from>
+			</column>
+			<column name="status" width="15.0">
+				<from>#{assigned.prescriberStatus}</from>
+				<output>
+					<!-- <a style="color:#{status=='Error'?'Red':'Black'};text-decoration:#{status=='Error'?'underline':''};cursor:#{status=='Error'?'pointer':''};" class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a> -->
+					<a class="error" onclick="javascript:showErrorDescripton(this);">#{status}</a>
+
+				</output>
+			</column>
+			<column name="messageID" internal="string07" width="25.0">
+				<from>#{assigned.messageID}</from>
+			</column>
+			<action name="menu" title="New" page="/five/list.xhtml" visible="true" query="global:assignedMenu">
+				<column name="Staff" internal="string01" instantiate="true" width="40.0" />
+			</action>
+		</list>
+
+	</extends>
+</application>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:wiz="http://www.tolven.org/jsf/wizard"
+      xmlns:trim="http://www.tolven.org/jsf/trim">
+<head>
+    <title>Patient Encounter - Drilldown</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <ui:composition>
+		<wiz:body>
+	 		<c:if test="#{menu.xmlNS == 'urn:tolven-org:trim:4.0'}">
+				<h2><h:outputText value="#{act.title.ST.value}"/></h2>
+
+				<c:if test="#{trim.trim.act.effectiveTime.IVLTS==null}">
+					<h:outputText value="#{act.effectiveTime.label.value}: "/>
+					<trim:TS value="#{trim.trim.act.effectiveTime.TS}" dateStyle="short" readonly="true"/>
+				</c:if>
+				<wiz:group title="Discharge Check List">
+					<table>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="ecopy" value="#{trim.trim.act.relationship['ecopy'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Patient requested electronic copy of Discharge Instructions"/>
+							</td>
+													<tr>
+							<td width="3%"></td>
+							<td tvisible="$('#{menu.elementLabel}:ecopy').checked">
+								<h:selectBooleanCheckbox id="ecopyPHR" value="#{trim.trim.act.relationship['ecopyPHR'].enableRelationship}" disabled="true"/>
+								<h:outputText value="Discharge Instructions sent to PHR"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="printed" value="#{trim.trim.act.relationship['printed'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Patient given printed Discharge Instructions"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="educationInfo" value="#{trim.trim.act.relationship['educationInfo'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Patient Specific Education information provided"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%"></td>
+							<td tvisible="$('#{menu.elementLabel}:educationInfo').checked">
+								<trim:ED id="educationInfoText" value="#{trim.trim.act.relationship['educationInfoText'].act.observation.value}" readonly="true"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="clinicalSummary" value="#{trim.trim.act.relationship['clinicalSummary'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Patient given printed clinical summary"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="eClinicalSummary" value="#{trim.trim.act.relationship['eClinicalSummary'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Electronic standard clinical summary sent to patient’s PHR"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="3%">
+								<h:selectBooleanCheckbox id="medicationReconciliation" value="#{trim.trim.act.relationship['medicationReconciliation'].enableRelationship}" disabled="true"/>
+							</td>
+							<td>
+								<h:outputText value="Medication reconciliation performed during this encounter"/>
+							</td>
+						</tr>	
+						</tr>
+					</table> 
+				</wiz:group>   						
+			</c:if>
+		</wiz:body>
+	</ui:composition>
+</body>
+</html>

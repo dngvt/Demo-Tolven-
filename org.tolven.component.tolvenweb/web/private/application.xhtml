@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<ui:composition template="/templates/portalTemplate.xhtml">
+		<ui:define name="content">
+		<c:choose>
+			<c:when test="#{reg.accountDataMigrationRequired}">
+				<div id="paneArea" class="pane">
+				<c:choose>
+						<!-- allow the account administrator to kick off data migration -->	
+						<c:when test="#{top.accountUser.accountPermission}">
+							<c:choose>
+					        	<c:when test="#{reg.accountDataMigrationInProgress}">
+					        		The account data migration is in progress please wait or login back after some time.
+					        	</c:when>
+					        	<c:otherwise>
+					        		<h:form id="migrateAccountForm" >
+								 		The data in the account has to be migrated to match with the changes done to the metadata. The data migration process requires to perform use authentication
+								 		please provide the user password and click 'Continue' to start migration. The migration process might take a while.
+								 		<br/>
+								 		
+								 		<h3>You'll be forced to logout of the system while the migration is running on the account</h3> 
+							 			<h:panelGrid columns="1">
+							                <h:panelGroup>
+							                	<h:outputText value="Password"/>
+								                <h:inputSecret id="password" value="#{reg.inviterUserPassword}" size="14" required="true" />
+								                <h:message for="password" errorClass="errorMsg" infoClass="infoMsg" warnClass="warnMsg" fatalClass="fatalMsg"/>
+								            </h:panelGroup>
+								             <h:panelGroup>
+								             	<h:commandButton action="switch" immediate="true" value="#{msg.Cancel}"/>
+								             	<h:commandButton id="startMigration" action="#{reg.startAccountDataMigration}" value="#{msg.StartDataMigration}"/>					
+											</h:panelGroup>
+										</h:panelGrid>
+									</h:form>
+					        	</c:otherwise>
+			       			</c:choose>
+						</c:when>
+		        		<c:otherwise>
+		        			<!-- non-admin account user or plea should contact account admin to do data migration -->
+		        			The data in the account need to be migrated. Please contact the account admin to trigger data migration
+		        		</c:otherwise>
+				</c:choose>
+				
+       			</div>
+			</c:when>
+			<c:otherwise>
+				<div id="contentArea" class="content"/>
+				<table style="width:100%" border="0" cellspacing="0" cellpadding="0">
+					<tr style="vertical-align:bottom">
+						<td style="width:100px">
+							<h:graphicImage value="#{top.applicationLogo}"/> 
+						</td>
+						<td>
+							<div id="tabArea" class="tabArea"/>
+						</td>
+					</tr>
+				</table>
+				<div id="paneArea" class="pane"></div>
+			</c:otherwise>
+		</c:choose> 		
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

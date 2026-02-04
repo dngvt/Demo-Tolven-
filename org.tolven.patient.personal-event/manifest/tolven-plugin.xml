@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="urn:tolven-org:tpf:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tolven-org:tpf:1.0 http://tolven.org/xsd/tpf.xsd" id="org.tolven.patient.personal-event" 
+version="2.1.2" vendor="Tolven">
+
+	<requires>
+		<import plugin-id="org.tolven.component.tolvenweb" />
+		<import plugin-id="org.tolven.component.application" />
+		<import plugin-id="org.tolven.component.tolvenlocale" />
+		<import plugin-id="org.tolven.component.tolvenlocale_en" />
+		<import plugin-id="org.tolven.component.tolvenweb.taglibs.trim" />
+		<import plugin-id="org.tolven.component.tolvenweb.taglibs.wizard" />
+		<import plugin-id="org.tolven.component.war" />
+		<import plugin-id="org.tolven.component.faces" />
+	</requires>
+
+	<extension-point id="applications" parent-plugin-id="org.tolven.component.application" parent-point-id="applications">
+		<parameter-def id="dir" default-value="app" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension-point id="trims" parent-plugin-id="org.tolven.component.application" parent-point-id="trims">
+		<parameter-def id="dir" default-value="app/trim" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="tagSourceDirectory.trim" plugin-id="org.tolven.component.tolvenweb.taglibs.trim" point-id="tagSourceDirectory">
+		<parameter id="source-directory" value="web/META-INF/tags/trim" />
+	</extension>
+
+	<extension id="tagSourceDirectory.wizard" plugin-id="org.tolven.component.tolvenweb.taglibs.wizard" point-id="tagSourceDirectory">
+		<parameter id="source-directory" value="web/META-INF/tags/wizard" />
+	</extension>
+	<extension id="personal-event-drilldownDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.personal-event" />
+		<parameter id="extension-point" value="personal-event-drilldownDirectory" />
+		<parameter id="targetWebDirectory" value="drilldown" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="personal-event-drilldownDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/drilldown" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="personal-event-wizardDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.personal-event" />
+		<parameter id="extension-point" value="personal-event-wizardDirectory" />
+		<parameter id="targetWebDirectory" value="wizard" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="personal-event-wizardDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/wizard" multiplicity="none-or-one" />
+	</extension-point>
+
+	<extension id="personal-event-fiveDirectory-webDirectory-adaptor" plugin-id="org.tolven.component.tolvenweb" point-id="webDirectory-adaptor">
+		<parameter id="source-plugin-id" value="org.tolven.patient.personal-event" />
+		<parameter id="extension-point" value="personal-event-fiveDirectory" />
+		<parameter id="targetWebDirectory" value="five" />
+		<parameter id="parent-context-id" value="tolvenweb" />
+	</extension>
+	<extension-point id="personal-event-fiveDirectory" extension-multiplicity="none">
+		<parameter-def id="sourceDirectory" default-value="web/five" multiplicity="none-or-one" />
+	</extension-point>
+	<!-- <extension id="application-global-locale-echr" plugin-id="org.tolven.component.tolvenlocale" point-id="application-global-locale"> <parameter id="application-name" value="echr"></parameter> <parameter value="locale/??-global.properties" id="properties-file" /> </extension> <extension id="application-locale" plugin-id="org.tolven.component.tolvenlocale" point-id="application-locale"> <parameter id="application-name" value="echr"></parameter> <parameter value="locale/??.properties" id="properties-file" /> </extension> -->
+</plugin>

@@ -1,0 +1,42 @@
+<application xmlns="urn:tolven-org:menuStructure:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:tolven-org:menuStructure:1.0 http://tolven.org/xsd/menuStructure.xsd">
+	<extends path="echr:patients">
+		<list name="LisinCh11" title="LisinCh11" page="/five/patientList.xhtml"
+			visible="true" drilldown="echr:patient">
+			<column name="Name" internal="string01" reference="true" width="20.0">
+				<from>#{patient.lastName}, #{patient.firstName} #{patient.middleName}</from>
+			</column>
+			<column name="DOB" internal="date01" format="d MMM yyyy" width="7.0">
+				<from>#{patient.dob}</from>
+			</column>
+			<column name="Age" internal="date01" format="age" width="4.5" />
+			<column name="Sex" internal="string02" width="6.0">
+				<from>#{patient.sex}</from>
+				<from>#{patient.gender}</from>
+			</column>
+			<column name="Race" width="10.0" visible="false">
+				<from>#{patient.race}</from>
+			</column>
+			<column name="Medication" internal="string03" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:medications:active,lower(string01) like '%lisinopril%'"].string01}</from>
+			</column>
+			<column name="Problem" width="10.0" internal="string04" visible="true">
+				<from>#{patient.latest["echr:patient:problems:active,lower(string01) like '%coronary artery disease%'"].string01}</from>
+			</column>
+			<column name="TotalCholestrol" internal="string05" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:labresults:completed,lower(string02) like '%total cholesterol%'"].pqValue01}</from>
+			</column>
+			<column name="HDLCholestrol" internal="string06" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:labresults:completed,lower(string02) like '%hdl cholesterol%'"].pqValue01}</from>
+			</column>
+			<column name="LDLCholestrol" internal="string07" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:labresults:completed,lower(string02) like '%ldl cholesterol%'"].pqValue01}</from>
+			</column>
+			<column name="Triglycerides" internal="string08" width="10.0" visible="true">
+				<from>#{patient.latest["echr:patient:labresults:completed,lower(string02) like '%triglycerides%'"].pqValue01}</from>
+			</column>
+		</list>
+	</extends>
+</application>
+				

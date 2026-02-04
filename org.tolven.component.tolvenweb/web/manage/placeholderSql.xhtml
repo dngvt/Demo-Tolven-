@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wiz="http://www.tolven.org/jsf/wizard"
+    xmlns:trim="http://www.tolven.org/jsf/trim">
+  <head>
+        <title>Patient Demographics</title>
+  </head>
+  <body>
+  	<ui:composition>
+  		 <fieldset>
+				<legend>SQL</legend>
+					<c:set var="sql" value="#{mu.placeholderSQL}"/>
+				 	 <c:forEach var="entry" items="#{sql}">
+					 CREATE OR REPLACE VIEW echr.#{entry.key}  AS 
+						#{entry.value};
+					<br/>
+					ALTER TABLE echr.#{entry.key} OWNER TO postgres;
+					<br/>
+					<br/>
+					
+				  </c:forEach>
+			</fieldset>
+	</ui:composition>
+  </body>
+</html>
